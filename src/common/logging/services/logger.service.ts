@@ -25,21 +25,18 @@ export class LoggerService implements NestLoggerService {
   private context?: string;
 
   constructor(private configService: ConfigService) {
-    this.serviceName =
-      this.configService.get<string>('APP_NAME') || 'haystack';
+    const appConfig = this.configService.get('app');
+    const loggingConfig = this.configService.get('logging');
+
+    this.serviceName = appConfig?.name || 'haystack';
 
     const config: LoggerConfig = {
       service: this.serviceName,
-      environment:
-        this.configService.get<string>('NODE_ENV') || 'development',
-      logLevel:
-        (this.configService.get<LogLevel>('LOG_LEVEL') as LogLevel) ||
-        LogLevel.INFO,
-      enablePrettyPrint:
-        this.configService.get<boolean>('LOG_PRETTY', true),
-      enableFileLogging:
-        this.configService.get<boolean>('LOG_FILE_ENABLED', false),
-      logDir: this.configService.get<string>('LOG_DIR', 'logs'),
+      environment: appConfig?.environment || 'development',
+      logLevel: (loggingConfig?.level as LogLevel) || LogLevel.INFO,
+      enablePrettyPrint: loggingConfig?.pretty ?? true,
+      enableFileLogging: loggingConfig?.fileEnabled ?? false,
+      logDir: loggingConfig?.logDir || 'logs',
     };
 
     this.logger = LoggerConfigFactory.create(config);

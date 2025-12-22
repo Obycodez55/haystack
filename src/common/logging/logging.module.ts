@@ -1,17 +1,16 @@
-import { Global, Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { LoggerService } from './services/logger.service';
 import { CorrelationMiddleware } from './middleware/correlation.middleware';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 /**
- * Global logging module
+ * Logging module
  * Provides structured logging service and correlation middleware
+ * Note: Not global - imported by CommonModule
  */
-@Global()
 @Module({
-  imports: [ConfigModule],
   providers: [
     {
       provide: LoggerService,

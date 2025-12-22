@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { LoggerService } from '@logger';
+import { LoggerService } from '@common';
 
 @Controller()
 export class AppController {

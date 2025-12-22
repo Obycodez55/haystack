@@ -86,7 +86,8 @@
       "^@modules/(.*)$": "<rootDir>/modules/$1",
       "^@config$": "<rootDir>/config",
       "^@config/(.*)$": "<rootDir>/config/$1",
-      "^@logger$": "<rootDir>/common/logging"
+      "^@errors$": "<rootDir>/common/errors",
+      "^@responses$": "<rootDir>/common/responses"
     }
   }
 }

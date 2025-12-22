@@ -24,10 +24,10 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     CorrelationMiddleware,
     // Optionally enable global request logging interceptor
     // Uncomment if you want automatic request/response logging
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: LoggingInterceptor,
-    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
   ],
   exports: [LoggerService, CorrelationMiddleware],
 })

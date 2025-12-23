@@ -22,16 +22,9 @@ import jwtConfig from './jwt.config';
         allowUnknown: true, // Allow extra env vars (useful for development)
         abortEarly: true, // Stop on first error (fail fast for required vars)
       },
-      load: [
-        appConfig,
-        databaseConfig,
-        redisConfig,
-        loggingConfig,
-        jwtConfig,
-      ],
+      load: [appConfig, databaseConfig, redisConfig, loggingConfig, jwtConfig],
     }),
   ],
   exports: [NestConfigModule],
 })
 export class ConfigModule {}
-

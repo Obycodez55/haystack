@@ -13,7 +13,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     private readonly logger: LoggerService,
   ) {
     const config = this.configService.get<RedisConfig>('redis');
-    
+
     if (!config) {
       throw new Error('Redis configuration is missing');
     }
@@ -38,12 +38,16 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
     // Error handling
     this.client.on('error', (error) => {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Redis connection error', errorObj);
     });
 
     this.client.on('connect', () => {
-      this.logger.log('Redis connected', { host: config.host, port: config.port });
+      this.logger.log('Redis connected', {
+        host: config.host,
+        port: config.port,
+      });
     });
 
     this.client.on('ready', () => {
@@ -66,7 +70,8 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         this.logger.log('Redis service initialized');
       }
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to initialize Redis', errorObj);
       // Don't throw - allow graceful degradation
     }
@@ -76,14 +81,15 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     try {
       // Remove all event listeners to prevent memory leaks
       this.client.removeAllListeners();
-      
+
       // Close the connection gracefully
       await this.client.quit();
       this.logger.log('Redis connection closed');
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Error closing Redis connection', errorObj);
-      
+
       // Force disconnect if quit fails
       try {
         this.client.disconnect();
@@ -96,16 +102,20 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   /**
    * Health check
    */
-  async healthCheck(): Promise<{ status: string; latency?: number; error?: string }> {
+  async healthCheck(): Promise<{
+    status: string;
+    latency?: number;
+    error?: string;
+  }> {
     try {
       const start = Date.now();
       await this.client.ping();
       const latency = Date.now() - start;
       return { status: 'up', latency };
     } catch (error) {
-      return { 
-        status: 'down', 
-        error: error instanceof Error ? error.message : String(error) 
+      return {
+        status: 'down',
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -130,10 +140,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         totalCommandsProcessed: commands ? parseInt(commands, 10) : undefined,
       };
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to get Redis stats', errorObj);
       return {};
     }
   }
 }
-

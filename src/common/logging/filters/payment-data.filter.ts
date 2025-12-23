@@ -18,7 +18,7 @@ const PAYMENT_SENSITIVE_FIELDS = [
   'expiry',
   'expiry_date',
   'expiryDate',
-  
+
   // Bank account
   'bank_account',
   'bankAccount',
@@ -28,7 +28,7 @@ const PAYMENT_SENSITIVE_FIELDS = [
   'routingNumber',
   'sort_code',
   'sortCode',
-  
+
   // Payment tokens
   'payment_token',
   'paymentToken',
@@ -38,7 +38,7 @@ const PAYMENT_SENSITIVE_FIELDS = [
   'providerResponse',
   'provider_data',
   'providerData',
-  
+
   // API keys and credentials
   'api_key',
   'apiKey',
@@ -50,14 +50,14 @@ const PAYMENT_SENSITIVE_FIELDS = [
   'providerApiKey',
   'provider_secret',
   'providerSecret',
-  
+
   // Webhook signatures
   'signature',
   'webhook_signature',
   'webhookSignature',
   'hmac_signature',
   'hmacSignature',
-  
+
   // Customer sensitive data
   'bvn',
   'nin',
@@ -109,7 +109,7 @@ export class PaymentDataFilter {
       // Check for payment-sensitive fields
       if (
         PAYMENT_SENSITIVE_FIELDS.some((field) =>
-          lowerKey.includes(field.toLowerCase())
+          lowerKey.includes(field.toLowerCase()),
         )
       ) {
         obj[key] = '[REDACTED]';
@@ -127,4 +127,3 @@ export class PaymentDataFilter {
     return SensitiveDataFilter.filterObject(paymentFiltered);
   }
 }
-

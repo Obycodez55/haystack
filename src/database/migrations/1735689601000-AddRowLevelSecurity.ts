@@ -91,4 +91,3 @@ export class AddRowLevelSecurity1735689601000 implements MigrationInterface {
     `);
   }
 }
-

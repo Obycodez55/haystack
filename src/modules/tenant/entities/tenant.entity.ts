@@ -1,10 +1,4 @@
-import {
-  Entity,
-  Column,
-  Index,
-  OneToMany,
-  Check,
-} from 'typeorm';
+import { Entity, Column, Index, OneToMany, Check } from 'typeorm';
 import { BaseEntity } from '@common/database/entities/base.entity';
 
 export enum TenantStatus {
@@ -65,7 +59,12 @@ export class TenantEntity extends BaseEntity {
   kycRejectedReason?: string;
 
   // Business Information
-  @Column({ type: 'varchar', length: 255, nullable: true, name: 'company_name' })
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    name: 'company_name',
+  })
   companyName?: string;
 
   @Column({
@@ -83,7 +82,12 @@ export class TenantEntity extends BaseEntity {
   phone?: string;
 
   // Settings
-  @Column({ type: 'varchar', length: 3, default: 'NGN', name: 'default_currency' })
+  @Column({
+    type: 'varchar',
+    length: 3,
+    default: 'NGN',
+    name: 'default_currency',
+  })
   defaultCurrency: string;
 
   @Column({ type: 'varchar', length: 50, default: 'Africa/Lagos' })
@@ -102,4 +106,3 @@ export class TenantEntity extends BaseEntity {
   @OneToMany('ApiKeyEntity', 'tenant')
   apiKeys: any[];
 }
-

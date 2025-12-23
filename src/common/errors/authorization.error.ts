@@ -12,8 +12,7 @@ const ERROR_MESSAGES: Record<AuthorizationErrorCode, string> = {
     'You do not have permission to perform this action.',
   [AuthorizationErrorCode.INSUFFICIENT_PERMISSIONS]:
     'Your API key does not have the required permissions for this operation.',
-  [AuthorizationErrorCode.FORBIDDEN]:
-    'Access to this resource is forbidden.',
+  [AuthorizationErrorCode.FORBIDDEN]: 'Access to this resource is forbidden.',
   [AuthorizationErrorCode.RESOURCE_ACCESS_DENIED]:
     'You do not have access to this resource.',
 };
@@ -56,13 +55,9 @@ export class AuthorizationError extends BaseError {
   }
 
   static forbidden(resource?: string) {
-    return new AuthorizationError(
-      AuthorizationErrorCode.FORBIDDEN,
-      {
-        resource,
-        suggestion: 'You do not have access to this resource',
-      },
-    );
+    return new AuthorizationError(AuthorizationErrorCode.FORBIDDEN, {
+      resource,
+      suggestion: 'You do not have access to this resource',
+    });
   }
 }
-

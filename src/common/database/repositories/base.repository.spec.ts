@@ -66,7 +66,11 @@ describe('BaseRepository', () => {
 
   describe('findById', () => {
     it('should find entity by id and tenant', async () => {
-      const entity = { id: '1', tenantId: 'tenant1', name: 'Test' } as TestEntity;
+      const entity = {
+        id: '1',
+        tenantId: 'tenant1',
+        name: 'Test',
+      } as TestEntity;
       mockRepository.findOne.mockResolvedValue(entity);
 
       const result = await repository.findById('1', 'tenant1');
@@ -86,4 +90,3 @@ describe('BaseRepository', () => {
     });
   });
 });
-

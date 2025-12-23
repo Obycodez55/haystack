@@ -18,10 +18,7 @@ import * as compression from 'compression';
  */
 function validateEnvironment(): void {
   // Required environment variables
-  const requiredVars = [
-    'JWT_SECRET',
-    'JWT_REFRESH_SECRET',
-  ];
+  const requiredVars = ['JWT_SECRET', 'JWT_REFRESH_SECRET'];
 
   EnvValidator.validateRequired(requiredVars);
 
@@ -49,7 +46,9 @@ async function bootstrap() {
   const appConfig = configService.get<AppConfig>('app');
 
   if (!appConfig) {
-    throw new Error('App configuration is missing. Please check your environment variables.');
+    throw new Error(
+      'App configuration is missing. Please check your environment variables.',
+    );
   }
 
   // Verify database connection
@@ -61,7 +60,9 @@ async function bootstrap() {
         responseTime: dbHealth.responseTime,
       });
     } else {
-      logger.warn('Database connection check failed', { error: dbHealth.error });
+      logger.warn('Database connection check failed', {
+        error: dbHealth.error,
+      });
     }
   } catch (error) {
     logger.warn('Database service not available', { error: error.message });
@@ -76,7 +77,9 @@ async function bootstrap() {
         latency: redisHealth.latency,
       });
     } else {
-      logger.warn('Redis connection check failed', { error: redisHealth.error });
+      logger.warn('Redis connection check failed', {
+        error: redisHealth.error,
+      });
     }
   } catch (error) {
     logger.warn('Redis service not available', { error: error.message });
@@ -95,17 +98,19 @@ async function bootstrap() {
   });
 
   // Security headers (Helmet)
-  app.use(helmet.default({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        scriptSrc: ["'self'"],
-        imgSrc: ["'self'", 'data:', 'https:'],
+  app.use(
+    helmet.default({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'"],
+          imgSrc: ["'self'", 'data:', 'https:'],
+        },
       },
-    },
-    crossOriginEmbedderPolicy: false, // Allow embedding if needed
-  }));
+      crossOriginEmbedderPolicy: false, // Allow embedding if needed
+    }),
+  );
 
   // CORS configuration
   app.enableCors({
@@ -187,15 +192,22 @@ async function bootstrap() {
   const port = appConfig.port;
 
   // Swagger/OpenAPI configuration
-  if (process.env.NODE_ENV !== 'production' || process.env.ENABLE_SWAGGER === 'true') {
+  if (
+    process.env.NODE_ENV !== 'production' ||
+    process.env.ENABLE_SWAGGER === 'true'
+  ) {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Haystack Payment Orchestration API')
       .setDescription(
         'Unified payment processing API for African businesses. ' +
-        'Integrate with multiple payment providers (Paystack, Stripe, Flutterwave) through a single API.',
+          'Integrate with multiple payment providers (Paystack, Stripe, Flutterwave) through a single API.',
       )
       .setVersion('1.0')
-      .setContact('Haystack Support', 'https://docs.haystack.com', 'support@haystack.com')
+      .setContact(
+        'Haystack Support',
+        'https://docs.haystack.com',
+        'support@haystack.com',
+      )
       .setLicense('UNLICENSED', '')
       .addBearerAuth(
         {
@@ -227,7 +239,8 @@ async function bootstrap() {
       .build();
 
     const document = SwaggerModule.createDocument(app, swaggerConfig, {
-      operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+      operationIdFactory: (controllerKey: string, methodKey: string) =>
+        methodKey,
     });
 
     SwaggerModule.setup('api-docs', app, document, {
@@ -247,13 +260,20 @@ async function bootstrap() {
     if (process.env.GENERATE_OPENAPI === 'true') {
       const fs = require('fs');
       const path = require('path');
-      const openApiPath = path.join(process.cwd(), 'website', 'static', 'openapi.json');
+      const openApiPath = path.join(
+        process.cwd(),
+        'website',
+        'static',
+        'openapi.json',
+      );
       fs.mkdirSync(path.dirname(openApiPath), { recursive: true });
       fs.writeFileSync(openApiPath, JSON.stringify(document, null, 2));
       logger.log(`OpenAPI specification written to: ${openApiPath}`);
     }
 
-    logger.log(`Swagger documentation available at: http://localhost:${port}/api-docs`);
+    logger.log(
+      `Swagger documentation available at: http://localhost:${port}/api-docs`,
+    );
   }
 
   // Graceful shutdown
@@ -292,13 +312,13 @@ async function bootstrap() {
       process.exit(0);
     } catch (error) {
       logger.error('Error during graceful shutdown', error);
-      
+
       // Clear timeout on error
       if (shutdownTimeout) {
         clearTimeout(shutdownTimeout);
         shutdownTimeout = null;
       }
-      
+
       process.exit(1);
     }
   };

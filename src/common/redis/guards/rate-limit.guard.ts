@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  CanActivate,
-  ExecutionContext,
-} from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { RateLimitService } from '../services/rate-limit.service';
@@ -29,7 +25,7 @@ export class RateLimitGuard implements CanActivate {
     const response = context.switchToHttp().getResponse();
 
     // Skip if no API key (will be handled by auth guard)
-    const apiKey = (request as any).apiKey;
+    const apiKey = request.apiKey;
     if (!apiKey) {
       return true; // Let auth guard handle this
     }
@@ -59,7 +55,8 @@ export class RateLimitGuard implements CanActivate {
     // Get config file overrides
     const redisConfig = this.configService.get<RedisConfig>('redis');
     const endpointConfig = redisConfig?.rateLimit?.endpoints?.[endpointKey];
-    const controllerConfig = redisConfig?.rateLimit?.controllers?.[controllerName];
+    const controllerConfig =
+      redisConfig?.rateLimit?.controllers?.[controllerName];
 
     // Determine final config (priority order)
     const finalConfig = this.resolveConfig(
@@ -77,7 +74,7 @@ export class RateLimitGuard implements CanActivate {
     }
 
     // Extract tenant and mode
-    const tenantId = (request as any).tenant?.id || apiKey.tenantId;
+    const tenantId = request.tenant?.id || apiKey.tenantId;
     const mode = apiKey.mode || 'test';
 
     // Build identifier (can be customized)
@@ -94,8 +91,11 @@ export class RateLimitGuard implements CanActivate {
     if (finalConfig.includeHeaders !== false) {
       response.setHeader('X-RateLimit-Limit', result.limit);
       response.setHeader('X-RateLimit-Remaining', result.remaining);
-      response.setHeader('X-RateLimit-Reset', new Date(result.reset).toISOString());
-      
+      response.setHeader(
+        'X-RateLimit-Reset',
+        new Date(result.reset).toISOString(),
+      );
+
       if (!result.allowed) {
         response.setHeader('Retry-After', result.retryAfter.toString());
       }
@@ -115,7 +115,8 @@ export class RateLimitGuard implements CanActivate {
         correlationId: requestContext?.correlationId,
       });
 
-      const errorMessage = finalConfig.errorMessage || 
+      const errorMessage =
+        finalConfig.errorMessage ||
         `Rate limit exceeded. You can make ${result.limit} requests per ${finalConfig.window} seconds. Try again in ${result.retryAfter} seconds.`;
 
       throw new RateLimitExceededError({
@@ -146,13 +147,14 @@ export class RateLimitGuard implements CanActivate {
     if (classConfig) return classConfig;
     if (endpointConfig) return endpointConfig;
     if (controllerConfig) return controllerConfig;
-    
+
     // Fall back to default for mode
-    return redisConfig?.rateLimit?.defaults?.[mode] || {
-      requests: mode === 'live' ? 10000 : 100,
-      window: 3600,
-      includeHeaders: true,
-    };
+    return (
+      redisConfig?.rateLimit?.defaults?.[mode] || {
+        requests: mode === 'live' ? 10000 : 100,
+        window: 3600,
+        includeHeaders: true,
+      }
+    );
   }
 }
-

@@ -68,8 +68,7 @@ export class LoggerConfigFactory {
     // For now, we'll use console transport only
     // File logging can be added later with proper stream handling
     // For production, consider using pino-roll for log rotation
-    
+
     return logger;
   }
 }
-

@@ -49,39 +49,27 @@ export class AuthenticationError extends BaseError {
    * Factory methods
    */
   static invalidApiKey() {
-    return new AuthenticationError(
-      AuthenticationErrorCode.INVALID_API_KEY,
-      {
-        suggestion: 'Check your API key in the dashboard or generate a new one',
-      },
-    );
+    return new AuthenticationError(AuthenticationErrorCode.INVALID_API_KEY, {
+      suggestion: 'Check your API key in the dashboard or generate a new one',
+    });
   }
 
   static missingApiKey() {
-    return new AuthenticationError(
-      AuthenticationErrorCode.MISSING_API_KEY,
-      {
-        suggestion: 'Include your API key in the Authorization header: Bearer sk_xxx',
-      },
-    );
+    return new AuthenticationError(AuthenticationErrorCode.MISSING_API_KEY, {
+      suggestion:
+        'Include your API key in the Authorization header: Bearer sk_xxx',
+    });
   }
 
   static apiKeyExpired() {
-    return new AuthenticationError(
-      AuthenticationErrorCode.API_KEY_EXPIRED,
-      {
-        suggestion: 'Generate a new API key from your dashboard',
-      },
-    );
+    return new AuthenticationError(AuthenticationErrorCode.API_KEY_EXPIRED, {
+      suggestion: 'Generate a new API key from your dashboard',
+    });
   }
 
   static apiKeyRevoked() {
-    return new AuthenticationError(
-      AuthenticationErrorCode.API_KEY_REVOKED,
-      {
-        suggestion: 'Generate a new API key from your dashboard',
-      },
-    );
+    return new AuthenticationError(AuthenticationErrorCode.API_KEY_REVOKED, {
+      suggestion: 'Generate a new API key from your dashboard',
+    });
   }
 }
-

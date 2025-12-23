@@ -13,4 +13,3 @@ export function calculateWindow(now: number, windowSeconds: number): number {
   const windowMs = windowSeconds * 1000;
   return now - windowMs;
 }
-

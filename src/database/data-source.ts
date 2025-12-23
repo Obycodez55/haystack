@@ -12,7 +12,10 @@ if (require.main !== module) {
 }
 
 // Import entities - use relative paths for CLI compatibility
-import { BaseEntity, TenantScopedEntity } from '../common/database/entities/base.entity';
+import {
+  BaseEntity,
+  TenantScopedEntity,
+} from '../common/database/entities/base.entity';
 import { TenantEntity } from '../modules/tenant/entities/tenant.entity';
 import { ApiKeyEntity } from '../modules/auth/entities/api-key.entity';
 
@@ -24,17 +27,15 @@ export default new DataSource({
   username: process.env.DATABASE_USERNAME || 'postgres',
   password: process.env.DATABASE_PASSWORD || 'postgres',
   database: process.env.DATABASE_NAME || 'haystack',
-  ssl: process.env.DATABASE_SSL === 'true' ? {
-    rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false',
-  } : false,
-  entities: [
-    BaseEntity,
-    TenantScopedEntity,
-    TenantEntity,
-    ApiKeyEntity,
-  ],
+  ssl:
+    process.env.DATABASE_SSL === 'true'
+      ? {
+          rejectUnauthorized:
+            process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false',
+        }
+      : false,
+  entities: [BaseEntity, TenantScopedEntity, TenantEntity, ApiKeyEntity],
   migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
   synchronize: false,
   logging: process.env.DATABASE_LOGGING === 'true',
 });
-

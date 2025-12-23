@@ -69,47 +69,30 @@ export class ProviderError extends BaseError {
    * Factory methods
    */
   static timeout(provider: string, timeoutMs?: number) {
-    return new ProviderError(
-      ProviderErrorCode.TIMEOUT,
-      provider,
-      {
-        timeoutMs,
-        suggestion: 'Retry the request after a short delay',
-      },
-    );
+    return new ProviderError(ProviderErrorCode.TIMEOUT, provider, {
+      timeoutMs,
+      suggestion: 'Retry the request after a short delay',
+    });
   }
 
   static unavailable(provider: string, retryAfter?: number) {
-    return new ProviderError(
-      ProviderErrorCode.UNAVAILABLE,
-      provider,
-      {
-        retryAfter,
-        suggestion: retryAfter
-          ? `Retry after ${retryAfter} seconds`
-          : 'Retry after a short delay',
-      },
-    );
+    return new ProviderError(ProviderErrorCode.UNAVAILABLE, provider, {
+      retryAfter,
+      suggestion: retryAfter
+        ? `Retry after ${retryAfter} seconds`
+        : 'Retry after a short delay',
+    });
   }
 
   static invalidCredentials(provider: string) {
-    return new ProviderError(
-      ProviderErrorCode.INVALID_CREDENTIALS,
-      provider,
-      {
-        suggestion: 'Check your provider API keys in the dashboard',
-      },
-    );
+    return new ProviderError(ProviderErrorCode.INVALID_CREDENTIALS, provider, {
+      suggestion: 'Check your provider API keys in the dashboard',
+    });
   }
 
   static notConfigured(provider: string) {
-    return new ProviderError(
-      ProviderErrorCode.NOT_CONFIGURED,
-      provider,
-      {
-        suggestion: 'Configure the provider in your dashboard settings',
-      },
-    );
+    return new ProviderError(ProviderErrorCode.NOT_CONFIGURED, provider, {
+      suggestion: 'Configure the provider in your dashboard settings',
+    });
   }
 }
-

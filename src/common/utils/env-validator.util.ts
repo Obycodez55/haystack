@@ -18,7 +18,8 @@ export class EnvValidator {
     });
 
     if (missing.length > 0) {
-      const errorMessage = `Missing required environment variables: ${missing.join(', ')}\n\n` +
+      const errorMessage =
+        `Missing required environment variables: ${missing.join(', ')}\n\n` +
         `Please set these variables in your .env file or environment.\n` +
         `See .env.example for reference.`;
 
@@ -84,4 +85,3 @@ export class EnvValidator {
     }
   }
 }
-

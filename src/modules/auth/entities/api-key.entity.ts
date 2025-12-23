@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Index,
-  Check,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, Index, Check } from 'typeorm';
 import { TenantScopedEntity } from '@common/database/entities/base.entity';
 import { TenantEntity } from '@modules/tenant/entities/tenant.entity';
 
@@ -63,4 +56,3 @@ export class ApiKeyEntity extends TenantScopedEntity {
   @Column({ type: 'timestamp', nullable: true, name: 'expires_at' })
   expiresAt?: Date;
 }
-

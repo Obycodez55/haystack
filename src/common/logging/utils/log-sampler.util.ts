@@ -27,7 +27,7 @@ export class LogSampler {
   static getSamplingRate(
     level: string,
     endpoint?: string,
-    defaultRate: number = 1
+    defaultRate: number = 1,
   ): number {
     // Always log errors
     if (level === 'error') {
@@ -49,4 +49,3 @@ export class LogSampler {
     return defaultRate;
   }
 }
-

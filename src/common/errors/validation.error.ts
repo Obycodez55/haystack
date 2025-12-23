@@ -53,40 +53,29 @@ export class ValidationError extends BaseError {
    * Factory methods
    */
   static missingField(field: string, details?: Record<string, any>) {
-    return new ValidationError(
-      ValidationErrorCode.MISSING_FIELD,
+    return new ValidationError(ValidationErrorCode.MISSING_FIELD, field, {
       field,
-      {
-        field,
-        suggestion: `Please include the '${field}' field in your request`,
-        ...details,
-      },
-    );
+      suggestion: `Please include the '${field}' field in your request`,
+      ...details,
+    });
   }
 
   static invalidValue(field: string, value: any, constraint?: string) {
-    return new ValidationError(
-      ValidationErrorCode.INVALID_VALUE,
+    return new ValidationError(ValidationErrorCode.INVALID_VALUE, field, {
       field,
-      {
-        field,
-        value,
-        constraint,
-        suggestion: `Please provide a valid value for '${field}'`,
-      },
-    );
+      value,
+      constraint,
+      suggestion: `Please provide a valid value for '${field}'`,
+    });
   }
 
   static invalidEmail(email: string) {
-    return new ValidationError(
-      ValidationErrorCode.INVALID_EMAIL,
-      'email',
-      {
-        field: 'email',
-        value: email,
-        suggestion: 'Please provide a valid email address (e.g., user@example.com)',
-      },
-    );
+    return new ValidationError(ValidationErrorCode.INVALID_EMAIL, 'email', {
+      field: 'email',
+      value: email,
+      suggestion:
+        'Please provide a valid email address (e.g., user@example.com)',
+    });
   }
 
   static invalidCurrency(currency: string, supportedCurrencies?: string[]) {
@@ -102,4 +91,3 @@ export class ValidationError extends BaseError {
     );
   }
 }
-

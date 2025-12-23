@@ -18,4 +18,3 @@ export function requireTenantId(): string {
   }
   return tenantId;
 }
-

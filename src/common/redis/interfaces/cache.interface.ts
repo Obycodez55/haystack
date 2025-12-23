@@ -20,4 +20,3 @@ export interface CacheResult<T> {
   value: T;
   cached: boolean;
 }
-

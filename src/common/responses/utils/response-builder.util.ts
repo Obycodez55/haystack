@@ -10,10 +10,7 @@ export class ResponseBuilder {
   /**
    * Build success response
    */
-  static success<T>(
-    data: T,
-    pagination?: PaginationMeta,
-  ): SuccessResponse<T> {
+  static success<T>(data: T, pagination?: PaginationMeta): SuccessResponse<T> {
     const requestContext = getRequestContext();
 
     return {
@@ -53,7 +50,15 @@ export class ResponseBuilder {
   static error(
     code: string,
     message: string,
-    type: 'payment_error' | 'provider_error' | 'validation_error' | 'authentication_error' | 'authorization_error' | 'rate_limit_error' | 'system_error' | 'client_error',
+    type:
+      | 'payment_error'
+      | 'provider_error'
+      | 'validation_error'
+      | 'authentication_error'
+      | 'authorization_error'
+      | 'rate_limit_error'
+      | 'system_error'
+      | 'client_error',
     details?: Record<string, any>,
     docUrl?: string,
   ): ErrorResponseStructure {
@@ -75,4 +80,3 @@ export class ResponseBuilder {
     };
   }
 }
-

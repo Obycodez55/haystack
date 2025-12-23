@@ -8,7 +8,10 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { CacheService } from '../services/cache.service';
-import { CACHE_INVALIDATE_PATTERN, CacheInvalidateOptions } from '../decorators/cache.decorator';
+import {
+  CACHE_INVALIDATE_PATTERN,
+  CacheInvalidateOptions,
+} from '../decorators/cache.decorator';
 import { LoggerService } from '@common';
 
 @Injectable()
@@ -21,10 +24,7 @@ export class CacheInvalidateInterceptor implements NestInterceptor {
     this.logger.setContext('CacheInvalidateInterceptor');
   }
 
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const handler = context.getHandler();
 
@@ -73,8 +73,9 @@ export class CacheInvalidateInterceptor implements NestInterceptor {
 
     if (isAsync) {
       // Fire and forget
-      invalidation().catch(error => {
-        const errorObj = error instanceof Error ? error : new Error(String(error));
+      invalidation().catch((error) => {
+        const errorObj =
+          error instanceof Error ? error : new Error(String(error));
         this.logger.error('Async cache invalidation failed', errorObj, {
           config,
         });
@@ -92,4 +93,3 @@ export class CacheInvalidateInterceptor implements NestInterceptor {
       .replace(/{apiKeyId}/g, request.apiKey?.id || '');
   }
 }
-

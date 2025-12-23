@@ -63,30 +63,25 @@ export class LoggingInterceptor implements NestInterceptor {
             responseSize,
             userAgent,
             ipAddress,
-          }
+          },
         );
       }),
       catchError((error) => {
         const duration = Date.now() - startTime;
 
         // Log error response
-        this.logger.error(
-          `Request failed: ${method} ${originalUrl}`,
-          error,
-          {
-            statusCode: error.status || error.statusCode || 500,
-            duration,
-            userAgent,
-            ipAddress,
-            body: filteredBody ? Object.keys(filteredBody) : [],
-            query: filteredQuery ? Object.keys(filteredQuery) : [],
-            params: filteredParams ? Object.keys(filteredParams) : [],
-          }
-        );
+        this.logger.error(`Request failed: ${method} ${originalUrl}`, error, {
+          statusCode: error.status || error.statusCode || 500,
+          duration,
+          userAgent,
+          ipAddress,
+          body: filteredBody ? Object.keys(filteredBody) : [],
+          query: filteredQuery ? Object.keys(filteredQuery) : [],
+          params: filteredParams ? Object.keys(filteredParams) : [],
+        });
 
         throw error;
-      })
+      }),
     );
   }
 }
-

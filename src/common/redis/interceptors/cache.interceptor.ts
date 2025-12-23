@@ -8,7 +8,11 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { CacheService } from '../services/cache.service';
-import { CACHE_KEY, CACHE_TTL, CACHE_NAMESPACE } from '../decorators/cache.decorator';
+import {
+  CACHE_KEY,
+  CACHE_TTL,
+  CACHE_NAMESPACE,
+} from '../decorators/cache.decorator';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
@@ -63,7 +67,7 @@ export class CacheInterceptor implements NestInterceptor {
   ): string {
     // Include tenant ID if available
     const tenantId = request.tenant?.id || request.user?.tenantId;
-    
+
     // Include relevant params
     const params = {
       id: request.params?.id,
@@ -78,4 +82,3 @@ export class CacheInterceptor implements NestInterceptor {
     return parts.join(':');
   }
 }
-

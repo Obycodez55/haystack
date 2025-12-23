@@ -66,46 +66,30 @@ export class PaymentError extends BaseError {
    * Static factory methods for common errors
    */
   static invalidAmount(amount: number, details?: Record<string, any>) {
-    return new PaymentError(
-      PaymentErrorCode.INVALID_AMOUNT,
-      {
-        field: 'amount',
-        value: amount,
-        constraint: 'must be positive and within limits',
-        ...details,
-      },
-    );
+    return new PaymentError(PaymentErrorCode.INVALID_AMOUNT, {
+      field: 'amount',
+      value: amount,
+      constraint: 'must be positive and within limits',
+      ...details,
+    });
   }
 
-  static invalidCurrency(
-    currency: string,
-    supportedCurrencies?: string[],
-  ) {
-    return new PaymentError(
-      PaymentErrorCode.INVALID_CURRENCY,
-      {
-        field: 'currency',
-        value: currency,
-        supportedCurrencies,
-      },
-    );
+  static invalidCurrency(currency: string, supportedCurrencies?: string[]) {
+    return new PaymentError(PaymentErrorCode.INVALID_CURRENCY, {
+      field: 'currency',
+      value: currency,
+      supportedCurrencies,
+    });
   }
 
   static paymentNotFound(paymentId: string) {
-    return new PaymentError(
-      PaymentErrorCode.PAYMENT_NOT_FOUND,
-      {
-        paymentId,
-        suggestion: 'Verify the payment ID and try again',
-      },
-    );
+    return new PaymentError(PaymentErrorCode.PAYMENT_NOT_FOUND, {
+      paymentId,
+      suggestion: 'Verify the payment ID and try again',
+    });
   }
 
-  static paymentFailed(
-    paymentId: string,
-    reason?: string,
-    cause?: Error,
-  ) {
+  static paymentFailed(paymentId: string, reason?: string, cause?: Error) {
     return new PaymentError(
       PaymentErrorCode.PAYMENT_FAILED,
       {
@@ -117,4 +101,3 @@ export class PaymentError extends BaseError {
     );
   }
 }
-

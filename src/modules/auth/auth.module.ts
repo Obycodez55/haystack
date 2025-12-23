@@ -13,4 +13,3 @@ import { TenantModule } from '../tenant/tenant.module';
   exports: [ApiKeyRepository, TypeOrmModule],
 })
 export class AuthModule {}
-

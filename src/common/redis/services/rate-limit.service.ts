@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RedisService } from '../redis.service';
 import { LoggerService } from '@common';
-import { RateLimitConfig, RateLimitResult } from '../interfaces/rate-limit.interface';
+import {
+  RateLimitConfig,
+  RateLimitResult,
+} from '../interfaces/rate-limit.interface';
 import { buildRateLimitKey } from '../utils/key-builder.util';
 import { calculateResetTime } from '../utils/window-calculator.util';
 import { RedisConfig } from '@config';
@@ -10,8 +13,8 @@ import { RedisConfig } from '@config';
 @Injectable()
 export class RateLimitService {
   private readonly defaultLimits: Map<string, RateLimitConfig> = new Map([
-    ['test', { requests: 100, window: 3600 }],      // 100/hour
-    ['live', { requests: 10000, window: 3600 }],    // 10k/hour
+    ['test', { requests: 100, window: 3600 }], // 100/hour
+    ['live', { requests: 10000, window: 3600 }], // 10k/hour
   ]);
 
   constructor(
@@ -20,7 +23,7 @@ export class RateLimitService {
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext('RateLimitService');
-    
+
     // Load defaults from config
     const redisConfig = this.configService.get<RedisConfig>('redis');
     if (redisConfig?.rateLimit?.defaults) {
@@ -38,7 +41,10 @@ export class RateLimitService {
     mode: 'test' | 'live',
     customLimit?: RateLimitConfig,
   ): Promise<RateLimitResult> {
-    const config = customLimit || this.defaultLimits.get(mode) || this.defaultLimits.get('test')!;
+    const config =
+      customLimit ||
+      this.defaultLimits.get(mode) ||
+      this.defaultLimits.get('test')!;
     const now = Date.now();
     const windowMs = config.window * 1000;
     const windowStart = now - windowMs;
@@ -96,7 +102,8 @@ export class RateLimitService {
       };
     } catch (error) {
       // Graceful degradation: allow request if Redis fails
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Rate limit check failed, allowing request', errorObj, {
         identifier,
         mode,
@@ -122,7 +129,10 @@ export class RateLimitService {
     mode: 'test' | 'live',
     customLimit?: RateLimitConfig,
   ): Promise<RateLimitResult> {
-    const config = customLimit || this.defaultLimits.get(mode) || this.defaultLimits.get('test')!;
+    const config =
+      customLimit ||
+      this.defaultLimits.get(mode) ||
+      this.defaultLimits.get('test')!;
     const now = Date.now();
     const windowMs = config.window * 1000;
     const windowStart = now - windowMs;
@@ -142,12 +152,14 @@ export class RateLimitService {
         limit: config.requests,
         remaining,
         reset: resetTime,
-        retryAfter: requestCount > config.requests 
-          ? Math.ceil((resetTime - now) / 1000) 
-          : 0,
+        retryAfter:
+          requestCount > config.requests
+            ? Math.ceil((resetTime - now) / 1000)
+            : 0,
       };
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Rate limit status check failed', errorObj, {
         identifier,
       });
@@ -166,15 +178,20 @@ export class RateLimitService {
   /**
    * Reset rate limit for a key (admin function)
    */
-  async resetRateLimit(identifier: string, mode: 'test' | 'live'): Promise<void> {
-    const config = this.defaultLimits.get(mode) || this.defaultLimits.get('test')!;
+  async resetRateLimit(
+    identifier: string,
+    mode: 'test' | 'live',
+  ): Promise<void> {
+    const config =
+      this.defaultLimits.get(mode) || this.defaultLimits.get('test')!;
     const key = buildRateLimitKey(identifier, mode, config.window);
-    
+
     try {
       await this.redis.client.del(key);
       this.logger.log('Rate limit reset', { identifier, mode });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to reset rate limit', errorObj, {
         identifier,
       });
@@ -182,4 +199,3 @@ export class RateLimitService {
     }
   }
 }
-

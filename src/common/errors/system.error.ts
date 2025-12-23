@@ -67,15 +67,11 @@ export class SystemError extends BaseError {
   }
 
   static serviceUnavailable(retryAfter?: number) {
-    return new SystemError(
-      SystemErrorCode.SERVICE_UNAVAILABLE,
-      {
-        retryAfter,
-        suggestion: retryAfter
-          ? `Please try again after ${retryAfter} seconds`
-          : 'Please try again later',
-      },
-    );
+    return new SystemError(SystemErrorCode.SERVICE_UNAVAILABLE, {
+      retryAfter,
+      suggestion: retryAfter
+        ? `Please try again after ${retryAfter} seconds`
+        : 'Please try again later',
+    });
   }
 }
-

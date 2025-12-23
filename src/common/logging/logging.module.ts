@@ -32,4 +32,3 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   exports: [LoggerService, CorrelationMiddleware],
 })
 export class LoggingModule {}
-

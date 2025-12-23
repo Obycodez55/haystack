@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   Repository,
   FindOptionsWhere,
@@ -14,7 +11,10 @@ import {
 } from 'typeorm';
 import { TenantScopedEntity } from '../entities/base.entity';
 import { LoggerService } from '@common';
-import { getCurrentTenantId, requireTenantId } from '@modules/tenant/utils/tenant-context.util';
+import {
+  getCurrentTenantId,
+  requireTenantId,
+} from '@modules/tenant/utils/tenant-context.util';
 
 /**
  * Base repository with automatic tenant filtering
@@ -70,10 +70,7 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
    * Find all entities for tenant
    * If tenantId is not provided, uses tenant from request context
    */
-  async findAll(
-    tenantId?: string,
-    options?: FindManyOptions<T>,
-  ): Promise<T[]> {
+  async findAll(tenantId?: string, options?: FindManyOptions<T>): Promise<T[]> {
     const effectiveTenantId = tenantId || requireTenantId();
     try {
       return this.repository.find({
@@ -84,7 +81,8 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
         } as FindOptionsWhere<T>,
       });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to find all entities', errorObj, {
         tenantId: effectiveTenantId,
       });
@@ -110,7 +108,8 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
         } as FindOptionsWhere<T>,
       });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to find one entity', errorObj, {
         tenantId: effectiveTenantId,
       });
@@ -131,7 +130,8 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
       } as T);
       return this.repository.save(newEntity);
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to create entity', errorObj, {
         tenantId: effectiveTenantId,
       });
@@ -156,7 +156,8 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
       );
       return this.findByIdOrFail(id, effectiveTenantId);
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to update entity', errorObj, {
         entityId: id,
         tenantId: effectiveTenantId,
@@ -172,9 +173,13 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
   async delete(id: string, tenantId?: string): Promise<DeleteResult> {
     const effectiveTenantId = tenantId || requireTenantId();
     try {
-      return this.repository.delete({ id, tenantId: effectiveTenantId } as FindOptionsWhere<T>);
+      return this.repository.delete({
+        id,
+        tenantId: effectiveTenantId,
+      } as FindOptionsWhere<T>);
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to delete entity', errorObj, {
         entityId: id,
         tenantId: effectiveTenantId,
@@ -187,7 +192,10 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
    * Count entities for tenant
    * If tenantId is not provided, uses tenant from request context
    */
-  async count(tenantId?: string, options?: FindManyOptions<T>): Promise<number> {
+  async count(
+    tenantId?: string,
+    options?: FindManyOptions<T>,
+  ): Promise<number> {
     const effectiveTenantId = tenantId || requireTenantId();
     try {
       return this.repository.count({
@@ -198,7 +206,8 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
         } as FindOptionsWhere<T>,
       });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to count entities', errorObj, {
         tenantId: effectiveTenantId,
       });
@@ -218,7 +227,8 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
       });
       return count > 0;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to check entity existence', errorObj, {
         entityId: id,
         tenantId: effectiveTenantId,
@@ -227,4 +237,3 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
     }
   }
 }
-

@@ -57,12 +57,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         exceptionResponse,
       );
 
-      const errorResponse = ResponseBuilder.error(
-        code,
-        message,
-        type,
-        details,
-      );
+      const errorResponse = ResponseBuilder.error(code, message, type, details);
 
       this.logger.error(
         `HTTP Exception: ${request.method} ${request.url}`,
@@ -181,4 +176,3 @@ export class HttpExceptionFilter implements ExceptionFilter {
     return 'client_error';
   }
 }
-

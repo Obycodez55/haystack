@@ -12,4 +12,3 @@ import { HealthService } from './health.service';
   exports: [HealthService],
 })
 export class HealthModule {}
-

@@ -25,4 +25,3 @@ export enum ErrorCategory {
   SYSTEM = 'system',
   BUSINESS_LOGIC = 'business_logic',
 }
-

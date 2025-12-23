@@ -52,13 +52,10 @@ export class NetworkError extends BaseError {
    * Factory methods
    */
   static timeout(timeoutMs?: number) {
-    return new NetworkError(
-      NetworkErrorCode.TIMEOUT,
-      {
-        timeoutMs,
-        suggestion: 'Please try again after checking your connection',
-      },
-    );
+    return new NetworkError(NetworkErrorCode.TIMEOUT, {
+      timeoutMs,
+      suggestion: 'Please try again after checking your connection',
+    });
   }
 
   static connectionError(cause?: Error) {
@@ -71,4 +68,3 @@ export class NetworkError extends BaseError {
     );
   }
 }
-

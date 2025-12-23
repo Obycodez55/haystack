@@ -70,4 +70,3 @@ export type ErrorType =
   | 'rate_limit_error'
   | 'system_error'
   | 'client_error';
-

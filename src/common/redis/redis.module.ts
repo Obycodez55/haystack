@@ -36,4 +36,3 @@ import { CacheInvalidateInterceptor } from './interceptors/cache-invalidate.inte
   exports: [RedisService, RateLimitService, CacheService],
 })
 export class RedisModule {}
-

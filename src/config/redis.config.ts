@@ -40,7 +40,10 @@ export default registerAs('redis', (): RedisConfig => {
   };
 
   const defaultRateLimitLive: RateLimitConfig = {
-    requests: parseInt(process.env.REDIS_RATE_LIMIT_LIVE_REQUESTS || '10000', 10),
+    requests: parseInt(
+      process.env.REDIS_RATE_LIMIT_LIVE_REQUESTS || '10000',
+      10,
+    ),
     window: parseInt(process.env.REDIS_RATE_LIMIT_LIVE_WINDOW || '3600', 10),
     includeHeaders: true,
   };
@@ -76,4 +79,3 @@ export default registerAs('redis', (): RedisConfig => {
     },
   };
 });
-

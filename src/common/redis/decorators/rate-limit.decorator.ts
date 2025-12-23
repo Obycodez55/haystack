@@ -5,7 +5,7 @@ export const RATE_LIMIT_KEY = 'rateLimit';
 
 /**
  * Decorator to configure rate limiting for a route
- * 
+ *
  * @example
  * @RateLimit({ requests: 100, window: 3600 }) // 100 requests per hour
  * @Get('payments')
@@ -13,4 +13,3 @@ export const RATE_LIMIT_KEY = 'rateLimit';
  */
 export const RateLimit = (config: RateLimitConfig) =>
   SetMetadata(RATE_LIMIT_KEY, config);
-

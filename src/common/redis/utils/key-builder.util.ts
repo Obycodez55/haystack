@@ -45,4 +45,3 @@ export function buildIdempotencyKey(
 export function buildLockKey(resourceType: string, resourceId: string): string {
   return buildKey(['lock', resourceType, resourceId]);
 }
-

@@ -20,7 +20,7 @@ import { LoggerService } from './logging/services/logger.service';
  * - Error handling (exception filters)
  * - Response transformation (interceptors)
  * - API versioning (guards)
- * 
+ *
  * This module should be imported in AppModule
  */
 @Global()
@@ -56,4 +56,3 @@ import { LoggerService } from './logging/services/logger.service';
   ],
 })
 export class CommonModule {}
-

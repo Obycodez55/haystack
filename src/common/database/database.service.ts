@@ -70,7 +70,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       // TypeORM uses pg-pool internally, but we can't access it directly
       // This is a placeholder - actual implementation depends on TypeORM version
       const pool = (this.dataSource.driver as any).master?.pool;
-      
+
       if (pool) {
         return {
           total: pool.totalCount || 0,
@@ -115,9 +115,9 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         this.logger.log('Database connections closed');
       }
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Error closing database connections', errorObj);
     }
   }
 }
-

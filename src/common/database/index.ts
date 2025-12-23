@@ -9,4 +9,3 @@ export * from './database.service';
 
 // Module
 export * from './database.module';
-

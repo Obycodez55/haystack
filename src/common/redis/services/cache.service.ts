@@ -30,7 +30,8 @@ export class CacheService {
 
       return JSON.parse(value) as T;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Cache get failed', errorObj, {
         key: fullKey,
       });
@@ -64,7 +65,8 @@ export class CacheService {
 
       return true;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Cache set failed', errorObj, {
         key: fullKey,
       });
@@ -82,7 +84,8 @@ export class CacheService {
       await this.redis.client.del(fullKey);
       return true;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Cache delete failed', errorObj, {
         key: fullKey,
       });
@@ -105,7 +108,8 @@ export class CacheService {
       await this.redis.client.del(...keys);
       return keys.length;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Cache delete pattern failed', errorObj, {
         pattern: fullPattern,
       });
@@ -190,10 +194,10 @@ export class CacheService {
   ): Promise<T> {
     // Update source
     const updated = await updater();
-    
+
     // Update cache immediately
     await this.set(key, updated, options);
-    
+
     return updated;
   }
 
@@ -211,20 +215,21 @@ export class CacheService {
     try {
       // Get all keys with this tag
       const keys = await this.redis.client.smembers(`tag:${tag}`);
-      
+
       if (keys.length === 0) {
         return 0;
       }
 
       // Delete all keys
       await this.redis.client.del(...keys);
-      
+
       // Delete tag set
       await this.redis.client.del(`tag:${tag}`);
 
       return keys.length;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Cache invalidate by tag failed', errorObj, {
         tag,
       });
@@ -246,7 +251,8 @@ export class CacheService {
         await this.redis.client.expire(`tag:${tag}`, ttl);
       }
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to set cache tags', errorObj, {
         key,
         tags,
@@ -279,7 +285,8 @@ export class CacheService {
     try {
       await this.redis.client.del(key);
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to release lock', errorObj, {
         key,
       });
@@ -290,7 +297,7 @@ export class CacheService {
    * Sleep utility
    */
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   /**
@@ -312,4 +319,3 @@ export class CacheService {
     }
   }
 }
-

@@ -31,4 +31,3 @@ export abstract class TenantScopedEntity extends BaseEntity {
   @Column('uuid', { name: 'tenant_id' })
   tenantId: string;
 }
-

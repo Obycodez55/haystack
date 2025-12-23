@@ -6,7 +6,7 @@ export const CACHE_NAMESPACE = 'cache:namespace';
 
 /**
  * Enable caching for a route
- * 
+ *
  * @example
  * @Cache('payment', { ttl: 300, namespace: 'payment' })
  * @Get('payments/:id')
@@ -39,17 +39,17 @@ export interface CacheInvalidateOptions {
    * Examples: 'payment:*', 'payment:{id}', 'tenant:*'
    */
   pattern: string;
-  
+
   /**
    * Namespace for the cache
    */
   namespace?: string;
-  
+
   /**
    * Cache tags to invalidate
    */
   tags?: string[];
-  
+
   /**
    * Whether to invalidate immediately or async
    */
@@ -58,12 +58,12 @@ export interface CacheInvalidateOptions {
 
 /**
  * Invalidate cache after method execution
- * 
+ *
  * @example
  * @CacheInvalidate({ pattern: 'payment:{id}', namespace: 'payment' })
  * @Patch('payments/:id')
  * async updatePayment(@Param('id') id: string) { ... }
- * 
+ *
  * @example
  * @CacheInvalidate({ tags: ['payments', 'tenant:{tenantId}'] })
  * @Post('payments')
@@ -72,4 +72,3 @@ export interface CacheInvalidateOptions {
 export const CacheInvalidate = (options: CacheInvalidateOptions) => {
   return SetMetadata(CACHE_INVALIDATE_PATTERN, options);
 };
-

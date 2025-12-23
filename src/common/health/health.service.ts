@@ -67,4 +67,3 @@ export class HealthService extends HealthIndicator {
     }
   }
 }
-

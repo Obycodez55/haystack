@@ -56,4 +56,3 @@ export class TestLogger extends LoggerService {
     return this.logs.filter((log) => log.level === level);
   }
 }
-

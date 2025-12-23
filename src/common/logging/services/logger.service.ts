@@ -1,4 +1,8 @@
-import { Injectable, LoggerService as NestLoggerService, Scope } from '@nestjs/common';
+import {
+  Injectable,
+  LoggerService as NestLoggerService,
+  Scope,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import pino from 'pino';
 import {
@@ -7,7 +11,10 @@ import {
   LogLevel,
   BusinessEventType,
 } from '../types';
-import { asyncLocalStorage, getRequestContext } from '../middleware/correlation.middleware';
+import {
+  asyncLocalStorage,
+  getRequestContext,
+} from '../middleware/correlation.middleware';
 import { RequestContext } from '../types/log-context.types';
 import { PaymentDataFilter } from '../filters';
 import { ErrorFormatter } from '../utils/error-formatter.util';
@@ -56,7 +63,7 @@ export class LoggerService implements NestLoggerService {
     level: string,
     message: string,
     data?: any,
-    error?: Error | any
+    error?: Error | any,
   ): StructuredLogEntry {
     const requestContext = getRequestContext();
     const timestamp = new Date().toISOString();
@@ -116,12 +123,7 @@ export class LoggerService implements NestLoggerService {
    */
   error(message: string, error?: Error | string, data?: any) {
     const errorObj = typeof error === 'string' ? new Error(error) : error;
-    const entry = this.buildLogEntry(
-      LogLevel.ERROR,
-      message,
-      data,
-      errorObj
-    );
+    const entry = this.buildLogEntry(LogLevel.ERROR, message, data, errorObj);
     this.logger.error(entry, message);
   }
 
@@ -157,12 +159,12 @@ export class LoggerService implements NestLoggerService {
     entity: string,
     entityId: string,
     action: string,
-    data?: any
+    data?: any,
   ) {
     const entry = this.buildLogEntry(
       LogLevel.INFO,
       `Business Event: ${event}`,
-      data
+      data,
     );
     entry.business = {
       event,
@@ -181,7 +183,7 @@ export class LoggerService implements NestLoggerService {
     const entry = this.buildLogEntry(
       LogLevel.INFO,
       `Performance: ${operation}`,
-      data
+      data,
     );
     entry.performance = {
       duration,
@@ -198,7 +200,7 @@ export class LoggerService implements NestLoggerService {
     url: string,
     statusCode: number,
     duration: number,
-    data?: any
+    data?: any,
   ) {
     // Sample high-volume endpoints
     const samplingRate = LogSampler.getSamplingRate(LogLevel.INFO, url);
@@ -209,7 +211,7 @@ export class LoggerService implements NestLoggerService {
     const entry = this.buildLogEntry(
       LogLevel.INFO,
       `${method} ${url} - ${statusCode}`,
-      data
+      data,
     );
     entry.context.method = method;
     entry.context.endpoint = url;
@@ -223,7 +225,12 @@ export class LoggerService implements NestLoggerService {
     };
     entry.performance = { duration };
 
-    const level = statusCode >= 500 ? LogLevel.ERROR : statusCode >= 400 ? LogLevel.WARN : LogLevel.INFO;
+    const level =
+      statusCode >= 500
+        ? LogLevel.ERROR
+        : statusCode >= 400
+          ? LogLevel.WARN
+          : LogLevel.INFO;
     this.logger[level](entry, `${method} ${url} - ${statusCode}`);
   }
 
@@ -234,12 +241,12 @@ export class LoggerService implements NestLoggerService {
     event: BusinessEventType,
     paymentId: string,
     action: string,
-    data?: any
+    data?: any,
   ) {
     const entry = this.buildLogEntry(
       LogLevel.INFO,
       `Payment Event: ${event}`,
-      data
+      data,
     );
     entry.context.paymentId = paymentId;
     entry.business = {
@@ -259,12 +266,12 @@ export class LoggerService implements NestLoggerService {
     provider: string,
     event: string,
     transactionId?: string,
-    data?: any
+    data?: any,
   ) {
     const entry = this.buildLogEntry(
       LogLevel.INFO,
       `Provider Event: ${provider} - ${event}`,
-      data
+      data,
     );
     entry.context.provider = provider;
     entry.context.transactionId = transactionId;
@@ -278,4 +285,3 @@ export class LoggerService implements NestLoggerService {
     this.logger.info(entry, `Provider Event: ${provider} - ${event}`);
   }
 }
-

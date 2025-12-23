@@ -42,4 +42,3 @@ export interface RateLimitResult {
   retryAfter: number; // Seconds until reset
   fallback?: boolean; // True if Redis failed and fallback was used
 }
-

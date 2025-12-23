@@ -12,7 +12,7 @@ import { DatabaseService } from './database.service';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const dbConfig = configService.get<DatabaseConfig>('database');
-        
+
         if (!dbConfig) {
           throw new Error('Database configuration is missing');
         }
@@ -52,4 +52,3 @@ import { DatabaseService } from './database.service';
   exports: [DatabaseService, TypeOrmModule],
 })
 export class DatabaseModule {}
-

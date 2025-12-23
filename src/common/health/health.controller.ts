@@ -17,7 +17,11 @@ export class HealthController {
    */
   @Get()
   @HealthCheck()
-  @ApiOperation({ summary: 'Health check', description: 'Comprehensive health check including API, database, and Redis' })
+  @ApiOperation({
+    summary: 'Health check',
+    description:
+      'Comprehensive health check including API, database, and Redis',
+  })
   @ApiResponse({ status: 200, description: 'Service is healthy' })
   @ApiResponse({ status: 503, description: 'Service is unhealthy' })
   check() {
@@ -34,12 +38,13 @@ export class HealthController {
    */
   @Get('live')
   @HealthCheck()
-  @ApiOperation({ summary: 'Liveness probe', description: 'Kubernetes liveness probe endpoint' })
+  @ApiOperation({
+    summary: 'Liveness probe',
+    description: 'Kubernetes liveness probe endpoint',
+  })
   @ApiResponse({ status: 200, description: 'Service is alive' })
   liveness() {
-    return this.health.check([
-      () => this.healthService.isHealthy('api'),
-    ]);
+    return this.health.check([() => this.healthService.isHealthy('api')]);
   }
 
   /**
@@ -49,7 +54,11 @@ export class HealthController {
    */
   @Get('ready')
   @HealthCheck()
-  @ApiOperation({ summary: 'Readiness probe', description: 'Kubernetes readiness probe endpoint including database and Redis checks' })
+  @ApiOperation({
+    summary: 'Readiness probe',
+    description:
+      'Kubernetes readiness probe endpoint including database and Redis checks',
+  })
   @ApiResponse({ status: 200, description: 'Service is ready' })
   @ApiResponse({ status: 503, description: 'Service is not ready' })
   readiness() {
@@ -60,4 +69,3 @@ export class HealthController {
     ]);
   }
 }
-

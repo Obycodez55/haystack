@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { ApiKeyRepository } from '@modules/auth/repositories/api-key.repository';
 import { extractApiKeyFromHeader } from '@modules/auth/utils/api-key-hash.util';
@@ -27,7 +31,9 @@ export class TenantMiddleware implements NestMiddleware {
 
     if (!existingContext) {
       // CorrelationMiddleware should have run first
-      this.logger.warn('Request context not found. Ensure CorrelationMiddleware runs before TenantMiddleware');
+      this.logger.warn(
+        'Request context not found. Ensure CorrelationMiddleware runs before TenantMiddleware',
+      );
       return next();
     }
 
@@ -113,7 +119,10 @@ export class TenantMiddleware implements NestMiddleware {
         next();
       });
     } catch (error) {
-      if (error instanceof AuthenticationError || error instanceof UnauthorizedException) {
+      if (
+        error instanceof AuthenticationError ||
+        error instanceof UnauthorizedException
+      ) {
         throw error;
       }
 
@@ -122,4 +131,3 @@ export class TenantMiddleware implements NestMiddleware {
     }
   }
 }
-

@@ -88,9 +88,15 @@ export class TenantRepository {
   /**
    * Update tenant
    */
-  async update(id: string, updates: Partial<TenantEntity>): Promise<TenantEntity> {
+  async update(
+    id: string,
+    updates: Partial<TenantEntity>,
+  ): Promise<TenantEntity> {
     try {
-      await this.repository.update({ id } as FindOptionsWhere<TenantEntity>, updates);
+      await this.repository.update(
+        { id } as FindOptionsWhere<TenantEntity>,
+        updates,
+      );
       const updated = await this.findById(id);
       if (!updated) {
         throw new Error(`Tenant with ID ${id} not found`);
@@ -106,4 +112,3 @@ export class TenantRepository {
     }
   }
 }
-

@@ -45,7 +45,8 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
         relations: ['tenant'],
       });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to find API keys by prefix', errorObj, {
         keyPrefix,
       });
@@ -66,10 +67,10 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
       }
 
       const keyPrefix = prefixMatch[0];
-      
+
       // Find all active API keys with this prefix
       const candidates = await this.findByKeyPrefix(keyPrefix);
-      
+
       if (candidates.length === 0) {
         return null;
       }
@@ -84,7 +85,8 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
 
       return null;
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to validate API key', errorObj);
       return null;
     }
@@ -107,7 +109,8 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
         order: { createdAt: 'DESC' },
       });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to find active API keys', errorObj, {
         tenantId,
         mode,
@@ -125,15 +128,13 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
     ipAddress?: string,
   ): Promise<void> {
     try {
-      await this.repository.update(
-        { id, tenantId } as any,
-        {
-          lastUsedAt: new Date(),
-          lastUsedIp: ipAddress,
-        },
-      );
+      await this.repository.update({ id, tenantId } as any, {
+        lastUsedAt: new Date(),
+        lastUsedIp: ipAddress,
+      });
     } catch (error) {
-      const errorObj = error instanceof Error ? error : new Error(String(error));
+      const errorObj =
+        error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to update last used', errorObj, {
         apiKeyId: id,
         tenantId,
@@ -142,4 +143,3 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
     }
   }
 }
-

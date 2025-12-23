@@ -15,7 +15,10 @@ export class AppController {
 
   @Get()
   @Version('1')
-  @ApiOperation({ summary: 'Get API status', description: 'Returns a simple hello message indicating the API is running' })
+  @ApiOperation({
+    summary: 'Get API status',
+    description: 'Returns a simple hello message indicating the API is running',
+  })
   @ApiResponse({ status: 200, description: 'API is running successfully' })
   getHello(): string {
     this.logger.log('GET / endpoint called');

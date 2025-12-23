@@ -10,7 +10,7 @@ import { getRequestContext } from '@common/logging/middleware/correlation.middle
 export const Tenant = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<Request>();
-    
+
     // First try to get from request object (set by TenantMiddleware)
     const tenant = (request as any).tenant;
     if (tenant) {
@@ -36,7 +36,7 @@ export const Tenant = createParamDecorator(
 export const TenantId = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<Request>();
-    
+
     // First try to get from request object
     const tenant = (request as any).tenant;
     if (tenant?.id) {
@@ -48,4 +48,3 @@ export const TenantId = createParamDecorator(
     return requestContext?.tenantId || null;
   },
 );
-

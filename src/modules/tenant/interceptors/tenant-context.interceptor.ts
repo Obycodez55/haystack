@@ -35,7 +35,9 @@ export class TenantContextInterceptor implements NestInterceptor {
       try {
         // Set tenant context for RLS policies
         // This must be called before any database queries
-        await this.dataSource.query('SELECT set_tenant_context($1)', [tenantId]);
+        await this.dataSource.query('SELECT set_tenant_context($1)', [
+          tenantId,
+        ]);
         this.logger.debug('Tenant context set for RLS', { tenantId });
       } catch (error) {
         this.logger.error('Failed to set tenant context for RLS', error, {
@@ -59,11 +61,13 @@ export class TenantContextInterceptor implements NestInterceptor {
             .catch((error) => {
               // Silently ignore errors when clearing tenant context
               // This is cleanup code and shouldn't affect request handling
-              this.logger.debug('Failed to clear tenant context (non-critical)', error);
+              this.logger.debug(
+                'Failed to clear tenant context (non-critical)',
+                error,
+              );
             });
         }
       }),
     );
   }
 }
-

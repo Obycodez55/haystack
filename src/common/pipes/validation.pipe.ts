@@ -1,8 +1,4 @@
-import {
-  PipeTransform,
-  Injectable,
-  ArgumentMetadata,
-} from '@nestjs/common';
+import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ValidationError } from '@errors';
@@ -12,14 +8,16 @@ import { ValidationError } from '@errors';
  */
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
-  constructor(private readonly options?: {
-    whitelist?: boolean;
-    forbidNonWhitelisted?: boolean;
-    transform?: boolean;
-    transformOptions?: {
-      enableImplicitConversion?: boolean;
-    };
-  }) {}
+  constructor(
+    private readonly options?: {
+      whitelist?: boolean;
+      forbidNonWhitelisted?: boolean;
+      transform?: boolean;
+      transformOptions?: {
+        enableImplicitConversion?: boolean;
+      };
+    },
+  ) {}
 
   async transform(value: any, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
@@ -32,7 +30,8 @@ export class ValidationPipe implements PipeTransform<any> {
       forbidNonWhitelisted: this.options?.forbidNonWhitelisted ?? true,
       transform: this.options?.transform ?? true,
       transformOptions: {
-        enableImplicitConversion: this.options?.transformOptions?.enableImplicitConversion ?? true,
+        enableImplicitConversion:
+          this.options?.transformOptions?.enableImplicitConversion ?? true,
       },
     });
 
@@ -94,4 +93,3 @@ export class ValidationPipe implements PipeTransform<any> {
     return formatted;
   }
 }
-

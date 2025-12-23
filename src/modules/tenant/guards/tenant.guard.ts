@@ -19,9 +19,17 @@ export const IS_TENANT_OPTIONAL = 'isTenantOptional';
  * Use this for endpoints that work with or without tenant context
  */
 export const OptionalTenant = () => {
-  return (target: any, propertyKey?: string, descriptor?: PropertyDescriptor) => {
+  return (
+    target: any,
+    propertyKey?: string,
+    descriptor?: PropertyDescriptor,
+  ) => {
     const reflector = new Reflector();
-    Reflect.defineMetadata(IS_TENANT_OPTIONAL, true, descriptor?.value || target);
+    Reflect.defineMetadata(
+      IS_TENANT_OPTIONAL,
+      true,
+      descriptor?.value || target,
+    );
   };
 };
 
@@ -35,10 +43,10 @@ export class TenantGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
-    const isOptional = this.reflector.getAllAndOverride<boolean>(IS_TENANT_OPTIONAL, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const isOptional = this.reflector.getAllAndOverride<boolean>(
+      IS_TENANT_OPTIONAL,
+      [context.getHandler(), context.getClass()],
+    );
 
     // Check if tenant is set on request (from TenantMiddleware)
     const tenant = (request as any).tenant;
@@ -65,4 +73,3 @@ export class TenantGuard implements CanActivate {
     return true;
   }
 }
-

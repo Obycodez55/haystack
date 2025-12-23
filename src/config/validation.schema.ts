@@ -22,7 +22,9 @@ export const validationSchema = Joi.object({
   DATABASE_PASSWORD: Joi.string().default('postgres'),
   DATABASE_NAME: Joi.string().default('haystack'),
   DATABASE_SSL: Joi.string().valid('true', 'false').default('false'),
-  DATABASE_SSL_REJECT_UNAUTHORIZED: Joi.string().valid('true', 'false').optional(),
+  DATABASE_SSL_REJECT_UNAUTHORIZED: Joi.string()
+    .valid('true', 'false')
+    .optional(),
   DATABASE_SSL_CA: Joi.string().optional(),
   DATABASE_SSL_CERT: Joi.string().optional(),
   DATABASE_SSL_KEY: Joi.string().optional(),
@@ -36,7 +38,9 @@ export const validationSchema = Joi.object({
   DATABASE_ACQUIRE_TIMEOUT: Joi.number().default(60000),
   DATABASE_SYNCHRONIZE: Joi.string().valid('true', 'false').default('false'),
   DATABASE_LOGGING: Joi.string().optional(),
-  DATABASE_ENABLE_QUERY_LOGGING: Joi.string().valid('true', 'false').default('false'),
+  DATABASE_ENABLE_QUERY_LOGGING: Joi.string()
+    .valid('true', 'false')
+    .default('false'),
 
   // Redis
   REDIS_HOST: Joi.string().default('localhost'),
@@ -78,4 +82,3 @@ export const validationSchema = Joi.object({
   // Encryption (for provider credentials)
   ENCRYPTION_KEY: Joi.string().optional(),
 });
-

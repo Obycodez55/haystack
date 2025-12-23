@@ -30,4 +30,3 @@ export * from './utils/window-calculator.util';
 
 // Config
 export * from './config/cache-ttl.config';
-

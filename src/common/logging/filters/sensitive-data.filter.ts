@@ -86,10 +86,14 @@ export class SensitiveDataFilter {
       const lowerKey = key.toLowerCase();
 
       // Check for sensitive fields (case-insensitive, partial match)
-      if (SENSITIVE_FIELDS.some((field) => lowerKey.includes(field.toLowerCase()))) {
+      if (
+        SENSITIVE_FIELDS.some((field) => lowerKey.includes(field.toLowerCase()))
+      ) {
         obj[key] = '[REDACTED]';
       } else if (
-        PARTIAL_MASK_FIELDS.some((field) => lowerKey.includes(field.toLowerCase()))
+        PARTIAL_MASK_FIELDS.some((field) =>
+          lowerKey.includes(field.toLowerCase()),
+        )
       ) {
         obj[key] = this.partialMask(obj[key]);
       } else if (typeof obj[key] === 'object' && obj[key] !== null) {
@@ -110,9 +114,8 @@ export class SensitiveDataFilter {
     if (value.includes('@')) {
       const [user, domain] = value.split('@');
       if (user && domain) {
-        const maskedUser = user.length > 2 
-          ? `${user.substring(0, 2)}***` 
-          : '***';
+        const maskedUser =
+          user.length > 2 ? `${user.substring(0, 2)}***` : '***';
         return `${maskedUser}@${domain}`;
       }
     }
@@ -126,4 +129,3 @@ export class SensitiveDataFilter {
     return '***';
   }
 }
-

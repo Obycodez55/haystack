@@ -18,4 +18,3 @@ export * from './utils';
 
 // Module
 export * from './logging.module';
-

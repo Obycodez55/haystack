@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 import { TenantScopedEntity } from '../entities/base.entity';
 import { LoggerService } from '@common';
+import { getCurrentTenantId, requireTenantId } from '@modules/tenant/utils/tenant-context.util';
 
 /**
  * Base repository with automatic tenant filtering
@@ -35,17 +36,19 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Find entity by ID and tenant
+   * If tenantId is not provided, uses tenant from request context
    */
-  async findById(id: string, tenantId: string): Promise<T | null> {
+  async findById(id: string, tenantId?: string): Promise<T | null> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       return this.repository.findOne({
-        where: { id, tenantId } as FindOptionsWhere<T>,
+        where: { id, tenantId: effectiveTenantId } as FindOptionsWhere<T>,
       });
     } catch (error) {
       this.logger.error(
         'Failed to find entity by ID',
         error instanceof Error ? error : new Error(String(error)),
-        { entityId: id, tenantId },
+        { entityId: id, tenantId: effectiveTenantId },
       );
       throw error;
     }
@@ -53,8 +56,9 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Find entity by ID and tenant or throw
+   * If tenantId is not provided, uses tenant from request context
    */
-  async findByIdOrFail(id: string, tenantId: string): Promise<T> {
+  async findByIdOrFail(id: string, tenantId?: string): Promise<T> {
     const entity = await this.findById(id, tenantId);
     if (!entity) {
       throw new NotFoundException(`Entity with ID ${id} not found`);
@@ -64,23 +68,25 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Find all entities for tenant
+   * If tenantId is not provided, uses tenant from request context
    */
   async findAll(
-    tenantId: string,
+    tenantId?: string,
     options?: FindManyOptions<T>,
   ): Promise<T[]> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       return this.repository.find({
         ...options,
         where: {
           ...options?.where,
-          ...this.getTenantFilter(tenantId),
+          ...this.getTenantFilter(effectiveTenantId),
         } as FindOptionsWhere<T>,
       });
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to find all entities', errorObj, {
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }
@@ -88,23 +94,25 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Find one entity for tenant
+   * If tenantId is not provided, uses tenant from request context
    */
   async findOne(
-    tenantId: string,
+    tenantId?: string,
     options?: FindOneOptions<T>,
   ): Promise<T | null> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       return this.repository.findOne({
         ...options,
         where: {
           ...options?.where,
-          ...this.getTenantFilter(tenantId),
+          ...this.getTenantFilter(effectiveTenantId),
         } as FindOptionsWhere<T>,
       });
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to find one entity', errorObj, {
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }
@@ -112,18 +120,20 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Create new entity
+   * If tenantId is not provided, uses tenant from request context
    */
-  async create(entity: DeepPartial<T>, tenantId: string): Promise<T> {
+  async create(entity: DeepPartial<T>, tenantId?: string): Promise<T> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       const newEntity = this.repository.create({
         ...entity,
-        tenantId,
+        tenantId: effectiveTenantId,
       } as T);
       return this.repository.save(newEntity);
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to create entity', errorObj, {
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }
@@ -131,23 +141,25 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Update entity
+   * If tenantId is not provided, uses tenant from request context
    */
   async update(
     id: string,
-    tenantId: string,
+    tenantId: string | undefined,
     updates: DeepPartial<T>,
   ): Promise<T> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       await this.repository.update(
-        { id, tenantId } as FindOptionsWhere<T>,
+        { id, tenantId: effectiveTenantId } as FindOptionsWhere<T>,
         updates as QueryDeepPartialEntity<T>,
       );
-      return this.findByIdOrFail(id, tenantId);
+      return this.findByIdOrFail(id, effectiveTenantId);
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to update entity', errorObj, {
         entityId: id,
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }
@@ -155,15 +167,17 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Delete entity
+   * If tenantId is not provided, uses tenant from request context
    */
-  async delete(id: string, tenantId: string): Promise<DeleteResult> {
+  async delete(id: string, tenantId?: string): Promise<DeleteResult> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
-      return this.repository.delete({ id, tenantId } as FindOptionsWhere<T>);
+      return this.repository.delete({ id, tenantId: effectiveTenantId } as FindOptionsWhere<T>);
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to delete entity', errorObj, {
         entityId: id,
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }
@@ -171,20 +185,22 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Count entities for tenant
+   * If tenantId is not provided, uses tenant from request context
    */
-  async count(tenantId: string, options?: FindManyOptions<T>): Promise<number> {
+  async count(tenantId?: string, options?: FindManyOptions<T>): Promise<number> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       return this.repository.count({
         ...options,
         where: {
           ...options?.where,
-          ...this.getTenantFilter(tenantId),
+          ...this.getTenantFilter(effectiveTenantId),
         } as FindOptionsWhere<T>,
       });
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to count entities', errorObj, {
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }
@@ -192,18 +208,20 @@ export abstract class BaseRepository<T extends TenantScopedEntity> {
 
   /**
    * Check if entity exists
+   * If tenantId is not provided, uses tenant from request context
    */
-  async exists(id: string, tenantId: string): Promise<boolean> {
+  async exists(id: string, tenantId?: string): Promise<boolean> {
+    const effectiveTenantId = tenantId || requireTenantId();
     try {
       const count = await this.repository.count({
-        where: { id, tenantId } as FindOptionsWhere<T>,
+        where: { id, tenantId: effectiveTenantId } as FindOptionsWhere<T>,
       });
       return count > 0;
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Failed to check entity existence', errorObj, {
         entityId: id,
-        tenantId,
+        tenantId: effectiveTenantId,
       });
       throw error;
     }

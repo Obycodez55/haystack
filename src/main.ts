@@ -136,20 +136,38 @@ async function bootstrap() {
   // Request timeout (30 seconds default)
   const timeout = parseInt(process.env.REQUEST_TIMEOUT || '30000', 10);
   app.use((req, res, next) => {
+    // Set request timeout
+    // Note: req.setTimeout() is a Node.js socket method, not a timer
+    // It automatically cleans up when the request completes
     req.setTimeout(timeout, () => {
-      res.status(408).json({
-        success: false,
-        error: {
-          code: 'request_timeout',
-          message: 'Request timeout. Please try again.',
-          type: 'client_error',
-        },
-        meta: {
-          requestId: req.headers['x-request-id'] || 'unknown',
-          timestamp: new Date().toISOString(),
-        },
-      });
+      // Only send timeout response if response hasn't been sent
+      if (!res.headersSent) {
+        res.status(408).json({
+          success: false,
+          error: {
+            code: 'request_timeout',
+            message: 'Request timeout. Please try again.',
+            type: 'client_error',
+          },
+          meta: {
+            requestId: req.headers['x-request-id'] || 'unknown',
+            timestamp: new Date().toISOString(),
+          },
+        });
+      }
     });
+
+    // Ensure cleanup on request completion
+    // The socket timeout is automatically cleared when the request finishes
+    // but we add explicit handlers for safety
+    const cleanup = () => {
+      // Socket timeout is automatically managed by Node.js
+      // No explicit cleanup needed for req.setTimeout()
+    };
+
+    res.once('finish', cleanup);
+    res.once('close', cleanup);
+
     next();
   });
 
@@ -239,12 +257,34 @@ async function bootstrap() {
   }
 
   // Graceful shutdown
+  let shutdownTimeout: NodeJS.Timeout | null = null;
+  let isShuttingDown = false;
+
   const gracefulShutdown = async (signal: string) => {
+    // Prevent multiple shutdown attempts
+    if (isShuttingDown) {
+      logger.warn('Shutdown already in progress, ignoring signal', { signal });
+      return;
+    }
+
+    isShuttingDown = true;
     logger.warn(`Received ${signal}, starting graceful shutdown...`);
 
     try {
       // Give ongoing requests time to complete (5 seconds)
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      const shutdownPromise = new Promise<void>((resolve) => {
+        shutdownTimeout = setTimeout(() => {
+          resolve();
+        }, 5000);
+      });
+
+      await shutdownPromise;
+
+      // Clear the timeout (in case we finish early)
+      if (shutdownTimeout) {
+        clearTimeout(shutdownTimeout);
+        shutdownTimeout = null;
+      }
 
       // Close the application
       await app.close();
@@ -252,6 +292,13 @@ async function bootstrap() {
       process.exit(0);
     } catch (error) {
       logger.error('Error during graceful shutdown', error);
+      
+      // Clear timeout on error
+      if (shutdownTimeout) {
+        clearTimeout(shutdownTimeout);
+        shutdownTimeout = null;
+      }
+      
       process.exit(1);
     }
   };

@@ -74,11 +74,22 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   async onModuleDestroy() {
     try {
+      // Remove all event listeners to prevent memory leaks
+      this.client.removeAllListeners();
+      
+      // Close the connection gracefully
       await this.client.quit();
       this.logger.log('Redis connection closed');
     } catch (error) {
       const errorObj = error instanceof Error ? error : new Error(String(error));
       this.logger.error('Error closing Redis connection', errorObj);
+      
+      // Force disconnect if quit fails
+      try {
+        this.client.disconnect();
+      } catch (disconnectError) {
+        // Ignore disconnect errors
+      }
     }
   }
 

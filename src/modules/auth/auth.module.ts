@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiKeyEntity } from './entities/api-key.entity';
 import { ApiKeyRepository } from './repositories/api-key.repository';
@@ -7,7 +7,7 @@ import { TenantModule } from '../tenant/tenant.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([ApiKeyEntity]),
-    TenantModule, // Import tenant module for entity reference
+    forwardRef(() => TenantModule), // Use forwardRef to avoid circular dependency
   ],
   providers: [ApiKeyRepository],
   exports: [ApiKeyRepository, TypeOrmModule],

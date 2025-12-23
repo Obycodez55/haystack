@@ -2,4 +2,9 @@
 export * from './entities/tenant.entity';
 export * from './repositories/tenant.repository';
 export * from './tenant.module';
+export * from './middleware/tenant.middleware';
+export * from './guards/tenant.guard';
+export * from './interceptors/tenant-context.interceptor';
+export * from './decorators/tenant.decorator';
+export * from './utils/tenant-context.util';
 

@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { LoggerService } from '@common';
@@ -10,7 +10,7 @@ export interface ConnectionStats {
 }
 
 @Injectable()
-export class DatabaseService implements OnModuleInit {
+export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   constructor(
     @InjectDataSource() private readonly dataSource: DataSource,
     private readonly logger: LoggerService,
@@ -102,6 +102,22 @@ export class DatabaseService implements OnModuleInit {
    */
   getDataSource(): DataSource {
     return this.dataSource;
+  }
+
+  /**
+   * Cleanup on module destroy
+   * Ensures all database connections are properly closed
+   */
+  async onModuleDestroy() {
+    try {
+      if (this.dataSource.isInitialized) {
+        await this.dataSource.destroy();
+        this.logger.log('Database connections closed');
+      }
+    } catch (error) {
+      const errorObj = error instanceof Error ? error : new Error(String(error));
+      this.logger.error('Error closing database connections', errorObj);
+    }
   }
 }
 

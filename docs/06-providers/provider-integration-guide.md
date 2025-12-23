@@ -1,3 +1,7 @@
+---
+title: Provider Integration Guide
+---
+
 # Provider Integration Guide
 
 **Version:** 1.0  

@@ -1,3 +1,7 @@
+---
+title: Database Schema
+---
+
 # Database Schema Documentation
 
 **Version:** 1.0  

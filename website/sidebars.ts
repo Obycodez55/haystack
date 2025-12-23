@@ -1,0 +1,49 @@
+import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+
+/**
+ * Sidebar configuration for Haystack documentation
+ * Note: Docusaurus strips numeric prefixes (01-, 02-, etc.) from folder names
+ * when generating document IDs, so we use the stripped versions here.
+ */
+const sidebars: SidebarsConfig = {
+  tutorialSidebar: [
+    {
+      type: 'category',
+      label: 'Product',
+      items: [
+        'product/PRD',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Architecture',
+      items: [
+        'architecture/technical-architecture',
+        'architecture/database-schema',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Planning',
+      items: [
+        'planning/development-roadmap',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'API',
+      items: [
+        'api/api-specification',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Providers',
+      items: [
+        'providers/provider-integration-guide',
+      ],
+    },
+  ],
+};
+
+export default sidebars;

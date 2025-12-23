@@ -1,3 +1,7 @@
+---
+title: Technical Architecture
+---
+
 # Technical Architecture Document
 
 **Version:** 1.0  

@@ -3,6 +3,11 @@
 /node_modules
 /build
 
+# Docusaurus build artifacts
+/website/.docusaurus/
+/website/build/
+/website/node_modules/
+
 # Logs
 logs
 *.log

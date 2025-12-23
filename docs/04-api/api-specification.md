@@ -1,3 +1,7 @@
+---
+title: API Specification
+---
+
 # API Specification
 
 **Version:** 1.0  

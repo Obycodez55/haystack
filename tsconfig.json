@@ -26,5 +26,6 @@
       "@errors": ["src/common/errors"],
       "@responses": ["src/common/responses"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist", "website"]
 }

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Version } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LoggerService } from '@common';
 
@@ -12,6 +12,7 @@ export class AppController {
   }
 
   @Get()
+  @Version('1')
   getHello(): string {
     this.logger.log('GET / endpoint called');
     return this.appService.getHello();

@@ -19,8 +19,8 @@ import jwtConfig from './jwt.config';
       envFilePath: ['.env.local', '.env'],
       validationSchema,
       validationOptions: {
-        allowUnknown: true,
-        abortEarly: false,
+        allowUnknown: true, // Allow extra env vars (useful for development)
+        abortEarly: true, // Stop on first error (fail fast for required vars)
       },
       load: [
         appConfig,

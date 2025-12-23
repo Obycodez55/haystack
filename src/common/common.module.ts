@@ -1,11 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@config';
 import { LoggingModule } from './logging/logging.module';
 import { HealthModule } from './health/health.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { VersionGuard } from './guards/version.guard';
 import { LoggerService } from './logging/services/logger.service';
 
 /**
@@ -37,12 +36,6 @@ import { LoggerService } from './logging/services/logger.service';
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
     },
-    // Global API version guard (optional - can be applied per route)
-    // Uncomment if you want versioning on all routes
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: VersionGuard,
-    // },
   ],
   exports: [ConfigModule, LoggingModule, HealthModule],
 })

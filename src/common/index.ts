@@ -19,8 +19,11 @@ export * from './interceptors';
 // Health exports
 export * from './health';
 
-// Guard exports
-export * from './guards';
+// Guard exports (currently empty - NestJS handles versioning automatically)
+// export * from './guards';
 
 // Pipe exports
 export * from './pipes';
+
+// Utils exports
+export * from './utils';

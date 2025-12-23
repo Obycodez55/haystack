@@ -3,12 +3,35 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { LoggerService } from '@common';
 import { ValidationPipe as CustomValidationPipe } from '@common/pipes';
+import { EnvValidator } from '@common/utils';
 import { AppConfig } from '@config';
 import { ConfigService } from '@nestjs/config';
 import * as helmet from 'helmet';
 import * as compression from 'compression';
 
+/**
+ * Validate environment variables before starting the application
+ * This ensures we fail fast if required variables are missing
+ */
+function validateEnvironment(): void {
+  // Required environment variables
+  const requiredVars = [
+    'JWT_SECRET',
+    'JWT_REFRESH_SECRET',
+  ];
+
+  EnvValidator.validateRequired(requiredVars);
+
+  // Production-specific validation
+  EnvValidator.validateProduction();
+
+  console.log('✅ Environment validation passed');
+}
+
 async function bootstrap() {
+  // Validate environment variables first (before creating app)
+  validateEnvironment();
+
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true, // Buffer logs until logger is ready
   });

@@ -6,7 +6,7 @@ import * as Joi from 'joi';
 export const validationSchema = Joi.object({
   // App
   NODE_ENV: Joi.string()
-    .valid('development', 'staging', 'production')
+    .valid('development', 'staging', 'production', 'test')
     .default('development'),
   APP_NAME: Joi.string().default('haystack'),
   APP_VERSION: Joi.string().default('0.0.1'),
@@ -81,4 +81,9 @@ export const validationSchema = Joi.object({
 
   // Encryption (for provider credentials)
   ENCRYPTION_KEY: Joi.string().optional(),
+
+  // Docker/Test flags
+  AUTO_MIGRATE: Joi.string().valid('true', 'false').optional(),
+  WAIT_FOR_DB: Joi.string().valid('true', 'false').optional(),
+  WAIT_FOR_REDIS: Joi.string().valid('true', 'false').optional(),
 });

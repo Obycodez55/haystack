@@ -48,12 +48,17 @@ export default registerAs('redis', (): RedisConfig => {
     includeHeaders: true,
   };
 
+  // Use test Redis DB if NODE_ENV is test
+  const isTest = process.env.NODE_ENV === 'test';
+  const defaultDb = isTest ? 1 : 0;
+
   return {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379', 10),
     password: process.env.REDIS_PASSWORD,
-    db: parseInt(process.env.REDIS_DB || '0', 10),
-    keyPrefix: process.env.REDIS_KEY_PREFIX || 'haystack:',
+    db: parseInt(process.env.REDIS_DB || String(defaultDb), 10),
+    keyPrefix:
+      process.env.REDIS_KEY_PREFIX || (isTest ? 'haystack_test:' : 'haystack:'),
     maxRetries: parseInt(process.env.REDIS_MAX_RETRIES || '3', 10),
     retryDelay: parseInt(process.env.REDIS_RETRY_DELAY || '1000', 10),
     connectTimeout: parseInt(process.env.REDIS_CONNECT_TIMEOUT || '10000', 10),

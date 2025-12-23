@@ -14,10 +14,14 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
+    "test:unit": "jest --testPathIgnorePatterns=e2e",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:docker": "docker-compose -f docker-compose.test.yml run --rm test",
+    "test:e2e:docker": "docker-compose -f docker-compose.test.yml run --rm test pnpm test:e2e",
+    "test:setup": "NODE_ENV=test ts-node -r tsconfig-paths/register test/setup/setup-test-db.ts",
     "docs:dev": "cd website && pnpm start",
     "docs:build": "cd website && pnpm build",
     "docs:serve": "cd website && pnpm serve",
@@ -26,6 +30,20 @@
     "migration:run": "pnpm exec ts-node -r tsconfig-paths/register scripts/run-migrations-sql.ts",
     "migration:revert": "ts-node -r tsconfig-paths/register scripts/migration-revert.ts",
     "migration:show": "ts-node -r tsconfig-paths/register scripts/migration-show.ts",
+    "db:migrate:test": "NODE_ENV=test pnpm migration:run",
+    "db:seed:test": "NODE_ENV=test ts-node -r tsconfig-paths/register test/setup/seed-test-data.ts",
+    "db:reset:test": "NODE_ENV=test ts-node -r tsconfig-paths/register test/setup/reset-test-db.ts",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f app",
+    "docker:clean": "docker-compose down -v",
+    "docker:restart": "docker-compose restart app",
+    "docker:dev": "docker-compose up",
+    "docker:dev:build": "docker-compose build",
+    "docker:dev:down": "docker-compose down",
+    "docker:dev:logs": "docker-compose logs -f app",
+    "docker:dev:clean": "docker-compose down -v",
     "prepare": "husky"
   },
   "dependencies": {
@@ -61,6 +79,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@faker-js/faker": "^10.1.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
@@ -96,26 +115,85 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "rootDir": ".",
+    "testMatch": [
+      "**/src/**/*.spec.ts",
+      "**/test/**/*.spec.ts"
+    ],
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.(t|j)s$": [
+        "ts-jest",
+        {
+          "tsconfig": {
+            "paths": {
+              "@common/*": [
+                "src/common/*"
+              ],
+              "@modules/*": [
+                "src/modules/*"
+              ],
+              "@config": [
+                "src/config"
+              ],
+              "@config/*": [
+                "src/config/*"
+              ],
+              "@errors": [
+                "src/common/errors"
+              ],
+              "@responses": [
+                "src/common/responses"
+              ],
+              "@database": [
+                "src/common/database"
+              ],
+              "@redis": [
+                "src/common/redis"
+              ]
+            }
+          }
+        }
+      ]
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!**/*.spec.ts",
+      "!**/*.interface.ts",
+      "!**/*.type.ts",
+      "!**/index.ts",
+      "!**/*.config.ts",
+      "!**/main.ts"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 70,
+        "functions": 70,
+        "lines": 70,
+        "statements": 70
+      }
+    },
     "testEnvironment": "node",
+    "testTimeout": 30000,
+    "maxWorkers": "50%",
+    "transformIgnorePatterns": [
+      "node_modules/(?!@faker-js)"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/test/setup/jest.setup.ts"
+    ],
+    "globalSetup": "<rootDir>/test/setup/global-setup.ts",
+    "globalTeardown": "<rootDir>/test/setup/global-teardown.ts",
     "moduleNameMapper": {
-      "^@common$": "<rootDir>/common",
-      "^@common/(.*)$": "<rootDir>/common/$1",
-      "^@modules/(.*)$": "<rootDir>/modules/$1",
-      "^@config$": "<rootDir>/config",
-      "^@config/(.*)$": "<rootDir>/config/$1",
-      "^@errors$": "<rootDir>/common/errors",
-      "^@responses$": "<rootDir>/common/responses",
-      "^@database$": "<rootDir>/common/database",
-      "^@redis$": "<rootDir>/common/redis"
+      "^@common$": "<rootDir>/src/common",
+      "^@common/(.*)$": "<rootDir>/src/common/$1",
+      "^@modules/(.*)$": "<rootDir>/src/modules/$1",
+      "^@config$": "<rootDir>/src/config",
+      "^@config/(.*)$": "<rootDir>/src/config/$1",
+      "^@errors$": "<rootDir>/src/common/errors",
+      "^@responses$": "<rootDir>/src/common/responses",
+      "^@database$": "<rootDir>/src/common/database",
+      "^@redis$": "<rootDir>/src/common/redis"
     }
   },
   "lint-staged": {

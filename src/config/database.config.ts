@@ -64,16 +64,26 @@ export default registerAs('database', (): DatabaseConfig => {
     )[];
   }
 
+  // Use test database name if NODE_ENV is test
+  const isTest = process.env.NODE_ENV === 'test';
+  const defaultDatabase = isTest ? 'haystack_test' : 'haystack';
+
   return {
     url: process.env.DATABASE_URL || '',
     host: process.env.DATABASE_HOST || 'localhost',
     port: parseInt(process.env.DATABASE_PORT || '5432', 10),
     username: process.env.DATABASE_USERNAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || 'postgres',
-    database: process.env.DATABASE_NAME || 'haystack',
+    database: process.env.DATABASE_NAME || defaultDatabase,
     ssl,
-    maxConnections: parseInt(process.env.DATABASE_MAX_CONNECTIONS || '20', 10),
-    minConnections: parseInt(process.env.DATABASE_MIN_CONNECTIONS || '5', 10),
+    maxConnections: parseInt(
+      process.env.DATABASE_MAX_CONNECTIONS || (isTest ? '10' : '20'),
+      10,
+    ),
+    minConnections: parseInt(
+      process.env.DATABASE_MIN_CONNECTIONS || (isTest ? '2' : '5'),
+      10,
+    ),
     idleTimeout: parseInt(process.env.DATABASE_IDLE_TIMEOUT || '30000', 10),
     connectionTimeout: parseInt(
       process.env.DATABASE_CONNECTION_TIMEOUT || '10000',

@@ -2,16 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import * as path from 'path';
 
-// Register path aliases for migration CLI
-if (require.main !== module) {
-  try {
-    require('tsconfig-paths/register');
-  } catch (e) {
-    // tsconfig-paths not available, use relative imports
-  }
-}
-
-// Import entities - use relative paths for CLI compatibility
+// Use relative imports for migration CLI compatibility
 import { BaseEntity, TenantScopedEntity } from '../common/database/entities/base.entity';
 import { TenantEntity } from '../modules/tenant/entities/tenant.entity';
 import { ApiKeyEntity } from '../modules/auth/entities/api-key.entity';

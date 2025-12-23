@@ -15,11 +15,14 @@ Migrations are used to manage database schema changes in a version-controlled, r
 ### Generate Migration
 
 ```bash
-# Generate a new migration
-pnpm migration:generate -- -n MigrationName
+# Generate a new migration (requires database connection)
+# The migration name is part of the path
+pnpm migration:generate src/database/migrations/MigrationName
 
 # Example: Add a new column
-pnpm migration:generate -- -n AddPaymentMethodToPayments
+pnpm migration:generate src/database/migrations/AddPaymentMethodToPayments
+
+# Note: TypeORM will automatically add a timestamp prefix to the filename
 ```
 
 ### Run Migrations

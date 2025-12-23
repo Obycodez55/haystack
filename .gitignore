@@ -7,6 +7,9 @@
 /website/.docusaurus/
 /website/build/
 /website/node_modules/
+# Copied docs (builds use copy, dev uses symlink)
+/website/docs/
+!website/docs/.gitkeep
 
 # Logs
 logs
@@ -59,3 +62,4 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.vercel

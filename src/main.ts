@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { LoggerService } from '@common';
 import { ValidationPipe as CustomValidationPipe } from '@common/pipes';
@@ -132,6 +133,79 @@ async function bootstrap() {
     }),
   );
 
+  // Get port for Swagger configuration
+  const port = appConfig.port;
+
+  // Swagger/OpenAPI configuration
+  if (process.env.NODE_ENV !== 'production' || process.env.ENABLE_SWAGGER === 'true') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Haystack Payment Orchestration API')
+      .setDescription(
+        'Unified payment processing API for African businesses. ' +
+        'Integrate with multiple payment providers (Paystack, Stripe, Flutterwave) through a single API.',
+      )
+      .setVersion('1.0')
+      .setContact('Haystack Support', 'https://docs.haystack.com', 'support@haystack.com')
+      .setLicense('UNLICENSED', '')
+      .addBearerAuth(
+        {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'Authorization',
+          description: 'Enter your API key (Bearer token)',
+          in: 'header',
+        },
+        'bearer',
+      )
+      .addApiKey(
+        {
+          type: 'apiKey',
+          name: 'X-API-Key',
+          in: 'header',
+          description: 'Alternative API key authentication',
+        },
+        'api-key',
+      )
+      .addTag('payments', 'Payment processing endpoints')
+      .addTag('providers', 'Payment provider management')
+      .addTag('webhooks', 'Webhook endpoints')
+      .addTag('health', 'Health check endpoints')
+      .addServer(`http://localhost:${port}`, 'Local development')
+      .addServer('https://api-staging.haystack.com', 'Staging environment')
+      .addServer('https://api.haystack.com', 'Production environment')
+      .build();
+
+    const document = SwaggerModule.createDocument(app, swaggerConfig, {
+      operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+    });
+
+    SwaggerModule.setup('api-docs', app, document, {
+      customSiteTitle: 'Haystack API Documentation',
+      customfavIcon: '/favicon.ico',
+      customCss: '.swagger-ui .topbar { display: none }',
+      swaggerOptions: {
+        persistAuthorization: true,
+        displayRequestDuration: true,
+        filter: true,
+        showExtensions: true,
+        showCommonExtensions: true,
+      },
+    });
+
+    // Also generate OpenAPI JSON file for Docusaurus
+    if (process.env.GENERATE_OPENAPI === 'true') {
+      const fs = require('fs');
+      const path = require('path');
+      const openApiPath = path.join(process.cwd(), 'website', 'static', 'openapi.json');
+      fs.mkdirSync(path.dirname(openApiPath), { recursive: true });
+      fs.writeFileSync(openApiPath, JSON.stringify(document, null, 2));
+      logger.log(`OpenAPI specification written to: ${openApiPath}`);
+    }
+
+    logger.log(`Swagger documentation available at: http://localhost:${port}/api-docs`);
+  }
+
   // Graceful shutdown
   const gracefulShutdown = async (signal: string) => {
     logger.warn(`Received ${signal}, starting graceful shutdown...`);
@@ -166,7 +240,6 @@ async function bootstrap() {
     gracefulShutdown('unhandledRejection');
   });
 
-  const port = appConfig.port;
   await app.listen(port);
 
   logger.log(

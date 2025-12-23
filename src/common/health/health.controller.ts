@@ -17,12 +17,14 @@ export class HealthController {
    */
   @Get()
   @HealthCheck()
-  @ApiOperation({ summary: 'Health check', description: 'Comprehensive health check including memory and disk usage' })
+  @ApiOperation({ summary: 'Health check', description: 'Comprehensive health check including API, database, and Redis' })
   @ApiResponse({ status: 200, description: 'Service is healthy' })
   @ApiResponse({ status: 503, description: 'Service is unhealthy' })
   check() {
     return this.health.check([
       () => this.healthService.isHealthy('api'),
+      () => this.healthService.isDatabaseHealthy(),
+      () => this.healthService.isRedisHealthy(),
     ]);
   }
 
@@ -43,19 +45,18 @@ export class HealthController {
   /**
    * Readiness probe for Kubernetes/containers
    * Returns 200 when service is ready to accept traffic
-   * Will include database/redis checks when implemented
+   * Includes database and Redis checks
    */
   @Get('ready')
   @HealthCheck()
-  @ApiOperation({ summary: 'Readiness probe', description: 'Kubernetes readiness probe endpoint' })
+  @ApiOperation({ summary: 'Readiness probe', description: 'Kubernetes readiness probe endpoint including database and Redis checks' })
   @ApiResponse({ status: 200, description: 'Service is ready' })
+  @ApiResponse({ status: 503, description: 'Service is not ready' })
   readiness() {
     return this.health.check([
       () => this.healthService.isHealthy('api'),
-      // TODO: Add database check when implemented
-      // () => this.healthService.isDatabaseHealthy(),
-      // TODO: Add redis check when implemented
-      // () => this.healthService.isRedisHealthy(),
+      () => this.healthService.isDatabaseHealthy(),
+      () => this.healthService.isRedisHealthy(),
     ]);
   }
 }

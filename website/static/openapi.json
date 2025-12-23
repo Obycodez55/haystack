@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/api/v1": {
       "get": {
         "description": "Returns a simple hello message indicating the API is running",
         "operationId": "getHello",

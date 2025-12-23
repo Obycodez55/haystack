@@ -3,6 +3,8 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { LoggerService } from '@common';
+import { DatabaseService } from '@common/database';
+import { RedisService } from '@common/redis';
 import { ValidationPipe as CustomValidationPipe } from '@common/pipes';
 import { EnvValidator } from '@common/utils';
 import { AppConfig } from '@config';
@@ -48,6 +50,36 @@ async function bootstrap() {
 
   if (!appConfig) {
     throw new Error('App configuration is missing. Please check your environment variables.');
+  }
+
+  // Verify database connection
+  try {
+    const databaseService = app.get(DatabaseService);
+    const dbHealth = await databaseService.checkHealth();
+    if (dbHealth.status === 'up') {
+      logger.log('Database connection verified', {
+        responseTime: dbHealth.responseTime,
+      });
+    } else {
+      logger.warn('Database connection check failed', { error: dbHealth.error });
+    }
+  } catch (error) {
+    logger.warn('Database service not available', { error: error.message });
+  }
+
+  // Verify Redis connection
+  try {
+    const redisService = app.get(RedisService);
+    const redisHealth = await redisService.healthCheck();
+    if (redisHealth.status === 'up') {
+      logger.log('Redis connection verified', {
+        latency: redisHealth.latency,
+      });
+    } else {
+      logger.warn('Redis connection check failed', { error: redisHealth.error });
+    }
+  } catch (error) {
+    logger.warn('Redis service not available', { error: error.message });
   }
 
   // Global prefix (e.g., /api)

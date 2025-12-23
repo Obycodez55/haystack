@@ -2,9 +2,14 @@ import { Module, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule, CorrelationMiddleware } from '@common';
+import { TenantModule, AuthModule } from '@modules';
 
 @Module({
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    TenantModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

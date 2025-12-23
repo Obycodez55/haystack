@@ -20,11 +20,14 @@
     "paths": {
       "@common": ["src/common"],
       "@common/*": ["src/common/*"],
+      "@modules": ["src/modules"],
       "@modules/*": ["src/modules/*"],
       "@config": ["src/config"],
       "@config/*": ["src/config/*"],
       "@errors": ["src/common/errors"],
-      "@responses": ["src/common/responses"]
+      "@responses": ["src/common/responses"],
+      "@database": ["src/common/database"],
+      "@redis": ["src/common/redis"]
     }
   },
   "exclude": ["node_modules", "dist", "website"]

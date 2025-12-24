@@ -9,7 +9,6 @@ export const v4 = jest.fn(() => {
 export const v1 = jest.fn(() => {
   return '00000000-0000-1000-8000-000000000000';
 });
-
 export default {
   v4,
   v1,

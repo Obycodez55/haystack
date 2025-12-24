@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as path from 'path';
 
 /**
@@ -39,6 +40,7 @@ export async function createDataSource(): Promise<DataSource> {
     ],
     synchronize: false, // Never use synchronize in tests
     logging: process.env.DATABASE_LOGGING === 'true',
+    namingStrategy: new SnakeNamingStrategy(),
     // Test-specific connection pool settings
     extra: {
       max: parseInt(process.env.DATABASE_MAX_CONNECTIONS || '10', 10),

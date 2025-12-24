@@ -55,7 +55,7 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-debug}
       LOG_PRETTY: 'true'
     ports:
-      - '${PORT:-3000}:8080'
+      - '${PORT:-3000}:3000'
     volumes:
       - ./src:/app/src
       - ./test:/app/test
@@ -64,9 +64,9 @@ services:
       - ./nest-cli.json:/app/nest-cli.json
       - ./eslint.config.mjs:/app/eslint.config.mjs
       - ./tsconfig.build.json:/app/tsconfig.build.json
-      # Exclude node_modules and dist from volume mounts
+      # Exclude node_modules from volume mounts
       - /app/node_modules
-      - /app/dist
+      # Don't mount dist - let it be created in container
     depends_on:
       postgres:
         condition: service_healthy

@@ -12,7 +12,7 @@ import {
   CACHE_INVALIDATE_PATTERN,
   CacheInvalidateOptions,
 } from '../decorators/cache.decorator';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../logging/services/logger.service';
 
 @Injectable()
 export class CacheInvalidateInterceptor implements NestInterceptor {

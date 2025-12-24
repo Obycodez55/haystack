@@ -5,15 +5,7 @@ import {
   KycStatus,
 } from '@modules/tenant/entities/tenant.entity';
 import { DataSource } from 'typeorm';
-
-// Dynamic import for Faker to handle ES modules
-let faker: any;
-async function getFaker() {
-  if (!faker) {
-    faker = (await import('@faker-js/faker')).faker;
-  }
-  return faker;
-}
+import { getFaker } from './faker-helper';
 
 /**
  * Tenant factory for creating test tenant entities
@@ -72,19 +64,20 @@ export class TenantFactory {
           : undefined;
     tenant.kycRejectedReason = overrides?.kycRejectedReason || undefined;
 
-    // Set timestamps
-    tenant.createdAt =
-      overrides?.createdAt instanceof Date
-        ? overrides.createdAt
-        : overrides?.createdAt
-          ? new Date(overrides.createdAt as any)
-          : new Date();
-    tenant.updatedAt =
-      overrides?.updatedAt instanceof Date
-        ? overrides.updatedAt
-        : overrides?.updatedAt
-          ? new Date(overrides.updatedAt as any)
-          : new Date();
+    // Don't set timestamps - let TypeORM handle them
+    // Only set if explicitly provided in overrides
+    if (overrides?.createdAt) {
+      tenant.createdAt =
+        overrides.createdAt instanceof Date
+          ? overrides.createdAt
+          : new Date(overrides.createdAt as any);
+    }
+    if (overrides?.updatedAt) {
+      tenant.updatedAt =
+        overrides.updatedAt instanceof Date
+          ? overrides.updatedAt
+          : new Date(overrides.updatedAt as any);
+    }
 
     return tenant;
   }

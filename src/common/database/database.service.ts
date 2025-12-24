@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { LoggerService } from '@common';
+import { LoggerService } from '../logging/services/logger.service';
 
 export interface ConnectionStats {
   total: number;

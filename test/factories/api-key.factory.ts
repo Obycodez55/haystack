@@ -5,15 +5,7 @@ import {
 } from '@modules/auth/entities/api-key.entity';
 import { DataSource } from 'typeorm';
 import { hashApiKey } from '@modules/auth/utils/api-key-hash.util';
-
-// Dynamic import for Faker to handle ES modules
-let faker: any;
-async function getFaker() {
-  if (!faker) {
-    faker = (await import('@faker-js/faker')).faker;
-  }
-  return faker;
-}
+import { getFaker } from './faker-helper';
 
 /**
  * API Key factory for creating test API key entities
@@ -59,7 +51,8 @@ export class ApiKeyFactory {
     entity.tenantId = tenantId;
     entity.keyHash = overrides?.keyHash || (await hashApiKey(apiKey));
     entity.keyPrefix = overrides?.keyPrefix || keyPrefix;
-    entity.name = overrides?.name || faker.company.buzzNoun();
+    const f = await getFaker();
+    entity.name = overrides?.name || f.company.name();
     entity.mode = mode;
     entity.isActive = overrides?.isActive ?? true;
     entity.lastUsedAt =
@@ -83,19 +76,20 @@ export class ApiKeyFactory {
           ? new Date(overrides.expiresAt as any)
           : undefined;
 
-    // Set timestamps
-    entity.createdAt =
-      overrides?.createdAt instanceof Date
-        ? overrides.createdAt
-        : overrides?.createdAt
-          ? new Date(overrides.createdAt as any)
-          : new Date();
-    entity.updatedAt =
-      overrides?.updatedAt instanceof Date
-        ? overrides.updatedAt
-        : overrides?.updatedAt
-          ? new Date(overrides.updatedAt as any)
-          : new Date();
+    // Don't set timestamps - let TypeORM handle them
+    // Only set if explicitly provided in overrides
+    if (overrides?.createdAt) {
+      entity.createdAt =
+        overrides.createdAt instanceof Date
+          ? overrides.createdAt
+          : new Date(overrides.createdAt as any);
+    }
+    if (overrides?.updatedAt) {
+      entity.updatedAt =
+        overrides.updatedAt instanceof Date
+          ? overrides.updatedAt
+          : new Date(overrides.updatedAt as any);
+    }
 
     return entity;
   }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { LoggerService } from './services/logger.service';
 import { CorrelationMiddleware } from './middleware/correlation.middleware';
@@ -8,19 +8,12 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 /**
  * Logging module
  * Provides structured logging service and correlation middleware
- * Note: Not global - imported by CommonModule
+ * Global module so LoggerService is available to all modules
  */
+@Global()
 @Module({
   providers: [
-    {
-      provide: LoggerService,
-      useFactory: (configService: ConfigService) => {
-        const logger = new LoggerService(configService);
-        logger.setContext('Haystack');
-        return logger;
-      },
-      inject: [ConfigService],
-    },
+    LoggerService, // Use class provider instead of factory for better DI support
     CorrelationMiddleware,
     // Optionally enable global request logging interceptor
     // Uncomment if you want automatic request/response logging

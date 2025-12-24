@@ -30,5 +30,12 @@
       "@redis": ["src/common/redis"]
     }
   },
-  "exclude": ["node_modules", "dist", "website"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "website",
+    "test",
+    "**/*spec.ts",
+    "**/*.spec.ts"
+  ]
 }

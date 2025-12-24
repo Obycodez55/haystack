@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  LoggerService as NestLoggerService,
-  Scope,
-} from '@nestjs/common';
+import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import pino from 'pino';
 import {
@@ -25,7 +21,7 @@ import { LoggerConfigFactory, LoggerConfig } from '../config/logger.config';
  * Structured logger service implementing NestJS LoggerService
  * Uses Pino for high-performance structured logging
  */
-@Injectable({ scope: Scope.TRANSIENT })
+@Injectable()
 export class LoggerService implements NestLoggerService {
   private readonly logger: pino.Logger;
   private readonly serviceName: string;

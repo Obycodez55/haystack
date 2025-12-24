@@ -27,8 +27,8 @@ import { LoggerService } from './logging/services/logger.service';
 @Module({
   imports: [
     ConfigModule,
-    LoggingModule,
-    DatabaseModule,
+    LoggingModule, // Import LoggingModule first so LoggerService is available
+    DatabaseModule, // DatabaseModule needs LoggerService
     RedisModule,
     HealthModule,
   ],

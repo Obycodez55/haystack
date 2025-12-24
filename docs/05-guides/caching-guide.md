@@ -24,6 +24,7 @@ Different data types have different TTLs based on volatility:
 ### Using Decorators
 
 **Cache GET requests:**
+
 ```typescript
 import { Cache } from '@common/redis';
 
@@ -38,6 +39,7 @@ export class PaymentController {
 ```
 
 **Invalidate on update:**
+
 ```typescript
 import { CacheInvalidate } from '@common/redis';
 
@@ -60,6 +62,7 @@ export class PaymentController {
 ### Using Service Directly
 
 **Cache-aside pattern:**
+
 ```typescript
 import { CacheService } from '@common/redis';
 
@@ -78,6 +81,7 @@ export class PaymentService {
 ```
 
 **Write-through pattern:**
+
 ```typescript
 async updatePaymentStatus(
   id: string,
@@ -95,6 +99,7 @@ async updatePaymentStatus(
 ```
 
 **Cache stampede prevention:**
+
 ```typescript
 async getPayment(id: string, tenantId: string): Promise<Payment> {
   return this.cache.getOrSetWithLock(
@@ -224,4 +229,3 @@ Cache metrics are available at `/health` endpoint:
 2. Check TTL is appropriate
 3. Verify invalidation patterns match cache keys
 4. Use write-through for critical data
-

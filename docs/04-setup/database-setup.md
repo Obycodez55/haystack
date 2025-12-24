@@ -16,12 +16,14 @@ This guide covers setting up PostgreSQL database for the Haystack Payment Orches
 ### 1. Install PostgreSQL
 
 **macOS:**
+
 ```bash
 brew install postgresql@15
 brew services start postgresql@15
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt-get update
 sudo apt-get install postgresql-15
@@ -29,6 +31,7 @@ sudo systemctl start postgresql
 ```
 
 **Docker:**
+
 ```bash
 docker run --name haystack-postgres \
   -e POSTGRES_PASSWORD=postgres \
@@ -44,6 +47,7 @@ pnpm install
 ```
 
 This installs:
+
 - `@nestjs/typeorm` - NestJS TypeORM integration
 - `typeorm` - TypeORM ORM
 - `pg` - PostgreSQL driver
@@ -140,6 +144,7 @@ src/common/database/
 All tenant-scoped entities automatically filter queries by `tenant_id`. The `BaseRepository` ensures all queries are scoped to the current tenant.
 
 **Example:**
+
 ```typescript
 // Automatically filters by tenantId
 const payments = await paymentRepository.findAll(tenantId);
@@ -155,9 +160,7 @@ import { ApiKeyRepository } from '@common/database';
 
 @Injectable()
 export class PaymentService {
-  constructor(
-    private readonly apiKeyRepository: ApiKeyRepository,
-  ) {}
+  constructor(private readonly apiKeyRepository: ApiKeyRepository) {}
 
   async findApiKey(keyHash: string) {
     return this.apiKeyRepository.findByKeyHash(keyHash);
@@ -172,6 +175,7 @@ export class PaymentService {
 ### Health Checks
 
 Database health is automatically checked at:
+
 - `/health` - Full health check
 - `/health/ready` - Readiness probe (includes database)
 
@@ -213,4 +217,3 @@ pnpm migration:revert
 3. **Monitor connections** - Use health check endpoint
 4. **Backup regularly** - Set up automated backups
 5. **Use read replicas** - For read-heavy workloads (future)
-

@@ -18,6 +18,7 @@ Rate limiting is implemented using Redis sliding window algorithm. It's applied 
 ## Configuration Priority
 
 Rate limit configuration is resolved in this order:
+
 1. Method-level decorator (`@RateLimit()` on method)
 2. Class-level decorator (`@RateLimit()` on controller)
 3. Config file endpoint override
@@ -33,6 +34,7 @@ Rate limiting is applied automatically to all routes. No configuration needed fo
 ### Custom Rate Limits
 
 **Per endpoint:**
+
 ```typescript
 import { RateLimit } from '@common/redis';
 
@@ -55,6 +57,7 @@ export class PaymentController {
 ```
 
 **Per controller:**
+
 ```typescript
 @Controller('webhooks')
 @RateLimit({ requests: 10000, window: 3600 }) // Applies to all methods
@@ -68,6 +71,7 @@ export class WebhookController {
 ```
 
 **Skip rate limiting:**
+
 ```typescript
 @Controller('health')
 @RateLimit({ skip: true }) // No rate limiting
@@ -140,6 +144,7 @@ When rate limit is exceeded:
 ## Graceful Degradation
 
 If Redis is unavailable, rate limiting gracefully degrades:
+
 - Requests are allowed (fallback mode)
 - Warning is logged
 - Headers still include limit information
@@ -172,4 +177,3 @@ it('should enforce rate limit', async () => {
     .expect(429);
 });
 ```
-

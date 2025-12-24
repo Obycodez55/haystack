@@ -16,12 +16,14 @@ This guide covers setting up Redis for caching, rate limiting, and distributed l
 ### 1. Install Redis
 
 **macOS:**
+
 ```bash
 brew install redis
 brew services start redis
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt-get update
 sudo apt-get install redis-server
@@ -29,6 +31,7 @@ sudo systemctl start redis-server
 ```
 
 **Docker:**
+
 ```bash
 docker run --name haystack-redis \
   -p 6379:6379 \
@@ -42,6 +45,7 @@ pnpm install
 ```
 
 This installs:
+
 - `ioredis` - Redis client for Node.js
 
 ## Configuration
@@ -110,6 +114,7 @@ src/common/redis/
 ### Rate Limiting
 
 **Default (per API key):**
+
 ```typescript
 @Controller('payments')
 export class PaymentController {
@@ -120,6 +125,7 @@ export class PaymentController {
 ```
 
 **Custom per endpoint:**
+
 ```typescript
 @Controller('payments')
 export class PaymentController {
@@ -134,6 +140,7 @@ export class PaymentController {
 ```
 
 **Per controller:**
+
 ```typescript
 @Controller('webhooks')
 @RateLimit({ requests: 10000, window: 3600 }) // Applies to all methods
@@ -146,6 +153,7 @@ export class WebhookController {
 ### Caching
 
 **Using decorator:**
+
 ```typescript
 @Controller('payments')
 export class PaymentController {
@@ -158,6 +166,7 @@ export class PaymentController {
 ```
 
 **Using service directly:**
+
 ```typescript
 @Injectable()
 export class PaymentService {
@@ -173,16 +182,17 @@ export class PaymentService {
 
   async updatePayment(id: string, updates: Partial<Payment>): Promise<Payment> {
     const payment = await this.repository.update(id, tenantId, updates);
-    
+
     // Invalidate cache
     await this.cache.delete(`payment:${id}`, 'payment');
-    
+
     return payment;
   }
 }
 ```
 
 **Cache invalidation:**
+
 ```typescript
 @Controller('payments')
 export class PaymentController {
@@ -203,6 +213,7 @@ export class PaymentController {
 ## Health Checks
 
 Redis health is automatically checked at:
+
 - `/health` - Full health check
 - `/health/ready` - Readiness probe (includes Redis)
 
@@ -211,6 +222,7 @@ Redis health is automatically checked at:
 All Redis keys follow the pattern: `{prefix}:{namespace}:{identifier}`
 
 **Examples:**
+
 - Rate limits: `haystack:rate_limit:test:tenant1:apiKey1:w3600`
 - Cache: `haystack:cache:payment:payment:123`
 - Idempotency: `haystack:idempotency:tenant1:key123`
@@ -254,4 +266,3 @@ redis-cli keys "haystack:*"
 3. **Use Redis Cluster** - For high availability (future)
 4. **Monitor memory** - Set up alerts
 5. **Use connection pooling** - Configured automatically
-

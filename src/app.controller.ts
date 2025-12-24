@@ -1,7 +1,7 @@
 import { Controller, Get, Version } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
-import { LoggerService } from '@common';
+import { LoggerService } from './common/logging/services/logger.service';
 
 @ApiTags('health')
 @Controller()

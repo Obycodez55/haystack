@@ -9,7 +9,7 @@ import { extractApiKeyFromHeader } from '@modules/auth/utils/api-key-hash.util';
 import { asyncLocalStorage } from '@common/logging/middleware/correlation.middleware';
 import { RequestContext } from '@common/logging/types/log-context.types';
 import { AuthenticationError } from '@common/errors/authentication.error';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../../common/logging/services/logger.service';
 
 /**
  * Tenant middleware

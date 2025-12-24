@@ -48,7 +48,10 @@ export class CacheService {
     options?: CacheOptions,
   ): Promise<boolean> {
     const fullKey = buildCacheKey(key, options?.namespace);
-    const ttl = options?.ttl || this.getDefaultTtl(options?.namespace);
+    const ttl =
+      options?.ttl !== undefined
+        ? options.ttl
+        : this.getDefaultTtl(options?.namespace);
     const serialized = JSON.stringify(value);
 
     try {

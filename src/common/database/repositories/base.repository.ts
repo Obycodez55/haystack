@@ -10,7 +10,7 @@ import {
   QueryDeepPartialEntity,
 } from 'typeorm';
 import { TenantScopedEntity } from '../entities/base.entity';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../logging/services/logger.service';
 import {
   getCurrentTenantId,
   requireTenantId,

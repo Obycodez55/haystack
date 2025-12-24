@@ -6,7 +6,8 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { LoggerService, getRequestContext } from '@common';
+import { LoggerService } from '../logging/services/logger.service';
+import { getRequestContext } from '../logging/middleware/correlation.middleware';
 import { BaseError } from '@errors';
 import { ResponseBuilder, ErrorType } from '@responses';
 

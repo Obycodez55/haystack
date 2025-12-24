@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApiKeyEntity, ApiKeyMode } from '../entities/api-key.entity';
 import { BaseRepository } from '@common/database/repositories/base.repository';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../../common/logging/services/logger.service';
 import { compareApiKey } from '../utils/api-key-hash.util';
 
 @Injectable()

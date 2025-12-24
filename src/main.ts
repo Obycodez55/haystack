@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { LoggerService } from '@common';
+import { LoggerService } from './common/logging/services/logger.service';
 import { DatabaseService } from '@common/database';
 import { RedisService } from '@common/redis';
 import { ValidationPipe as CustomValidationPipe } from '@common/pipes';

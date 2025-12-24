@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { CacheService } from './cache.service';
 import { RedisService } from '../redis.service';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../logging/services/logger.service';
 
 describe('CacheService', () => {
   let service: CacheService;
@@ -121,7 +121,10 @@ describe('CacheService', () => {
       const result = await service.set('test-key', value, { ttl: 0 });
 
       expect(result).toBe(true);
+      // When ttl is 0, it should use set() instead of setex()
+      // The key will be prefixed with namespace if provided, or just the key
       expect(redisService.client.set).toHaveBeenCalled();
+      expect(redisService.client.setex).not.toHaveBeenCalled();
     });
   });
 

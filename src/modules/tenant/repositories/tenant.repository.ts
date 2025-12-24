@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { TenantEntity } from '../entities/tenant.entity';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../../common/logging/services/logger.service';
 
 @Injectable()
 export class TenantRepository {

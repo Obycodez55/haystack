@@ -179,8 +179,9 @@
     "testTimeout": 30000,
     "maxWorkers": "50%",
     "transformIgnorePatterns": [
-      "node_modules/(?!@faker-js)"
+      "node_modules/(?!@faker-js|uuid)"
     ],
+    "extensionsToTreatAsEsm": [],
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup/jest.setup.ts"
     ],
@@ -195,7 +196,8 @@
       "^@errors$": "<rootDir>/src/common/errors",
       "^@responses$": "<rootDir>/src/common/responses",
       "^@database$": "<rootDir>/src/common/database",
-      "^@redis$": "<rootDir>/src/common/redis"
+      "^@redis$": "<rootDir>/src/common/redis",
+      "^uuid$": "<rootDir>/test/mocks/uuid.mock.ts"
     }
   },
   "lint-staged": {

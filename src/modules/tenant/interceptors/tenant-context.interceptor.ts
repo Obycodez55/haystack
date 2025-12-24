@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
 import { DataSource } from 'typeorm';
 import { getRequestContext } from '@common/logging/middleware/correlation.middleware';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../../common/logging/services/logger.service';
 
 /**
  * Tenant context interceptor

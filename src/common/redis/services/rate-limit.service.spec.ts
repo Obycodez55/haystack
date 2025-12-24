@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { RateLimitService } from './rate-limit.service';
 import { RedisService } from '../redis.service';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../logging/services/logger.service';
 
 describe('RateLimitService', () => {
   let service: RateLimitService;

@@ -3,7 +3,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseRepository } from './base.repository';
 import { TenantScopedEntity } from '../entities/base.entity';
-import { LoggerService } from '@common';
+import { LoggerService } from '../../logging/services/logger.service';
 
 class TestEntity extends TenantScopedEntity {
   name: string;

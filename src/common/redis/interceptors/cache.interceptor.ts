@@ -78,7 +78,6 @@ export class CacheInterceptor implements NestInterceptor {
     const parts = [baseKey];
     if (tenantId) parts.push(`tenant:${tenantId}`);
     if (params.id) parts.push(`id:${params.id}`);
-
     return parts.join(':');
   }
 }

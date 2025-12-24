@@ -55,7 +55,6 @@ export interface CacheInvalidateOptions {
    */
   async?: boolean;
 }
-
 /**
  * Invalidate cache after method execution
  *

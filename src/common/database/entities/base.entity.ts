@@ -22,7 +22,6 @@ export abstract class BaseEntity {
   })
   updatedAt: Date;
 }
-
 /**
  * Base entity for tenant-scoped entities
  * Automatically includes tenant_id for multi-tenancy

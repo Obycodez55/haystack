@@ -108,7 +108,6 @@ describe('RateLimitService', () => {
       (pipeline.exec as jest.Mock).mockRejectedValue(new Error('Redis error'));
 
       const result = await service.checkRateLimit('test-id', 'test');
-
       expect(result.allowed).toBe(true);
       expect(result.fallback).toBe(true);
       expect(logger.error).toHaveBeenCalled();

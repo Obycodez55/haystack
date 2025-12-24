@@ -2,7 +2,6 @@ import { SetMetadata } from '@nestjs/common';
 import { RateLimitConfig } from '../interfaces/rate-limit.interface';
 
 export const RATE_LIMIT_KEY = 'rateLimit';
-
 /**
  * Decorator to configure rate limiting for a route
  *

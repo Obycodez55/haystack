@@ -19,7 +19,6 @@ export const CACHE_TTL_STRATEGY = {
     info: 900, // 15 minutes - tenant info changes rarely
     settings: 1800, // 30 minutes - settings change infrequently
   },
-
   // Static/read-only data - very long TTL
   reference: {
     currencies: 86400, // 24 hours - currencies don't change

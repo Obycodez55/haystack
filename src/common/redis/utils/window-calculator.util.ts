@@ -5,7 +5,6 @@ export function calculateResetTime(now: number, windowSeconds: number): number {
   const windowMs = windowSeconds * 1000;
   return Math.ceil(now / windowMs) * windowMs;
 }
-
 /**
  * Calculate window start time
  */

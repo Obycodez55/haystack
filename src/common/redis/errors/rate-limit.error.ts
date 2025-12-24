@@ -15,7 +15,6 @@ export class RateLimitExceededError extends BaseError {
     const userMessage =
       details.message ||
       `Rate limit exceeded. You can make ${details.limit} requests per hour. Try again in ${details.retryAfter} seconds.`;
-
     super(userMessage, {
       details: {
         errorCode: 'rate_limit_exceeded',

@@ -148,7 +148,6 @@ describe('CacheService', () => {
       const fetcher = jest.fn().mockResolvedValue(fetchedValue);
 
       const result = await service.getOrSet('test-key', fetcher);
-
       expect(result).toEqual(fetchedValue);
       expect(fetcher).toHaveBeenCalled();
       expect(redisService.client.setex).toHaveBeenCalled();

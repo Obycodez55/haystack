@@ -85,7 +85,6 @@ describe('BaseRepository', () => {
       mockRepository.findOne.mockResolvedValue(null);
 
       const result = await repository.findById('1', 'tenant1');
-
       expect(result).toBeNull();
     });
   });

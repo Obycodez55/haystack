@@ -38,7 +38,6 @@ export function buildIdempotencyKey(
 ): string {
   return buildKey(['idempotency', tenantId, idempotencyKey]);
 }
-
 /**
  * Build lock key
  */

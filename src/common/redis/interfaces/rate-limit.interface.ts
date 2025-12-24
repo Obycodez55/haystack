@@ -33,7 +33,6 @@ export interface RateLimitConfig {
    */
   includeHeaders?: boolean;
 }
-
 export interface RateLimitResult {
   allowed: boolean;
   limit: number;

@@ -2,6 +2,7 @@ import { Controller, Get, VERSION_NEUTRAL } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HealthCheck, HealthCheckService } from '@nestjs/terminus';
 import { HealthService } from './health.service';
+import { Public } from '../decorators/public.decorator';
 
 @ApiTags('health')
 @Controller({ path: 'health', version: VERSION_NEUTRAL })
@@ -16,6 +17,7 @@ export class HealthController {
    * Returns 200 if service is running
    */
   @Get()
+  @Public() // Health checks should be public
   @HealthCheck()
   @ApiOperation({
     summary: 'Health check',
@@ -37,6 +39,7 @@ export class HealthController {
    * Returns 200 if service is alive
    */
   @Get('live')
+  @Public() // Liveness probe should be public
   @HealthCheck()
   @ApiOperation({
     summary: 'Liveness probe',
@@ -53,6 +56,7 @@ export class HealthController {
    * Includes database and Redis checks
    */
   @Get('ready')
+  @Public() // Readiness probe should be public
   @HealthCheck()
   @ApiOperation({
     summary: 'Readiness probe',

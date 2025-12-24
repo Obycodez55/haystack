@@ -8,6 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { getRequestContext } from '@common/logging/middleware/correlation.middleware';
 import { AuthenticationError } from '@common/errors/authentication.error';
+import { IS_PUBLIC_KEY } from '@common/decorators/public.decorator';
 
 /**
  * Metadata key for optional tenant requirement
@@ -43,6 +44,18 @@ export class TenantGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
+
+    // Check if route is marked as public
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    // Public routes don't need tenant authentication
+    if (isPublic) {
+      return true;
+    }
+
     const isOptional = this.reflector.getAllAndOverride<boolean>(
       IS_TENANT_OPTIONAL,
       [context.getHandler(), context.getClass()],

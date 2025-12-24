@@ -17,27 +17,28 @@ import { AuthModule } from '@modules';
   providers: [
     AppService,
     // Register TenantContextInterceptor globally
+    // This sets up tenant context for RLS but doesn't enforce authentication
     {
       provide: APP_INTERCEPTOR,
       useClass: TenantContextInterceptor,
     },
-    // Register TenantGuard globally (can be overridden per route)
-    {
-      provide: APP_GUARD,
-      useClass: TenantGuard,
-    },
+    // Note: Guards are NOT applied globally
+    // Use @UseGuards() decorator on controllers/routes that need authentication
+    // Public routes (health, docs, etc.) don't need guards
+    // Admin/dashboard routes can use different guards (JWT, etc.)
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // Apply CorrelationMiddleware first (creates request context)
+    // Apply CorrelationMiddleware globally (creates request context for all routes)
+    // This is safe to apply everywhere as it just adds tracking IDs
     consumer.apply(CorrelationMiddleware).forRoutes('*');
 
-    // Apply TenantMiddleware second (populates tenant in context)
-    // Skip for public endpoints (health checks, etc.)
-    consumer
-      .apply(TenantMiddleware)
-      .exclude('health', 'health/(.*)', 'api/health', 'api/health/(.*)')
-      .forRoutes('*');
+    // TenantMiddleware is NOT applied globally
+    // It should be applied selectively via @UseGuards(TenantGuard) or custom middleware
+    // This allows:
+    // - Public routes (health, docs) to work without tenant context
+    // - Admin/dashboard routes to use different auth (JWT, etc.)
+    // - API key routes to opt-in to tenant authentication
   }
 }

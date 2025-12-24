@@ -2,6 +2,7 @@ import { Controller, Get, Version } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { LoggerService } from './common/logging/services/logger.service';
+import { Public } from './common/decorators/public.decorator';
 
 @ApiTags('health')
 @Controller()
@@ -15,6 +16,7 @@ export class AppController {
 
   @Get()
   @Version('1')
+  @Public() // Public endpoint - no authentication required
   @ApiOperation({
     summary: 'Get API status',
     description: 'Returns a simple hello message indicating the API is running',

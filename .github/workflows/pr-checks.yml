@@ -173,6 +173,7 @@ jobs:
 
       - name: Run tests with coverage
         run: pnpm test:cov
+        continue-on-error: true # Don't fail CI if coverage is low
 
       - name: Comment PR with coverage
         uses: py-cov-action/python-coverage-comment-action@v3

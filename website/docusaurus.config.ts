@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
@@ -83,9 +83,9 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          to: '/docs/api/api-specification',
+          to: '/docs/api-reference',
           position: 'left',
-          label: 'API',
+          label: 'API Reference',
         },
         {
           href: 'https://github.com/yourorg/haystack',
@@ -107,6 +107,10 @@ const config: Config = {
             {
               label: 'API Specification',
               to: '/docs/api/api-specification',
+            },
+            {
+              label: 'API Reference',
+              to: '/docs/api-reference',
             },
             {
               label: 'Architecture',

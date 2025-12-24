@@ -1,4 +1,8 @@
 #!/bin/bash
+# Generate OpenAPI spec before starting dev server
+cd "$(dirname "$0")/../.."
+pnpm docs:generate-openapi
+
 # Prepare docs for dev server by using symlink (faster, single source of truth)
 cd "$(dirname "$0")/.."
 
@@ -13,4 +17,3 @@ if [ ! -L "docs" ]; then
   ln -s ../docs docs
   echo "✅ Symlink created"
 fi
-

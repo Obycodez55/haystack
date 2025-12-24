@@ -1,7 +1,10 @@
 #!/bin/bash
+# Generate OpenAPI spec before building docs
+cd "$(dirname "$0")/../.."
+pnpm docs:generate-openapi
+
 # Prepare docs for build by copying from source instead of using symlink
 # This fixes Docusaurus build issues with symlinks
-
 cd "$(dirname "$0")/.."
 
 # Remove symlink if it exists
@@ -17,4 +20,3 @@ if [ ! -d "docs" ] || [ "../docs" -nt "docs" ]; then
 else
   echo "✅ Docs are up to date"
 fi
-

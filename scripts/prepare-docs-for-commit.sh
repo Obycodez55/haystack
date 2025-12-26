@@ -10,9 +10,13 @@ echo "📝 Preparing documentation for commit..."
 echo "Generating OpenAPI specification..."
 pnpm docs:generate-openapi
 
+# Generate API reference docs from OpenAPI spec
+echo "Generating API reference documentation..."
+cd website
+npx docusaurus gen-api-docs all
+
 # Copy docs to website/docs
 echo "Copying docs to website/docs..."
-cd website
 
 # Remove symlink if it exists
 if [ -L "docs" ]; then

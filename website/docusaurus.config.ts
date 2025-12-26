@@ -52,7 +52,7 @@ const config: Config = {
         id: 'api',
         docsPluginId: 'classic',
         config: {
-          haystack: {
+          api: {
             specPath: 'static/openapi.json',
             outputDir: 'docs/api-reference',
             sidebarOptions: {
@@ -64,6 +64,8 @@ const config: Config = {
       },
     ],
   ],
+
+  themes: ['docusaurus-theme-openapi-docs'],
 
   themeConfig: {
     image: 'img/docusaurus-social-card.jpg',

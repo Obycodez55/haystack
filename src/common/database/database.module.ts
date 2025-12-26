@@ -56,7 +56,7 @@ const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
       ],
   providers: [
     DatabaseService,
-    // During OpenAPI generation, provide a mock DataSource
+    // During OpenAPI generation, provide a null DataSource
     ...(isOpenApiGeneration
       ? [
           {

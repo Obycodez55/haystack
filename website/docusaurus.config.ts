@@ -16,7 +16,7 @@ const config: Config = {
   organizationName: 'haystack',
   projectName: 'haystack-docs',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'warn',

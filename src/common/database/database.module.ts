@@ -17,21 +17,32 @@ import { DatabaseService } from './database.service';
           throw new Error('Database configuration is missing');
         }
 
-        // For OpenAPI generation, use a mock/in-memory database configuration
-        // This prevents TypeORM from attempting to connect to a real database
+        // For OpenAPI generation, use PostgreSQL with autoConnect disabled
+        // This prevents TypeORM from attempting to connect during module initialization
         if (process.env.GENERATE_OPENAPI === 'true') {
           return {
-            type: 'sqlite',
-            database: ':memory:',
+            type: 'postgres',
+            host: dbConfig.host,
+            port: dbConfig.port,
+            username: dbConfig.username,
+            password: dbConfig.password,
+            database: dbConfig.database,
+            ssl: false, // Disable SSL for OpenAPI generation
             entities: [
               __dirname + '/entities/*.entity{.ts,.js}',
               __dirname + '/../../modules/**/entities/*.entity{.ts,.js}',
             ],
             synchronize: false,
             logging: false,
-            dropSchema: false,
-            // Don't initialize the connection
-            autoLoadEntities: false,
+            migrationsRun: false,
+            // Don't auto-connect - we'll handle connection manually if needed
+            extra: {
+              max: 0, // No connection pool
+              min: 0,
+              connectionTimeoutMillis: 1, // Fail immediately
+            },
+            // This prevents TypeORM from connecting during initialization
+            connectTimeoutMS: 1,
           };
         }
 

@@ -25,26 +25,36 @@ fi
 
 # Check if source docs directory exists
 # Try multiple possible paths for Vercel build context
+# We're currently in the website directory, so check relative to that
 DOCS_SOURCE=""
-if [ -d "../docs" ]; then
+if [ -d "../docs" ] && [ ! -L "../docs" ] && [ "$(ls -A ../docs 2>/dev/null)" ]; then
+  # ../docs exists, is not a symlink, and has content
   DOCS_SOURCE="../docs"
-elif [ -d "../../docs" ]; then
+elif [ -d "../../docs" ] && [ ! -L "../../docs" ] && [ "$(ls -A ../../docs 2>/dev/null)" ]; then
+  # ../../docs exists, is not a symlink, and has content
   DOCS_SOURCE="../../docs"
-elif [ -d "./docs" ]; then
-  DOCS_SOURCE="./docs"
 fi
 
 if [ -z "$DOCS_SOURCE" ]; then
-  echo "Warning: docs directory not found. Creating minimal docs structure..."
+  echo "Warning: docs directory not found or empty. Creating minimal docs structure..."
+  rm -rf docs
   mkdir -p docs
   touch docs/.exists
   # Create minimal structure to prevent build errors
   mkdir -p docs/setup
   echo "# Documentation" > docs/README.md
   echo "Documentation will be added here." >> docs/README.md
-  echo "# Redis Setup" > docs/setup/redis-setup.md
+  echo "---" > docs/setup/redis-setup.md
+  echo "title: Redis Setup Guide" >> docs/setup/redis-setup.md
+  echo "---" >> docs/setup/redis-setup.md
+  echo "" >> docs/setup/redis-setup.md
+  echo "# Redis Setup" >> docs/setup/redis-setup.md
   echo "Redis setup documentation." >> docs/setup/redis-setup.md
-  echo "# Database Setup" > docs/setup/database-setup.md
+  echo "---" > docs/setup/database-setup.md
+  echo "title: Database Setup Guide" >> docs/setup/database-setup.md
+  echo "---" >> docs/setup/database-setup.md
+  echo "" >> docs/setup/database-setup.md
+  echo "# Database Setup" >> docs/setup/database-setup.md
   echo "Database setup documentation." >> docs/setup/database-setup.md
   echo "✅ Created minimal docs directory"
 else
@@ -52,7 +62,9 @@ else
   if [ ! -d "docs" ] || [ ! -f "docs/.exists" ] || [ "$DOCS_SOURCE" -nt "docs/.exists" ]; then
     echo "Copying docs from $DOCS_SOURCE to website/docs..."
     rm -rf docs
-    cp -r "$DOCS_SOURCE" docs
+    # Use absolute path to avoid issues with relative paths
+    ABS_DOCS_SOURCE="$(cd "$(dirname "$DOCS_SOURCE")" && pwd)/$(basename "$DOCS_SOURCE")"
+    cp -r "$ABS_DOCS_SOURCE" docs
     touch docs/.exists
     echo "✅ Docs copied successfully"
   else

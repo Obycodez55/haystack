@@ -58,6 +58,7 @@ const config: Config = {
             sidebarOptions: {
               groupPathsBy: 'tag',
             },
+            downloadUrl: false,
           },
         },
       },

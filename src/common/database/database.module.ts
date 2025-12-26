@@ -4,80 +4,68 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from '@config';
 import { DatabaseService } from './database.service';
 
+// For OpenAPI generation, create a minimal module without TypeORM
+// This prevents database connection attempts during spec generation
+const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
+
 @Global()
 @Module({
-  imports: [
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const dbConfig = configService.get<DatabaseConfig>('database');
+  imports: isOpenApiGeneration
+    ? [] // No TypeORM during OpenAPI generation
+    : [
+        TypeOrmModule.forRootAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: (configService: ConfigService) => {
+            const dbConfig = configService.get<DatabaseConfig>('database');
 
-        if (!dbConfig) {
-          throw new Error('Database configuration is missing');
-        }
+            if (!dbConfig) {
+              throw new Error('Database configuration is missing');
+            }
 
-        // For OpenAPI generation, use PostgreSQL with autoConnect disabled
-        // This prevents TypeORM from attempting to connect during module initialization
-        if (process.env.GENERATE_OPENAPI === 'true') {
-          return {
-            type: 'postgres',
-            host: dbConfig.host,
-            port: dbConfig.port,
-            username: dbConfig.username,
-            password: dbConfig.password,
-            database: dbConfig.database,
-            ssl: false, // Disable SSL for OpenAPI generation
-            entities: [
-              __dirname + '/entities/*.entity{.ts,.js}',
-              __dirname + '/../../modules/**/entities/*.entity{.ts,.js}',
-            ],
-            synchronize: false,
-            logging: false,
-            migrationsRun: false,
-            // Don't auto-connect - we'll handle connection manually if needed
-            extra: {
-              max: 0, // No connection pool
-              min: 0,
-              connectionTimeoutMillis: 1, // Fail immediately
-            },
-            // This prevents TypeORM from connecting during initialization
-            connectTimeoutMS: 1,
-          };
-        }
-
-        return {
-          type: 'postgres',
-          url: dbConfig.url || undefined,
-          host: dbConfig.host,
-          port: dbConfig.port,
-          username: dbConfig.username,
-          password: dbConfig.password,
-          database: dbConfig.database,
-          ssl: dbConfig.ssl,
-          // Scan for entities in both common and modules directories
-          entities: [
-            __dirname + '/entities/*.entity{.ts,.js}',
-            __dirname + '/../../modules/**/entities/*.entity{.ts,.js}',
-          ],
-          migrations: [__dirname + '/../../database/migrations/*{.ts,.js}'],
-          migrationsRun: false, // Run migrations manually or via script
-          synchronize: dbConfig.synchronize, // NEVER true in production
-          logging: dbConfig.logging,
-          extra: {
-            max: dbConfig.maxConnections,
-            min: dbConfig.minConnections,
-            idleTimeoutMillis: dbConfig.idleTimeout,
-            connectionTimeoutMillis: dbConfig.connectionTimeout,
-            statement_timeout: dbConfig.statementTimeout,
-            query_timeout: dbConfig.queryTimeout,
-            acquireTimeoutMillis: dbConfig.acquireTimeout,
+            return {
+              type: 'postgres',
+              url: dbConfig.url || undefined,
+              host: dbConfig.host,
+              port: dbConfig.port,
+              username: dbConfig.username,
+              password: dbConfig.password,
+              database: dbConfig.database,
+              ssl: dbConfig.ssl,
+              // Scan for entities in both common and modules directories
+              entities: [
+                __dirname + '/entities/*.entity{.ts,.js}',
+                __dirname + '/../../modules/**/entities/*.entity{.ts,.js}',
+              ],
+              migrations: [__dirname + '/../../database/migrations/*{.ts,.js}'],
+              migrationsRun: false, // Run migrations manually or via script
+              synchronize: dbConfig.synchronize, // NEVER true in production
+              logging: dbConfig.logging,
+              extra: {
+                max: dbConfig.maxConnections,
+                min: dbConfig.minConnections,
+                idleTimeoutMillis: dbConfig.idleTimeout,
+                connectionTimeoutMillis: dbConfig.connectionTimeout,
+                statement_timeout: dbConfig.statementTimeout,
+                query_timeout: dbConfig.queryTimeout,
+                acquireTimeoutMillis: dbConfig.acquireTimeout,
+              },
+            };
           },
-        };
-      },
-    }),
+        }),
+      ],
+  providers: [
+    DatabaseService,
+    // During OpenAPI generation, provide a mock DataSource
+    ...(isOpenApiGeneration
+      ? [
+          {
+            provide: 'DataSource',
+            useValue: null,
+          },
+        ]
+      : []),
   ],
-  providers: [DatabaseService],
-  exports: [DatabaseService, TypeOrmModule],
+  exports: [DatabaseService, ...(isOpenApiGeneration ? [] : [TypeOrmModule])],
 })
 export class DatabaseModule {}

@@ -11,16 +11,19 @@ export interface ConnectionStats {
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
+  private readonly dataSource: DataSource | null;
+
   constructor(
-    @InjectDataSource() private readonly dataSource: DataSource,
+    @InjectDataSource({ optional: true }) dataSource: DataSource | null,
     private readonly logger: LoggerService,
   ) {
+    this.dataSource = dataSource;
     this.logger.setContext('DatabaseService');
   }
 
   async onModuleInit() {
-    // Skip database connection during OpenAPI generation
-    if (process.env.GENERATE_OPENAPI === 'true') {
+    // Skip database connection during OpenAPI generation or if no data source
+    if (process.env.GENERATE_OPENAPI === 'true' || !this.dataSource) {
       this.logger.warn('Database connection skipped (OpenAPI generation mode)');
       return;
     }
@@ -46,6 +49,13 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     responseTime?: number;
     error?: string;
   }> {
+    if (!this.dataSource) {
+      return {
+        status: 'down',
+        error: 'Database not available (OpenAPI generation mode)',
+      };
+    }
+
     try {
       const startTime = Date.now();
       await this.dataSource.query('SELECT 1');
@@ -63,7 +73,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       );
       return {
         status: 'down',
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
@@ -106,7 +116,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   /**
    * Get data source instance
    */
-  getDataSource(): DataSource {
+  getDataSource(): DataSource | null {
     return this.dataSource;
   }
 
@@ -115,6 +125,10 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
    * Ensures all database connections are properly closed
    */
   async onModuleDestroy() {
+    if (!this.dataSource) {
+      return;
+    }
+
     try {
       if (this.dataSource.isInitialized) {
         await this.dataSource.destroy();

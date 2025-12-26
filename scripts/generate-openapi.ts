@@ -1,3 +1,21 @@
+// IMPORTANT: Set environment variables BEFORE importing any modules
+// This ensures ConfigModule validation passes during OpenAPI generation
+process.env.GENERATE_OPENAPI = 'true';
+process.env.SKIP_DB_CONNECTION = 'true';
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
+process.env.DATABASE_PORT = process.env.DATABASE_PORT || '5432';
+process.env.DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
+process.env.DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || 'postgres';
+process.env.DATABASE_NAME = process.env.DATABASE_NAME || 'haystack';
+process.env.REDIS_HOST = process.env.REDIS_HOST || 'localhost';
+process.env.REDIS_PORT = process.env.REDIS_PORT || '6379';
+process.env.JWT_SECRET =
+  process.env.JWT_SECRET || 'temp-secret-for-openapi-generation';
+process.env.JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET ||
+  'temp-refresh-secret-for-openapi-generation';
+
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from '../src/app.module';
@@ -5,24 +23,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function generateOpenApiSpec() {
-  // Set environment variables to prevent database/Redis connections during OpenAPI generation
-  // This is needed for CI/CD environments like Vercel where databases aren't available
-  process.env.GENERATE_OPENAPI = 'true';
-  process.env.SKIP_DB_CONNECTION = 'true';
-  process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-  process.env.DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
-  process.env.DATABASE_PORT = process.env.DATABASE_PORT || '5432';
-  process.env.DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
-  process.env.DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || 'postgres';
-  process.env.DATABASE_NAME = process.env.DATABASE_NAME || 'haystack';
-  process.env.REDIS_HOST = process.env.REDIS_HOST || 'localhost';
-  process.env.REDIS_PORT = process.env.REDIS_PORT || '6379';
-  process.env.JWT_SECRET =
-    process.env.JWT_SECRET || 'temp-secret-for-openapi-generation';
-  process.env.JWT_REFRESH_SECRET =
-    process.env.JWT_REFRESH_SECRET ||
-    'temp-refresh-secret-for-openapi-generation';
-
   const app = await NestFactory.create(AppModule, {
     logger: false,
     abortOnError: false, // Don't abort on errors (like database connection failures)

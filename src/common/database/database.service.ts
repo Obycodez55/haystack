@@ -24,6 +24,16 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       await this.dataSource.query('SELECT 1');
       this.logger.log('Database connection established');
     } catch (error) {
+      // In OpenAPI generation mode, don't fail if database is unavailable
+      if (
+        process.env.GENERATE_OPENAPI === 'true' ||
+        process.env.SKIP_DB_CONNECTION === 'true'
+      ) {
+        this.logger.warn(
+          'Database connection skipped (OpenAPI generation mode)',
+        );
+        return;
+      }
       this.logger.error(
         'Failed to connect to database',
         error instanceof Error ? error : new Error(String(error)),

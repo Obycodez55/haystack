@@ -35,15 +35,27 @@ import { DatabaseService } from './database.service';
           migrationsRun: false, // Run migrations manually or via script
           synchronize: dbConfig.synchronize, // NEVER true in production
           logging: dbConfig.logging,
-          extra: {
-            max: dbConfig.maxConnections,
-            min: dbConfig.minConnections,
-            idleTimeoutMillis: dbConfig.idleTimeout,
-            connectionTimeoutMillis: dbConfig.connectionTimeout,
-            statement_timeout: dbConfig.statementTimeout,
-            query_timeout: dbConfig.queryTimeout,
-            acquireTimeoutMillis: dbConfig.acquireTimeout,
-          },
+          // For OpenAPI generation, don't connect immediately
+          ...(process.env.GENERATE_OPENAPI === 'true' && {
+            connectTimeoutMS: 100,
+            extra: {
+              max: 1,
+              min: 0,
+              idleTimeoutMillis: 1000,
+              connectionTimeoutMillis: 100,
+            },
+          }),
+          ...(process.env.GENERATE_OPENAPI !== 'true' && {
+            extra: {
+              max: dbConfig.maxConnections,
+              min: dbConfig.minConnections,
+              idleTimeoutMillis: dbConfig.idleTimeout,
+              connectionTimeoutMillis: dbConfig.connectionTimeout,
+              statement_timeout: dbConfig.statementTimeout,
+              query_timeout: dbConfig.queryTimeout,
+              acquireTimeoutMillis: dbConfig.acquireTimeout,
+            },
+          }),
         };
       },
     }),

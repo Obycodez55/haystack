@@ -29,9 +29,11 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       },
       maxRetriesPerRequest: config.maxRetries,
       enableReadyCheck: true,
-      lazyConnect: config.lazyConnect,
+      lazyConnect:
+        process.env.GENERATE_OPENAPI === 'true' ? true : config.lazyConnect,
       keepAlive: config.keepAlive,
-      connectTimeout: config.connectTimeout,
+      connectTimeout:
+        process.env.GENERATE_OPENAPI === 'true' ? 100 : config.connectTimeout,
       commandTimeout: config.commandTimeout,
       keyPrefix: config.keyPrefix,
     });
@@ -93,7 +95,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       // Force disconnect if quit fails
       try {
         this.client.disconnect();
-      } catch (disconnectError) {
+      } catch {
         // Ignore disconnect errors
       }
     }

@@ -3,9 +3,12 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  Inject,
+  Optional,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap, finalize } from 'rxjs/operators';
+import { InjectDataSource, getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { getRequestContext } from '@common/logging/middleware/correlation.middleware';
 import { LoggerService } from '../../../common/logging/services/logger.service';
@@ -18,7 +21,9 @@ import { LoggerService } from '../../../common/logging/services/logger.service';
 @Injectable()
 export class TenantContextInterceptor implements NestInterceptor {
   constructor(
-    private readonly dataSource: DataSource,
+    @Optional()
+    @Inject(getDataSourceToken())
+    private readonly dataSource: DataSource | null,
     private readonly logger: LoggerService,
   ) {
     this.logger.setContext('TenantContextInterceptor');
@@ -31,7 +36,7 @@ export class TenantContextInterceptor implements NestInterceptor {
     const requestContext = getRequestContext();
     const tenantId = requestContext?.tenantId;
 
-    if (tenantId) {
+    if (tenantId && this.dataSource) {
       try {
         // Set tenant context for RLS policies
         // This must be called before any database queries
@@ -53,7 +58,7 @@ export class TenantContextInterceptor implements NestInterceptor {
         // Optionally clear tenant context after request
         // Note: This might not be necessary with connection pooling
         // but can be useful for debugging
-        if (tenantId) {
+        if (tenantId && this.dataSource) {
           // Use void to explicitly mark promise as intentionally not awaited
           // This prevents unhandled promise rejection warnings
           void this.dataSource

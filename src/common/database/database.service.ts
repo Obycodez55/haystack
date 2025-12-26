@@ -88,6 +88,14 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
    * Get connection pool statistics
    */
   async getConnectionStats(): Promise<ConnectionStats> {
+    if (!this.dataSource) {
+      return {
+        total: 0,
+        idle: 0,
+        waiting: 0,
+      };
+    }
+
     try {
       // TypeORM uses pg-pool internally, but we can't access it directly
       // This is a placeholder - actual implementation depends on TypeORM version

@@ -26,6 +26,7 @@
     "docs:build": "cd website && pnpm build",
     "docs:serve": "cd website && pnpm serve",
     "docs:generate-openapi": "ts-node -r tsconfig-paths/register scripts/generate-openapi.ts",
+    "docs:prepare": "bash scripts/prepare-docs-for-commit.sh",
     "migration:generate": "ts-node -r tsconfig-paths/register scripts/migration-generate.ts",
     "migration:run": "pnpm exec ts-node -r tsconfig-paths/register scripts/run-migrations-sql.ts",
     "migration:revert": "ts-node -r tsconfig-paths/register scripts/migration-revert.ts",

@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm docs:generate-openapi && cd website && pnpm install && pnpm build",
+  "buildCommand": "pnpm install && cd website && pnpm install && pnpm build",
   "outputDirectory": "website/build",
   "devCommand": "cd website && pnpm start",
   "installCommand": "pnpm install",

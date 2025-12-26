@@ -7,9 +7,9 @@
 /website/.docusaurus/
 /website/build/
 /website/node_modules/
-# Copied docs (builds use copy, dev uses symlink)
-/website/docs/
-!website/docs/.gitkeep
+# Copied docs - now committed (generated in pre-commit hook)
+# /website/docs/
+# !website/docs/.gitkeep
 
 # Logs
 logs

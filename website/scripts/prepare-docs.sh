@@ -24,19 +24,35 @@ if [ -L "docs" ]; then
 fi
 
 # Check if source docs directory exists
-if [ ! -d "../docs" ]; then
-  echo "Warning: ../docs directory not found. Creating empty docs directory..."
+# Try multiple possible paths for Vercel build context
+DOCS_SOURCE=""
+if [ -d "../docs" ]; then
+  DOCS_SOURCE="../docs"
+elif [ -d "../../docs" ]; then
+  DOCS_SOURCE="../../docs"
+elif [ -d "./docs" ]; then
+  DOCS_SOURCE="./docs"
+fi
+
+if [ -z "$DOCS_SOURCE" ]; then
+  echo "Warning: docs directory not found. Creating minimal docs structure..."
   mkdir -p docs
   touch docs/.exists
+  # Create minimal structure to prevent build errors
+  mkdir -p docs/setup
   echo "# Documentation" > docs/README.md
   echo "Documentation will be added here." >> docs/README.md
-  echo "✅ Created empty docs directory"
+  echo "# Redis Setup" > docs/setup/redis-setup.md
+  echo "Redis setup documentation." >> docs/setup/redis-setup.md
+  echo "# Database Setup" > docs/setup/database-setup.md
+  echo "Database setup documentation." >> docs/setup/database-setup.md
+  echo "✅ Created minimal docs directory"
 else
   # Copy docs if they don't exist or are outdated
-  if [ ! -d "docs" ] || [ ! -f "docs/.exists" ] || [ "../docs" -nt "docs/.exists" ]; then
-    echo "Copying docs from ../docs to website/docs..."
+  if [ ! -d "docs" ] || [ ! -f "docs/.exists" ] || [ "$DOCS_SOURCE" -nt "docs/.exists" ]; then
+    echo "Copying docs from $DOCS_SOURCE to website/docs..."
     rm -rf docs
-    cp -r ../docs docs
+    cp -r "$DOCS_SOURCE" docs
     touch docs/.exists
     echo "✅ Docs copied successfully"
   else

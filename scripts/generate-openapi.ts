@@ -23,10 +23,34 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function generateOpenApiSpec() {
-  const app = await NestFactory.create(AppModule, {
-    logger: false,
-    abortOnError: false, // Don't abort on errors (like database connection failures)
-  });
+  let app;
+  try {
+    app = await NestFactory.create(AppModule, {
+      logger: false,
+      abortOnError: false, // Don't abort on errors (like database connection failures)
+    });
+  } catch (error) {
+    // If app creation fails due to database connection, try again with error handling
+    // This can happen if TypeORM tries to connect during module initialization
+    if (
+      error instanceof Error &&
+      (error.message.includes('ECONNREFUSED') ||
+        error.message.includes('connect') ||
+        error.message.includes('database'))
+    ) {
+      console.warn(
+        '⚠️  Database connection error during app creation, retrying with error handling...',
+      );
+      // Set flag to skip connection checks
+      process.env.SKIP_DB_CONNECTION = 'true';
+      app = await NestFactory.create(AppModule, {
+        logger: false,
+        abortOnError: false,
+      });
+    } else {
+      throw error;
+    }
+  }
 
   const config = new DocumentBuilder()
     .setTitle('Haystack Payment Orchestration API')

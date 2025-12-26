@@ -58,7 +58,7 @@ const config: Config = {
             sidebarOptions: {
               groupPathsBy: 'tag',
             },
-            downloadUrl: false,
+            // downloadUrl is omitted - plugin will use local specPath instead
           },
         },
       },

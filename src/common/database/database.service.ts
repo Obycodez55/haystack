@@ -1,5 +1,11 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Inject,
+  Optional,
+} from '@nestjs/common';
+import { InjectDataSource, getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { LoggerService } from '../logging/services/logger.service';
 
@@ -14,7 +20,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   private readonly dataSource: DataSource | null;
 
   constructor(
-    @InjectDataSource({ optional: true }) dataSource: DataSource | null,
+    @Optional() @Inject(getDataSourceToken()) dataSource: DataSource | null,
     private readonly logger: LoggerService,
   ) {
     this.dataSource = dataSource;

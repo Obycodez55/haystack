@@ -56,11 +56,11 @@ const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
       ],
   providers: [
     DatabaseService,
-    // During OpenAPI generation, provide a null DataSource
+    // During OpenAPI generation, provide a null DataSource using the correct token
     ...(isOpenApiGeneration
       ? [
           {
-            provide: 'DataSource',
+            provide: getDataSourceToken(),
             useValue: null,
           },
         ]

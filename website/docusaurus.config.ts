@@ -35,7 +35,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           // Use default /docs/ route to avoid conflicts with homepage
-          editUrl: 'https://github.com/yourorg/haystack/edit/main/website/',
+          editUrl: 'https://github.com/Obycodez55/haystack/edit/main/website/',
           // Use ApiItem component for OpenAPI docs
           docItemComponent: '@theme/ApiItem',
         },
@@ -93,7 +93,7 @@ const config: Config = {
           label: 'API Reference',
         },
         {
-          href: 'https://github.com/yourorg/haystack',
+          href: 'https://github.com/Obycodez55/haystack',
           label: 'GitHub',
           position: 'right',
         },
@@ -141,7 +141,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/yourorg/haystack',
+              href: 'https://github.com/Obycodez55/haystack',
             },
           ],
         },

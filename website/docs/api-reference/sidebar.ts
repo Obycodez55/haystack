@@ -4,7 +4,13 @@ const sidebar: SidebarsConfig = {
   apisidebar: [
     {
       type: 'doc',
+      id: 'api-reference/api-reference',
+      label: 'Overview',
+    },
+    {
+      type: 'doc',
       id: 'api-reference/haystack-payment-orchestration-api',
+      label: 'Introduction',
     },
     {
       type: 'category',

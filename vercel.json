@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm install && pnpm docs:prepare && cd website && rm -rf node_modules && pnpm install --frozen-lockfile && pnpm build",
+  "buildCommand": "pnpm install && pnpm docs:prepare && cd website && pnpm install --frozen-lockfile --no-shamefully-hoist && pnpm build",
   "outputDirectory": "website/build",
   "devCommand": "cd website && pnpm start",
   "installCommand": "pnpm install",

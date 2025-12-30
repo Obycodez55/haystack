@@ -18,6 +18,12 @@ npx docusaurus gen-api-docs all
 # Copy docs to website/docs
 echo "Copying docs to website/docs..."
 
+# Backup api-reference if it exists (it's generated, not copied)
+if [ -d "docs/api-reference" ]; then
+  echo "Backing up generated API reference..."
+  cp -r docs/api-reference /tmp/api-reference.backup
+fi
+
 # Remove symlink if it exists
 if [ -L "docs" ]; then
   rm docs
@@ -29,11 +35,23 @@ rm -rf docs
 # Copy from root docs directory
 if [ -d "../docs" ]; then
   cp -r ../docs docs
+  # Restore api-reference if it was backed up
+  if [ -d "/tmp/api-reference.backup" ]; then
+    cp -r /tmp/api-reference.backup docs/api-reference
+    rm -rf /tmp/api-reference.backup
+    echo "✅ Restored generated API reference"
+  fi
   touch docs/.exists
   echo "✅ Docs copied successfully"
 else
   echo "⚠️  Warning: ../docs directory not found"
   mkdir -p docs
+  # Restore api-reference if it was backed up
+  if [ -d "/tmp/api-reference.backup" ]; then
+    cp -r /tmp/api-reference.backup docs/api-reference
+    rm -rf /tmp/api-reference.backup
+    echo "✅ Restored generated API reference"
+  fi
   touch docs/.exists
 fi
 

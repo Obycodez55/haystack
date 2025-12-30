@@ -47,3 +47,12 @@ if [ ! -f "static/openapi.json" ]; then
 else
   echo "✅ OpenAPI spec exists"
 fi
+
+# Verify api-reference directory exists (should be committed)
+if [ ! -d "docs/api-reference" ] || [ -z "$(ls -A docs/api-reference 2>/dev/null)" ]; then
+  echo "Warning: api-reference directory not found or empty."
+  echo "This should have been generated in the pre-commit hook."
+  echo "The build may fail if API reference docs are expected."
+else
+  echo "✅ API reference directory exists"
+fi

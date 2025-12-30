@@ -8,8 +8,9 @@
 /website/build/
 /website/node_modules/
 # Copied docs - now committed (generated in pre-commit hook)
-# /website/docs/
-# !website/docs/.gitkeep
+# Allow api-reference to be committed (it's generated from OpenAPI spec)
+!/website/docs/api-reference/
+!/website/docs/api-reference/**
 
 # Logs
 logs

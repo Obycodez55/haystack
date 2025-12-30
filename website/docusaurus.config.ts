@@ -36,6 +36,8 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           // Use default /docs/ route to avoid conflicts with homepage
           editUrl: 'https://github.com/yourorg/haystack/edit/main/website/',
+          // Use ApiItem component for OpenAPI docs
+          docItemComponent: '@theme/ApiItem',
         },
         blog: false, // Disable blog feature
         theme: {

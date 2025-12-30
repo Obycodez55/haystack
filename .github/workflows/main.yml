@@ -82,6 +82,11 @@ jobs:
       - name: Build project
         run: pnpm build
 
+      - name: Generate OpenAPI specification
+        run: pnpm docs:generate-openapi
+        env:
+          NODE_ENV: production
+
       - name: Run database migrations
         run: pnpm db:migrate:test
 

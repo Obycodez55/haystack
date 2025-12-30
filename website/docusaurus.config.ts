@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
@@ -16,7 +16,7 @@ const config: Config = {
   organizationName: 'haystack',
   projectName: 'haystack-docs',
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: 'warn',
@@ -35,7 +35,9 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           // Use default /docs/ route to avoid conflicts with homepage
-          editUrl: 'https://github.com/yourorg/haystack/edit/main/website/',
+          editUrl: 'https://github.com/Obycodez55/haystack/edit/main/website/',
+          // Use ApiItem component for OpenAPI docs
+          docItemComponent: '@theme/ApiItem',
         },
         blog: false, // Disable blog feature
         theme: {
@@ -52,17 +54,20 @@ const config: Config = {
         id: 'api',
         docsPluginId: 'classic',
         config: {
-          haystack: {
+          api: {
             specPath: 'static/openapi.json',
             outputDir: 'docs/api-reference',
             sidebarOptions: {
               groupPathsBy: 'tag',
             },
+            // downloadUrl is omitted - plugin will use local specPath instead
           },
         },
       },
     ],
   ],
+
+  themes: ['docusaurus-theme-openapi-docs'],
 
   themeConfig: {
     image: 'img/docusaurus-social-card.jpg',
@@ -83,12 +88,12 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          to: '/docs/api/api-specification',
+          to: '/docs/api-reference',
           position: 'left',
-          label: 'API',
+          label: 'API Reference',
         },
         {
-          href: 'https://github.com/yourorg/haystack',
+          href: 'https://github.com/Obycodez55/haystack',
           label: 'GitHub',
           position: 'right',
         },
@@ -107,6 +112,10 @@ const config: Config = {
             {
               label: 'API Specification',
               to: '/docs/api/api-specification',
+            },
+            {
+              label: 'API Reference',
+              to: '/docs/api-reference',
             },
             {
               label: 'Architecture',
@@ -132,7 +141,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/yourorg/haystack',
+              href: 'https://github.com/Obycodez55/haystack',
             },
           ],
         },

@@ -16,12 +16,14 @@ Haystack is a payment orchestration service that aggregates multiple payment pro
 ### The Problem We Solve
 
 **For E-commerce Businesses:**
+
 - 💸 **Lost Revenue**: 8-10% of potential revenue lost due to payment failures
 - ⏱️ **Integration Time**: 3+ months and $15k-30k to integrate multiple providers
 - 📊 **Manual Reconciliation**: 4+ hours daily spent matching transactions across providers
 - 🔒 **Vendor Lock-in**: Dependent on single provider with no negotiating power
 
 **For Developers:**
+
 - 🔧 **Complex Integration**: Different APIs, webhooks, and error codes for each provider
 - 🔄 **Fallback Complexity**: Must build retry logic from scratch
 - 🛠️ **Maintenance Burden**: Constant updates as provider APIs change
@@ -109,7 +111,7 @@ src/
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Obycodez55/haystack.git
 cd haystack
 
 # Install dependencies
@@ -205,6 +207,7 @@ import { DatabaseConfig } from '@config/database.config';
 ```
 
 Available aliases:
+
 - `@common/*` → `src/common/*`
 - `@modules/*` → `src/modules/*`
 - `@config/*` → `src/config/*`

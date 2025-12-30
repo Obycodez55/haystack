@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd website && pnpm install && pnpm build",
+  "buildCommand": "pnpm install && pnpm docs:prepare && cd website && pnpm install && pnpm build",
   "outputDirectory": "website/build",
   "devCommand": "cd website && pnpm start",
   "installCommand": "pnpm install",
@@ -11,4 +11,3 @@
     }
   ]
 }
-

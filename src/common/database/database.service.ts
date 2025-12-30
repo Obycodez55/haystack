@@ -1,7 +1,14 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { InjectDataSource } from '@nestjs/typeorm';
+import {
+  Injectable,
+  OnModuleInit,
+  OnModuleDestroy,
+  Inject,
+  Optional,
+} from '@nestjs/common';
+import { InjectDataSource, getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { LoggerService } from '../logging/services/logger.service';
+import { getErrorMessage, toError } from '../utils/error.util';
 
 export interface ConnectionStats {
   total: number;
@@ -11,23 +18,29 @@ export interface ConnectionStats {
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnModuleDestroy {
+  private readonly dataSource: DataSource | null;
+
   constructor(
-    @InjectDataSource() private readonly dataSource: DataSource,
+    @Optional() @Inject(getDataSourceToken()) dataSource: DataSource | null,
     private readonly logger: LoggerService,
   ) {
+    this.dataSource = dataSource;
     this.logger.setContext('DatabaseService');
   }
 
   async onModuleInit() {
+    // Skip database connection during OpenAPI generation or if no data source
+    if (process.env.GENERATE_OPENAPI === 'true' || !this.dataSource) {
+      this.logger.warn('Database connection skipped (OpenAPI generation mode)');
+      return;
+    }
+
     try {
       // Test connection
       await this.dataSource.query('SELECT 1');
       this.logger.log('Database connection established');
     } catch (error) {
-      this.logger.error(
-        'Failed to connect to database',
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      this.logger.error('Failed to connect to database', toError(error));
       throw error;
     }
   }
@@ -40,6 +53,13 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
     responseTime?: number;
     error?: string;
   }> {
+    if (!this.dataSource) {
+      return {
+        status: 'down',
+        error: 'Database not available (OpenAPI generation mode)',
+      };
+    }
+
     try {
       const startTime = Date.now();
       await this.dataSource.query('SELECT 1');
@@ -50,14 +70,13 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         responseTime,
       };
     } catch (error) {
-      this.logger.error(
-        'Database health check failed',
-        error instanceof Error ? error : new Error(String(error)),
-        { error: error instanceof Error ? error.message : String(error) },
-      );
+      const errorMessage = getErrorMessage(error);
+      this.logger.error('Database health check failed', toError(error), {
+        error: errorMessage,
+      });
       return {
         status: 'down',
-        error: error.message,
+        error: errorMessage,
       };
     }
   }
@@ -66,6 +85,14 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
    * Get connection pool statistics
    */
   async getConnectionStats(): Promise<ConnectionStats> {
+    if (!this.dataSource) {
+      return {
+        total: 0,
+        idle: 0,
+        waiting: 0,
+      };
+    }
+
     try {
       // TypeORM uses pg-pool internally, but we can't access it directly
       // This is a placeholder - actual implementation depends on TypeORM version
@@ -85,10 +112,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         waiting: 0,
       };
     } catch (error) {
-      this.logger.error(
-        'Failed to get connection stats',
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      this.logger.error('Failed to get connection stats', toError(error));
       return {
         total: 0,
         idle: 0,
@@ -100,7 +124,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   /**
    * Get data source instance
    */
-  getDataSource(): DataSource {
+  getDataSource(): DataSource | null {
     return this.dataSource;
   }
 
@@ -109,15 +133,17 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
    * Ensures all database connections are properly closed
    */
   async onModuleDestroy() {
+    if (!this.dataSource) {
+      return;
+    }
+
     try {
       if (this.dataSource.isInitialized) {
         await this.dataSource.destroy();
         this.logger.log('Database connections closed');
       }
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
-      this.logger.error('Error closing database connections', errorObj);
+      this.logger.error('Error closing database connections', toError(error));
     }
   }
 }

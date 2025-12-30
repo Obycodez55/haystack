@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/api/v1": {
+    "/": {
       "get": {
         "description": "Returns a simple hello message indicating the API is running",
         "operationId": "getHello",
@@ -19,7 +19,7 @@
     },
     "/health": {
       "get": {
-        "description": "Comprehensive health check including memory and disk usage",
+        "description": "Comprehensive health check including API, database, and Redis",
         "operationId": "check",
         "parameters": [],
         "responses": {
@@ -359,7 +359,7 @@
     },
     "/health/ready": {
       "get": {
-        "description": "Kubernetes readiness probe endpoint",
+        "description": "Kubernetes readiness probe endpoint including database and Redis checks",
         "operationId": "readiness",
         "parameters": [],
         "responses": {

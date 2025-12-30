@@ -86,12 +86,24 @@ jobs:
       - name: Build project
         run: pnpm build
 
+      - name: Generate OpenAPI specification
+        run: pnpm docs:generate-openapi
+        env:
+          NODE_ENV: production
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
           retention-days: 1
+
+      - name: Upload OpenAPI spec
+        uses: actions/upload-artifact@v4
+        with:
+          name: openapi-spec
+          path: website/static/openapi.json
+          retention-days: 30
 
   test:
     name: Unit Tests

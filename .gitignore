@@ -7,9 +7,10 @@
 /website/.docusaurus/
 /website/build/
 /website/node_modules/
-# Copied docs (builds use copy, dev uses symlink)
-/website/docs/
-!website/docs/.gitkeep
+# Copied docs - now committed (generated in pre-commit hook)
+# Allow api-reference to be committed (it's generated from OpenAPI spec)
+!/website/docs/api-reference/
+!/website/docs/api-reference/**
 
 # Logs
 logs

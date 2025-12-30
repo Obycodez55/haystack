@@ -13,6 +13,7 @@ import {
   CacheInvalidateOptions,
 } from '../decorators/cache.decorator';
 import { LoggerService } from '../../logging/services/logger.service';
+import { toError } from '../../utils/error.util';
 
 @Injectable()
 export class CacheInvalidateInterceptor implements NestInterceptor {
@@ -74,9 +75,7 @@ export class CacheInvalidateInterceptor implements NestInterceptor {
     if (isAsync) {
       // Fire and forget
       invalidation().catch((error) => {
-        const errorObj =
-          error instanceof Error ? error : new Error(String(error));
-        this.logger.error('Async cache invalidation failed', errorObj, {
+        this.logger.error('Async cache invalidation failed', toError(error), {
           config,
         });
       });

@@ -1,4 +1,6 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+// Import the auto-generated API sidebar
+import apiSidebar from './docs/api-reference/sidebar';
 
 /**
  * Sidebar configuration for Haystack documentation
@@ -7,41 +9,11 @@ import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
  */
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
+    // Include the auto-generated API reference sidebar
     {
       type: 'category',
-      label: 'Product',
-      items: [
-        'product/PRD',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Architecture',
-      items: [
-        'architecture/technical-architecture',
-        'architecture/database-schema',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Planning',
-      items: [
-        'planning/development-roadmap',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'API',
-      items: [
-        'api/api-specification',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Providers',
-      items: [
-        'providers/provider-integration-guide',
-      ],
+      label: 'API Reference',
+      items: apiSidebar,
     },
   ],
 };

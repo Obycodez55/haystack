@@ -5,6 +5,7 @@ import { ApiKeyEntity, ApiKeyMode } from '../entities/api-key.entity';
 import { BaseRepository } from '@common/database/repositories/base.repository';
 import { LoggerService } from '../../../common/logging/services/logger.service';
 import { compareApiKey } from '../utils/api-key-hash.util';
+import { toError } from '@common/utils/error.util';
 
 @Injectable()
 export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
@@ -26,10 +27,7 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
         relations: ['tenant'],
       });
     } catch (error) {
-      this.logger.error(
-        'Failed to find API key by hash',
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      this.logger.error('Failed to find API key by hash', toError(error));
       throw error;
     }
   }
@@ -45,8 +43,7 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
         relations: ['tenant'],
       });
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Failed to find API keys by prefix', errorObj, {
         keyPrefix,
       });
@@ -85,8 +82,7 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
 
       return null;
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Failed to validate API key', errorObj);
       return null;
     }
@@ -109,8 +105,7 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
         order: { createdAt: 'DESC' },
       });
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Failed to find active API keys', errorObj, {
         tenantId,
         mode,
@@ -133,8 +128,7 @@ export class ApiKeyRepository extends BaseRepository<ApiKeyEntity> {
         lastUsedIp: ipAddress,
       });
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Failed to update last used', errorObj, {
         apiKeyId: id,
         tenantId,

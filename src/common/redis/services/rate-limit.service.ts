@@ -9,6 +9,7 @@ import {
 import { buildRateLimitKey } from '../utils/key-builder.util';
 import { calculateResetTime } from '../utils/window-calculator.util';
 import { RedisConfig } from '@config';
+import { toError } from '../../utils/error.util';
 
 @Injectable()
 export class RateLimitService {
@@ -102,8 +103,7 @@ export class RateLimitService {
       };
     } catch (error) {
       // Graceful degradation: allow request if Redis fails
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Rate limit check failed, allowing request', errorObj, {
         identifier,
         mode,
@@ -158,8 +158,7 @@ export class RateLimitService {
             : 0,
       };
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Rate limit status check failed', errorObj, {
         identifier,
       });
@@ -190,8 +189,7 @@ export class RateLimitService {
       await this.redis.client.del(key);
       this.logger.log('Rate limit reset', { identifier, mode });
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
+      const errorObj = toError(error);
       this.logger.error('Failed to reset rate limit', errorObj, {
         identifier,
       });

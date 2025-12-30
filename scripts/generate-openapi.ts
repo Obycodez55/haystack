@@ -11,10 +11,10 @@ process.env.DATABASE_NAME = process.env.DATABASE_NAME || 'haystack';
 process.env.REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 process.env.REDIS_PORT = process.env.REDIS_PORT || '6379';
 process.env.JWT_SECRET =
-  process.env.JWT_SECRET || 'temp-secret-for-openapi-generation';
+  process.env.JWT_SECRET || 'PLACEHOLDER_NOT_FOR_USE_JWT_SECRET';
 process.env.JWT_REFRESH_SECRET =
   process.env.JWT_REFRESH_SECRET ||
-  'temp-refresh-secret-for-openapi-generation';
+  'PLACEHOLDER_NOT_FOR_USE_JWT_REFRESH_SECRET';
 
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';

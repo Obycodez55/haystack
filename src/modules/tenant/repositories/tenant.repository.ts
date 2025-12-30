@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { TenantEntity } from '../entities/tenant.entity';
 import { LoggerService } from '../../../common/logging/services/logger.service';
+import { toError } from '@common/utils/error.util';
 
 @Injectable()
 export class TenantRepository {
@@ -23,11 +24,9 @@ export class TenantRepository {
         where: { id } as FindOptionsWhere<TenantEntity>,
       });
     } catch (error) {
-      this.logger.error(
-        'Failed to find tenant by ID',
-        error instanceof Error ? error : new Error(String(error)),
-        { tenantId: id },
-      );
+      this.logger.error('Failed to find tenant by ID', toError(error), {
+        tenantId: id,
+      });
       throw error;
     }
   }
@@ -41,11 +40,9 @@ export class TenantRepository {
         where: { email },
       });
     } catch (error) {
-      this.logger.error(
-        'Failed to find tenant by email',
-        error instanceof Error ? error : new Error(String(error)),
-        { email },
-      );
+      this.logger.error('Failed to find tenant by email', toError(error), {
+        email,
+      });
       throw error;
     }
   }
@@ -60,11 +57,9 @@ export class TenantRepository {
       });
       return count > 0;
     } catch (error) {
-      this.logger.error(
-        'Failed to check email existence',
-        error instanceof Error ? error : new Error(String(error)),
-        { email },
-      );
+      this.logger.error('Failed to check email existence', toError(error), {
+        email,
+      });
       throw error;
     }
   }
@@ -77,10 +72,7 @@ export class TenantRepository {
       const newEntity = this.repository.create(entity);
       return this.repository.save(newEntity);
     } catch (error) {
-      this.logger.error(
-        'Failed to create tenant',
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      this.logger.error('Failed to create tenant', toError(error));
       throw error;
     }
   }
@@ -103,11 +95,9 @@ export class TenantRepository {
       }
       return updated;
     } catch (error) {
-      this.logger.error(
-        'Failed to update tenant',
-        error instanceof Error ? error : new Error(String(error)),
-        { tenantId: id },
-      );
+      this.logger.error('Failed to update tenant', toError(error), {
+        tenantId: id,
+      });
       throw error;
     }
   }

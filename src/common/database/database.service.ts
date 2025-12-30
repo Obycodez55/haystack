@@ -8,6 +8,7 @@ import {
 import { InjectDataSource, getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { LoggerService } from '../logging/services/logger.service';
+import { getErrorMessage, toError } from '../utils/error.util';
 
 export interface ConnectionStats {
   total: number;
@@ -39,10 +40,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
       await this.dataSource.query('SELECT 1');
       this.logger.log('Database connection established');
     } catch (error) {
-      this.logger.error(
-        'Failed to connect to database',
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      this.logger.error('Failed to connect to database', toError(error));
       throw error;
     }
   }
@@ -72,14 +70,13 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         responseTime,
       };
     } catch (error) {
-      this.logger.error(
-        'Database health check failed',
-        error instanceof Error ? error : new Error(String(error)),
-        { error: error instanceof Error ? error.message : String(error) },
-      );
+      const errorMessage = getErrorMessage(error);
+      this.logger.error('Database health check failed', toError(error), {
+        error: errorMessage,
+      });
       return {
         status: 'down',
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
       };
     }
   }
@@ -115,10 +112,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         waiting: 0,
       };
     } catch (error) {
-      this.logger.error(
-        'Failed to get connection stats',
-        error instanceof Error ? error : new Error(String(error)),
-      );
+      this.logger.error('Failed to get connection stats', toError(error));
       return {
         total: 0,
         idle: 0,
@@ -149,9 +143,7 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
         this.logger.log('Database connections closed');
       }
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
-      this.logger.error('Error closing database connections', errorObj);
+      this.logger.error('Error closing database connections', toError(error));
     }
   }
 }

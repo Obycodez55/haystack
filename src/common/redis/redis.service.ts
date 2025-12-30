@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { RedisConfig } from '@config';
 import { LoggerService } from '../logging/services/logger.service';
+import { getErrorMessage, toError } from '../utils/error.util';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
@@ -40,9 +41,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
     // Error handling
     this.client.on('error', (error) => {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
-      this.logger.error('Redis connection error', errorObj);
+      this.logger.error('Redis connection error', toError(error));
     });
 
     this.client.on('connect', () => {
@@ -72,9 +71,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         this.logger.log('Redis service initialized');
       }
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
-      this.logger.error('Failed to initialize Redis', errorObj);
+      this.logger.error('Failed to initialize Redis', toError(error));
       // Don't throw - allow graceful degradation
     }
   }
@@ -88,9 +85,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await this.client.quit();
       this.logger.log('Redis connection closed');
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
-      this.logger.error('Error closing Redis connection', errorObj);
+      this.logger.error('Error closing Redis connection', toError(error));
 
       // Force disconnect if quit fails
       try {
@@ -117,7 +112,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     } catch (error) {
       return {
         status: 'down',
-        error: error instanceof Error ? error.message : String(error),
+        error: getErrorMessage(error),
       };
     }
   }
@@ -142,9 +137,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         totalCommandsProcessed: commands ? parseInt(commands, 10) : undefined,
       };
     } catch (error) {
-      const errorObj =
-        error instanceof Error ? error : new Error(String(error));
-      this.logger.error('Failed to get Redis stats', errorObj);
+      this.logger.error('Failed to get Redis stats', toError(error));
       return {};
     }
   }

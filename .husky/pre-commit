@@ -1,5 +1,2 @@
-# Prepare docs and OpenAPI spec before commit
-pnpm docs:prepare
-
 pnpm format
 pnpm exec lint-staged

@@ -1,4 +1,6 @@
 import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
+// Import the auto-generated API sidebar
+import apiSidebar from './docs/api-reference/sidebar';
 
 /**
  * Sidebar configuration for Haystack documentation
@@ -7,18 +9,11 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
  */
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
-    // Only include items that actually exist
-    // The API reference is auto-generated and has its own sidebar
+    // Include the auto-generated API reference sidebar
     {
       type: 'category',
       label: 'API Reference',
-      items: [
-        'api-reference/haystack-payment-orchestration-api',
-        'api-reference/get-hello',
-        'api-reference/check',
-        'api-reference/liveness',
-        'api-reference/readiness',
-      ],
+      items: apiSidebar,
     },
   ],
 };

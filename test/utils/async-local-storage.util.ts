@@ -1,5 +1,5 @@
-import { asyncLocalStorage } from '@common/logging/middleware/correlation.middleware';
-import { RequestContext } from '@common/logging/types/log-context.types';
+import { asyncLocalStorage } from '@logging/middleware/correlation.middleware';
+import { RequestContext } from '@logging/types/log-context.types';
 
 /**
  * AsyncLocalStorage utilities for testing
@@ -25,7 +25,9 @@ export class AsyncLocalStorageUtil {
       userAgent: context.userAgent || 'test-agent',
     };
 
-    return asyncLocalStorage.run(fullContext, fn);
+    return await asyncLocalStorage.run(fullContext, async () => {
+      return await fn();
+    });
   }
 
   /**

@@ -1,5 +1,4 @@
-import { LoggerService } from '@common/logging/services/logger.service';
-import { createMockLogger, TestLogger } from '@common/logging/utils/test-utils';
+import { createMockLogger, TestLogger } from '@logging/utils/test-utils';
 
 /**
  * Enhanced logger mock for testing

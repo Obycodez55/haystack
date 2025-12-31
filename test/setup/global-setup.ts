@@ -4,7 +4,6 @@ import 'tsconfig-paths/register';
 import { DataSource } from 'typeorm';
 import { DatabaseHelper } from '../helpers/database.helper';
 import { RedisHelper } from '../helpers/redis.helper';
-import { createDataSource } from '../helpers/test-database';
 import { TenantFactory, ApiKeyFactory } from '../factories';
 
 /**

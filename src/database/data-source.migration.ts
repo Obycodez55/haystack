@@ -1,4 +1,7 @@
 import 'reflect-metadata';
+// Register path aliases before any imports that use them
+require('tsconfig-paths/register');
+
 import { DataSource } from 'typeorm';
 import * as path from 'path';
 
@@ -6,6 +9,8 @@ import * as path from 'path';
 import { BaseEntity, TenantScopedEntity } from './entities/base.entity';
 import { TenantEntity } from '../modules/tenant/entities/tenant.entity';
 import { ApiKeyEntity } from '../modules/auth/entities/api-key.entity';
+import { TwoFactorEntity } from '../modules/auth/entities/two-factor.entity';
+import { EmailLogEntity } from '../modules/email/entities/email-log.entity';
 
 export default new DataSource({
   type: 'postgres',
@@ -22,7 +27,14 @@ export default new DataSource({
             process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false',
         }
       : false,
-  entities: [BaseEntity, TenantScopedEntity, TenantEntity, ApiKeyEntity],
+  entities: [
+    BaseEntity,
+    TenantScopedEntity,
+    TenantEntity,
+    ApiKeyEntity,
+    TwoFactorEntity,
+    EmailLogEntity,
+  ],
   migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
   synchronize: false,
   logging: process.env.DATABASE_LOGGING === 'true',

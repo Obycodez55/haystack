@@ -33,9 +33,9 @@ export interface IEmailProvider {
  * Email send options
  */
 export interface EmailSendOptions {
-  to: string | string[];
-  cc?: string | string[];
-  bcc?: string | string[];
+  to: string | string[] | EmailAddress | EmailAddress[];
+  cc?: string | string[] | EmailAddress | EmailAddress[];
+  bcc?: string | string[] | EmailAddress | EmailAddress[];
   subject: string;
   template?: string; // Template name
   templateVariables?: Record<string, any>; // Type-safe template variables

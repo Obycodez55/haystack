@@ -153,10 +153,28 @@
                 "src/common/responses"
               ],
               "@database": [
-                "src/common/database"
+                "src/database"
+              ],
+              "@database/*": [
+                "src/database/*"
               ],
               "@redis": [
-                "src/common/redis"
+                "src/redis"
+              ],
+              "@redis/*": [
+                "src/redis/*"
+              ],
+              "@queue": [
+                "src/queue"
+              ],
+              "@queue/*": [
+                "src/queue/*"
+              ],
+              "@logging": [
+                "src/logging"
+              ],
+              "@logging/*": [
+                "src/logging/*"
               ]
             }
           }
@@ -190,6 +208,9 @@
     "transformIgnorePatterns": [
       "node_modules/(?!@faker-js|uuid)"
     ],
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
     "extensionsToTreatAsEsm": [],
     "setupFilesAfterEnv": [
       "<rootDir>/test/setup/jest.setup.ts"
@@ -204,8 +225,14 @@
       "^@config/(.*)$": "<rootDir>/src/config/$1",
       "^@errors$": "<rootDir>/src/common/errors",
       "^@responses$": "<rootDir>/src/common/responses",
-      "^@database$": "<rootDir>/src/common/database",
-      "^@redis$": "<rootDir>/src/common/redis",
+      "^@database$": "<rootDir>/src/database",
+      "^@database/(.*)$": "<rootDir>/src/database/$1",
+      "^@redis$": "<rootDir>/src/redis",
+      "^@redis/(.*)$": "<rootDir>/src/redis/$1",
+      "^@queue$": "<rootDir>/src/queue",
+      "^@queue/(.*)$": "<rootDir>/src/queue/$1",
+      "^@logging$": "<rootDir>/src/logging",
+      "^@logging/(.*)$": "<rootDir>/src/logging/$1",
       "^uuid$": "<rootDir>/test/mocks/uuid.mock.ts"
     }
   },

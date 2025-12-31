@@ -43,12 +43,17 @@ export async function getFaker(): Promise<any> {
 
   try {
     // Try to use real faker
+    // @faker-js/faker v10+ is an ES module, use dynamic import
+    // Jest should handle this with proper configuration
     const fakerModule = await import('@faker-js/faker');
     fakerInstance = fakerModule.faker;
+    if (!fakerInstance) {
+      throw new Error('Faker instance not found in module');
+    }
     return fakerInstance;
-  } catch (error) {
-    // Fallback to simple generator
-    console.warn('Faker.js not available, using simple data generator');
+  } catch (error: any) {
+    // Fallback to simple generator if import fails
+    // This can happen if Jest doesn't properly transform the ES module
     fakerInstance = simpleDataGenerator();
     return fakerInstance;
   }

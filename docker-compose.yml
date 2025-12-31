@@ -52,6 +52,9 @@ services:
       REDIS_DB: 0
       JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-in-production}
+      BREVO_API_KEY: ${BREVO_API_KEY:-dev-brevo-api-key}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Haystack}
+      EMAIL_FROM_EMAIL: ${EMAIL_FROM_EMAIL:-noreply@haystack.com}
       LOG_LEVEL: ${LOG_LEVEL:-debug}
       LOG_PRETTY: 'true'
     ports:
@@ -59,6 +62,7 @@ services:
     volumes:
       - ./src:/app/src
       - ./test:/app/test
+      - ./scripts:/app/scripts
       - ./package.json:/app/package.json
       - ./tsconfig.json:/app/tsconfig.json
       - ./nest-cli.json:/app/nest-cli.json

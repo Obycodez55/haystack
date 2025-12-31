@@ -146,13 +146,19 @@ export class TemplateRegistry {
   ): { valid: boolean; error?: Joi.ValidationError } {
     const schema = templateSchemas[name];
     if (!schema) {
+      // Create a validation error manually when template doesn't exist
+      const error = new Error(`Template "${name}" not found`) as any;
+      error.isJoi = true;
+      error.details = [
+        {
+          message: `Template "${name}" not found`,
+          path: [],
+          type: 'any.unknown',
+        },
+      ];
       return {
         valid: false,
-        error: new Joi.ValidationError(
-          `Template "${name}" not found`,
-          [],
-          variables,
-        ),
+        error: error as Joi.ValidationError,
       };
     }
 

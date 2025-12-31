@@ -329,11 +329,17 @@ export class BrevoAdapter implements IEmailProvider {
   private getErrorCode(error: Error): string {
     const message = error.message.toLowerCase();
 
+    if (message.includes('400') || message.includes('bad request')) {
+      return 'BAD_REQUEST';
+    }
     if (message.includes('401') || message.includes('unauthorized')) {
       return 'AUTH_ERROR';
     }
     if (message.includes('403') || message.includes('forbidden')) {
       return 'FORBIDDEN';
+    }
+    if (message.includes('404') || message.includes('not found')) {
+      return 'NOT_FOUND';
     }
     if (message.includes('429') || message.includes('rate limit')) {
       return 'RATE_LIMIT';
@@ -345,7 +351,13 @@ export class BrevoAdapter implements IEmailProvider {
     ) {
       return 'SERVER_ERROR';
     }
-    if (message.includes('network') || message.includes('timeout')) {
+    if (
+      message.includes('network') ||
+      message.includes('timeout') ||
+      message.includes('econnrefused') ||
+      message.includes('enotfound') ||
+      message.includes('etimedout')
+    ) {
       return 'NETWORK_ERROR';
     }
 

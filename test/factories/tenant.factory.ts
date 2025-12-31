@@ -66,17 +66,20 @@ export class TenantFactory {
 
     // Don't set timestamps - let TypeORM handle them
     // Only set if explicitly provided in overrides
-    if (overrides?.createdAt) {
-      tenant.createdAt =
-        overrides.createdAt instanceof Date
-          ? overrides.createdAt
-          : new Date(overrides.createdAt as any);
+    // Use type assertion since createdAt/updatedAt are inherited from BaseEntity
+    const overridesWithBase = overrides as any;
+    const tenantWithBase = tenant as any;
+    if (overridesWithBase?.createdAt) {
+      tenantWithBase.createdAt =
+        overridesWithBase.createdAt instanceof Date
+          ? overridesWithBase.createdAt
+          : new Date(overridesWithBase.createdAt);
     }
-    if (overrides?.updatedAt) {
-      tenant.updatedAt =
-        overrides.updatedAt instanceof Date
-          ? overrides.updatedAt
-          : new Date(overrides.updatedAt as any);
+    if (overridesWithBase?.updatedAt) {
+      tenantWithBase.updatedAt =
+        overridesWithBase.updatedAt instanceof Date
+          ? overridesWithBase.updatedAt
+          : new Date(overridesWithBase.updatedAt);
     }
 
     return tenant;

@@ -24,27 +24,6 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Planning',
-      items: ['planning/development-roadmap'],
-    },
-    {
-      type: 'category',
-      label: 'Setup',
-      items: ['setup/database-setup', 'setup/redis-setup'],
-    },
-    {
-      type: 'category',
-      label: 'Guides',
-      items: [
-        'guides/docker-guide',
-        'guides/testing-guide',
-        'guides/migrations-guide',
-        'guides/caching-guide',
-        'guides/rate-limiting-guide',
-      ],
-    },
-    {
-      type: 'category',
       label: 'API',
       items: ['api/api-specification'],
     },

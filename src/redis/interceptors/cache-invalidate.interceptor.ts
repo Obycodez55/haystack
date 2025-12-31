@@ -13,7 +13,7 @@ import {
   CacheInvalidateOptions,
 } from '../decorators/cache.decorator';
 import { LoggerService } from '../../logging/services/logger.service';
-import { toError } from '../../utils/error.util';
+import { toError } from '@common/utils/error.util';
 
 @Injectable()
 export class CacheInvalidateInterceptor implements NestInterceptor {

@@ -5,7 +5,7 @@ import { LoggerService } from '../../logging/services/logger.service';
 import { CacheOptions } from '../interfaces/cache.interface';
 import { buildCacheKey } from '../utils/key-builder.util';
 import { RedisConfig } from '@config';
-import { toError } from '../../utils/error.util';
+import { toError } from '@common/utils/error.util';
 
 @Injectable()
 export class CacheService {

@@ -10,7 +10,7 @@ import {
   EmailAddress,
 } from '../interfaces/email-provider.interface';
 import { EmailConfig } from '@config/email.config';
-import { LoggerService } from '@common/logging/services/logger.service';
+import { LoggerService } from '@logging/services/logger.service';
 import { toError, getErrorMessage } from '@common/utils/error.util';
 
 /**

@@ -1,9 +1,6 @@
 // Common module exports
 export * from './common.module';
 
-// Logging exports
-export * from './logging';
-
 // Error exports
 export * from './errors';
 
@@ -28,8 +25,8 @@ export * from './pipes';
 // Utils exports
 export * from './utils';
 
-// Database exports
-export * from './database';
+// Note: Database, Redis, Queue, and Logging modules have been moved to src/
+// Import them directly: @database, @redis, @queue, @logging
 
-// Redis exports
-export * from './redis';
+// Re-export CorrelationMiddleware for convenience
+export { CorrelationMiddleware } from '@logging/middleware/correlation.middleware';

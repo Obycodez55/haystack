@@ -6,8 +6,8 @@ import { RateLimit, RATE_LIMIT_KEY } from '../decorators/rate-limit.decorator';
 import { RateLimitExceededError } from '../errors/rate-limit.error';
 import { RateLimitConfig } from '../interfaces/rate-limit.interface';
 import { RedisConfig } from '@config';
-import { getRequestContext } from '@common/logging';
-import { LoggerService } from '../../logging/services/logger.service';
+import { getRequestContext } from '@logging/middleware/correlation.middleware';
+import { LoggerService } from '@logging/services/logger.service';
 
 @Injectable()
 export class RateLimitGuard implements CanActivate {

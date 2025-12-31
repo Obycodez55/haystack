@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { EmailJobData } from '../jobs/email.job.interface';
 import { EmailService } from '../services/email.service';
 import { EmailResult } from '../interfaces';
-import { LoggerService } from '@common/logging/services/logger.service';
+import { LoggerService } from '@logging/services/logger.service';
 import { toError } from '@common/utils/error.util';
 
 /**

@@ -30,16 +30,16 @@ export class PaymentService {
   async processPayment(paymentId: string, amount: number) {
     try {
       this.logger.log('Processing payment', { paymentId, amount });
-      
+
       // ... payment logic ...
-      
+
       this.logger.logPaymentEvent(
         BusinessEventType.PAYMENT_COMPLETED,
         paymentId,
         'success',
-        { amount, provider: 'paystack' }
+        { amount, provider: 'paystack' },
       );
-      
+
       return result;
     } catch (error) {
       this.logger.error('Payment processing failed', error, {
@@ -81,16 +81,13 @@ logger.logPaymentEvent(
   BusinessEventType.PAYMENT_COMPLETED,
   paymentId,
   'success',
-  { amount: 5000, provider: 'paystack' }
+  { amount: 5000, provider: 'paystack' },
 );
 
 // Provider events
-logger.logProviderEvent(
-  'paystack',
-  'fallback',
-  transactionId,
-  { reason: 'timeout' }
-);
+logger.logProviderEvent('paystack', 'fallback', transactionId, {
+  reason: 'timeout',
+});
 
 // Generic business events
 logger.logBusinessEvent(
@@ -98,7 +95,7 @@ logger.logBusinessEvent(
   'webhook',
   webhookId,
   'delivered',
-  { endpoint: 'https://customer.com/webhook' }
+  { endpoint: 'https://customer.com/webhook' },
 );
 ```
 
@@ -127,7 +124,7 @@ logger.logRequest(
     responseSize: 1024,
     userAgent: 'Mozilla/5.0...',
     ipAddress: '192.168.1.1',
-  }
+  },
 );
 ```
 
@@ -167,6 +164,7 @@ LOG_DIR=logs  # Log directory (if file logging enabled)
 ### Request Context
 
 The correlation middleware automatically:
+
 - Extracts or generates correlation ID from `X-Correlation-ID` header
 - Generates unique request ID
 - Captures IP address and user agent
@@ -186,9 +184,11 @@ console.log(context?.correlationId); // Available in any async operation
 ### Automatically Filtered Fields
 
 **Completely Redacted:**
+
 - `password`, `password_hash`, `pin`, `token`, `secret`, `api_key`, etc.
 
 **Partially Masked:**
+
 - `email`: `us***@example.com`
 - `phone`: `+234***12`
 - `account_number`: `123***45`
@@ -196,6 +196,7 @@ console.log(context?.correlationId); // Available in any async operation
 ### Payment-Specific Fields
 
 Additional filtering for:
+
 - Card data: `card_number`, `cvv`, `expiry`
 - Bank accounts: `account_number`, `routing_number`
 - API keys: `provider_api_key`, `provider_secret`
@@ -211,9 +212,7 @@ import { createMockLogger } from '@common/logging/utils/test-utils';
 const mockLogger = createMockLogger();
 
 const module = Test.createTestingModule({
-  providers: [
-    { provide: LoggerService, useValue: mockLogger },
-  ],
+  providers: [{ provide: LoggerService, useValue: mockLogger }],
 });
 ```
 
@@ -232,6 +231,7 @@ expect(logs).toHaveLength(1);
 ## Best Practices
 
 1. **Set Context**: Always set context for your service
+
    ```typescript
    constructor(private logger: LoggerService) {
      this.logger.setContext('PaymentService');
@@ -246,6 +246,7 @@ expect(logs).toHaveLength(1);
    - `verbose`: Very detailed debugging
 
 3. **Include Context**: Always include relevant context in logs
+
    ```typescript
    logger.log('Payment created', { paymentId, amount, currency });
    ```
@@ -253,6 +254,7 @@ expect(logs).toHaveLength(1);
 4. **Filter Sensitive Data**: Don't manually filter - the logger does it automatically
 
 5. **Use Business Events**: Use specialized methods for business events
+
    ```typescript
    logger.logPaymentEvent(...) // Better than generic log()
    ```
@@ -309,4 +311,3 @@ To enable automatic HTTP request/response logging, uncomment the interceptor in 
 1. Ensure `CorrelationMiddleware` is registered
 2. Check middleware order (should be early in chain)
 3. Verify AsyncLocalStorage is working (Node.js 12.17+)
-

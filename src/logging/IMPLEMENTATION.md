@@ -7,34 +7,40 @@ A comprehensive, production-ready structured logging system for Haystack with th
 ## Key Improvements
 
 ### 1. **Performance** ⚡
+
 - **Switched from Winston to Pino**: 3-5x faster, lower memory footprint
 - **Optimized filtering**: Uses `structuredClone` with fallback to lodash
 - **Log sampling**: Reduces volume for high-traffic endpoints
 
 ### 2. **Payment-Specific Features** 💳
+
 - **PaymentDataFilter**: Specialized filtering for payment data
 - **Payment event types**: Pre-defined business event types
 - **Provider event logging**: Specialized methods for provider events
 - **Transaction tracking**: Automatic transaction ID capture
 
 ### 3. **Enhanced Error Handling** 🛡️
+
 - **ErrorFormatter**: Extracts rich error context
 - **Error categorization**: Automatic error categorization (payment, provider, validation, etc.)
 - **User-friendly messages**: Maps technical errors to user-friendly messages
 - **Nested error support**: Handles error causes and chains
 
 ### 4. **Better TypeScript Support** 📘
+
 - **Strong typing**: Comprehensive TypeScript types throughout
 - **Type-safe enums**: Business event types, log levels, error categories
 - **Interface-based**: Clear contracts for all components
 
 ### 5. **Improved Architecture** 🏗️
+
 - **Modular structure**: Clear separation of concerns
 - **No circular dependencies**: Proper import structure
 - **Test utilities**: Built-in test helpers and mocks
 - **Documentation**: Comprehensive README and inline docs
 
 ### 6. **Production Ready** 🚀
+
 - **Environment-aware**: Different configs for dev/staging/prod
 - **CloudWatch ready**: JSON format for production log aggregation
 - **Scalable**: Handles high-volume scenarios with sampling
@@ -81,26 +87,26 @@ export class PaymentService {
 
   async processPayment(paymentId: string, amount: number) {
     const startTime = Date.now();
-    
+
     try {
       this.logger.log('Processing payment', { paymentId, amount });
-      
+
       // Process payment...
       const result = await this.provider.createPayment(...);
-      
+
       const duration = Date.now() - startTime;
       this.logger.logPerformance('payment_processing', duration, {
         paymentId,
         provider: 'paystack',
       });
-      
+
       this.logger.logPaymentEvent(
         BusinessEventType.PAYMENT_COMPLETED,
         paymentId,
         'success',
         { amount, provider: 'paystack' }
       );
-      
+
       return result;
     } catch (error) {
       this.logger.error('Payment processing failed', error, {
@@ -167,18 +173,17 @@ const logs = testLogger.getLogsByLevel('info');
 
 ## Comparison with Reference Implementation
 
-| Feature | Reference (Winston) | This Implementation (Pino) |
-|---------|---------------------|---------------------------|
-| Performance | Baseline | 3-5x faster |
-| Memory Usage | Higher | Lower |
-| Payment Filtering | Basic | Comprehensive |
-| Error Context | Basic | Rich with categorization |
-| TypeScript | Good | Excellent |
-| Test Utilities | Basic | Comprehensive |
-| Documentation | Good | Excellent |
-| Production Ready | Yes | Enhanced |
+| Feature           | Reference (Winston) | This Implementation (Pino) |
+| ----------------- | ------------------- | -------------------------- |
+| Performance       | Baseline            | 3-5x faster                |
+| Memory Usage      | Higher              | Lower                      |
+| Payment Filtering | Basic               | Comprehensive              |
+| Error Context     | Basic               | Rich with categorization   |
+| TypeScript        | Good                | Excellent                  |
+| Test Utilities    | Basic               | Comprehensive              |
+| Documentation     | Good                | Excellent                  |
+| Production Ready  | Yes                 | Enhanced                   |
 
 ## Conclusion
 
 This implementation provides a robust, scalable, and production-ready logging system specifically tailored for a payment orchestration service. It improves upon the reference implementation in performance, features, and maintainability while maintaining compatibility with NestJS patterns and best practices.
-

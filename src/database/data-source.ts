@@ -12,10 +12,7 @@ if (require.main !== module) {
 }
 
 // Import entities - use relative paths for CLI compatibility
-import {
-  BaseEntity,
-  TenantScopedEntity,
-} from '../common/database/entities/base.entity';
+import { BaseEntity, TenantScopedEntity } from './entities/base.entity';
 import { TenantEntity } from '../modules/tenant/entities/tenant.entity';
 import { ApiKeyEntity } from '../modules/auth/entities/api-key.entity';
 

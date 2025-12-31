@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { getRequestContext } from '@common/logging/middleware/correlation.middleware';
+import { getRequestContext } from '@logging/middleware/correlation.middleware';
 import { AuthenticationError } from '@common/errors/authentication.error';
 import { IS_PUBLIC_KEY } from '@common/decorators/public.decorator';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { EmailJobData } from '../jobs/email.job.interface';
-import { LoggerService } from '@common/logging/services/logger.service';
+import { LoggerService } from '@logging/services/logger.service';
 
 /**
  * Email queue service

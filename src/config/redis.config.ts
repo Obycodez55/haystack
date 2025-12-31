@@ -1,5 +1,5 @@
 import { registerAs } from '@nestjs/config';
-import { RateLimitConfig } from '@common/redis/interfaces/rate-limit.interface';
+import { RateLimitConfig } from '@redis/interfaces/rate-limit.interface';
 
 export interface RedisConfig {
   host: string;

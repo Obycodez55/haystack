@@ -1,5 +1,5 @@
 import { Entity, Column, Index, OneToMany, Check } from 'typeorm';
-import { BaseEntity } from '@common/database/entities/base.entity';
+import { BaseEntity } from '@database/entities/base.entity';
 
 export enum TenantStatus {
   ACTIVE = 'active',

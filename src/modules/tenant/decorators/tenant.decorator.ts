@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
-import { getRequestContext } from '@common/logging/middleware/correlation.middleware';
+import { getRequestContext } from '@logging/middleware/correlation.middleware';
 
 /**
  * Tenant decorator

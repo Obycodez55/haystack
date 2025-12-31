@@ -15,7 +15,7 @@ import {
   getCurrentTenantId,
   requireTenantId,
 } from '@modules/tenant/utils/tenant-context.util';
-import { toError } from '../../utils/error.util';
+import { toError } from '@common/utils/error.util';
 
 /**
  * Base repository with automatic tenant filtering

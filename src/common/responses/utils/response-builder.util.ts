@@ -4,7 +4,7 @@ import {
   ResponseMeta,
   PaginationMeta,
 } from '../types/response.types';
-import { getRequestContext } from '../../logging/middleware/correlation.middleware';
+import { getRequestContext } from '@logging/middleware/correlation.middleware';
 
 export class ResponseBuilder {
   /**

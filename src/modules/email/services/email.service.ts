@@ -12,7 +12,7 @@ import {
 import { TemplateService } from './template.service';
 import { BrevoAdapter } from '../adapters/brevo.adapter';
 import { EmailLogEntity } from '../entities/email-log.entity';
-import { LoggerService } from '@common/logging/services/logger.service';
+import { LoggerService } from '@logging/services/logger.service';
 import {
   TemplateName,
   TemplateVariablesMap,

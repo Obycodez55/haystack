@@ -6,10 +6,10 @@ import {
 import { Request, Response, NextFunction } from 'express';
 import { ApiKeyRepository } from '@modules/auth/repositories/api-key.repository';
 import { extractApiKeyFromHeader } from '@modules/auth/utils/api-key-hash.util';
-import { asyncLocalStorage } from '@common/logging/middleware/correlation.middleware';
-import { RequestContext } from '@common/logging/types/log-context.types';
+import { asyncLocalStorage } from '@logging/middleware/correlation.middleware';
+import { RequestContext } from '@logging/types/log-context.types';
 import { AuthenticationError } from '@common/errors/authentication.error';
-import { LoggerService } from '../../../common/logging/services/logger.service';
+import { LoggerService } from '@logging/services/logger.service';
 
 /**
  * Tenant middleware

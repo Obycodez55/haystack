@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn, Index, Check } from 'typeorm';
-import { TenantScopedEntity } from '@common/database/entities/base.entity';
+import { TenantScopedEntity } from '@database/entities/base.entity';
 import { TenantEntity } from '@modules/tenant/entities/tenant.entity';
 
 export enum ApiKeyMode {

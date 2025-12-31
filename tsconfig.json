@@ -26,8 +26,14 @@
       "@config/*": ["src/config/*"],
       "@errors": ["src/common/errors"],
       "@responses": ["src/common/responses"],
-      "@database": ["src/common/database"],
-      "@redis": ["src/common/redis"]
+      "@database": ["src/database"],
+      "@database/*": ["src/database/*"],
+      "@redis": ["src/redis"],
+      "@redis/*": ["src/redis/*"],
+      "@queue": ["src/queue"],
+      "@queue/*": ["src/queue/*"],
+      "@logging": ["src/logging"],
+      "@logging/*": ["src/logging/*"]
     }
   },
   "exclude": [

@@ -11,10 +11,27 @@ import {
 } from '@modules';
 import { AuthModule } from '@modules';
 import { EmailModule } from '@modules/email/email.module';
+import { ConfigModule } from '@config';
+import { LoggingModule } from '@logging/logging.module';
+import { DatabaseModule } from '@database/database.module';
+import { RedisModule } from '@redis/redis.module';
+import { QueueModule } from '@queue/queue.module';
+import { HealthModule } from '@common/health/health.module';
 
 // Conditionally import DatabaseModule only if not generating OpenAPI
 // During OpenAPI generation, we don't need database connection
-const imports = [CommonModule, TenantModule, AuthModule, EmailModule];
+const imports = [
+  ConfigModule,
+  LoggingModule, // Import LoggingModule first so LoggerService is available
+  DatabaseModule, // DatabaseModule needs LoggerService
+  RedisModule,
+  QueueModule,
+  HealthModule,
+  CommonModule,
+  TenantModule,
+  AuthModule,
+  EmailModule,
+];
 
 // Only import DatabaseModule if not in OpenAPI generation mode
 // This prevents TypeORM from attempting to connect during spec generation

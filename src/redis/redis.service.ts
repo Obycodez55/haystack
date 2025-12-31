@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { RedisConfig } from '@config';
 import { LoggerService } from '../logging/services/logger.service';
-import { getErrorMessage, toError } from '../utils/error.util';
+import { getErrorMessage, toError } from '@common/utils/error.util';
 
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {

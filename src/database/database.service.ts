@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { InjectDataSource, getDataSourceToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { LoggerService } from '../logging/services/logger.service';
-import { getErrorMessage, toError } from '../utils/error.util';
+import { LoggerService } from '@logging/services/logger.service';
+import { getErrorMessage, toError } from '@common/utils/error.util';
 
 export interface ConnectionStats {
   total: number;

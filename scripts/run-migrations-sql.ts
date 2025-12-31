@@ -7,7 +7,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Import entities using relative paths to avoid alias issues
-import { BaseEntity, TenantScopedEntity } from '../src/common/database/entities/base.entity';
+import {
+  BaseEntity,
+  TenantScopedEntity,
+} from '../src/database/entities/base.entity';
 import { TenantEntity } from '../src/modules/tenant/entities/tenant.entity';
 import { ApiKeyEntity } from '../src/modules/auth/entities/api-key.entity';
 
@@ -53,8 +56,9 @@ async function runMigrations() {
 
     // Find all migration files
     const migrationsDir = path.join(__dirname, '../src/database/migrations');
-    const migrationFiles = fs.readdirSync(migrationsDir)
-      .filter(f => f.endsWith('.ts') && f.match(/^\d+-.+\.ts$/))
+    const migrationFiles = fs
+      .readdirSync(migrationsDir)
+      .filter((f) => f.endsWith('.ts') && f.match(/^\d+-.+\.ts$/))
       .sort();
 
     console.log(`Found ${migrationFiles.length} migration files`);
@@ -72,28 +76,34 @@ async function runMigrations() {
       }
 
       console.log(`\n🔄 Running migration: ${file}`);
-      
+
       try {
         // Dynamically import the migration
         const migrationPath = path.join(migrationsDir, file);
         delete require.cache[require.resolve(migrationPath)];
         const migrationModule = require(migrationPath);
-        const MigrationClass = migrationModule.default || migrationModule[migrationName] || Object.values(migrationModule)[0] as any;
-        
+        const MigrationClass =
+          migrationModule.default ||
+          migrationModule[migrationName] ||
+          (Object.values(migrationModule)[0] as any);
+
         if (!MigrationClass) {
           throw new Error(`Could not find migration class in ${file}`);
         }
 
         const migration = new MigrationClass();
-        
+
         if (migration.up) {
           await migration.up(queryRunner);
-          
+
           // Record migration
-          await queryRunner.query(`
+          await queryRunner.query(
+            `
             INSERT INTO migrations (timestamp, name) VALUES ($1, $2)
-          `, [parseInt(timestamp), migrationName]);
-          
+          `,
+            [parseInt(timestamp), migrationName],
+          );
+
           console.log(`✓ Completed: ${file}`);
         } else {
           console.log(`⚠ Skipping ${file} - no up() method`);
@@ -115,4 +125,3 @@ async function runMigrations() {
 }
 
 runMigrations().catch(console.error);
-

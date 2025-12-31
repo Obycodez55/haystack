@@ -1,4 +1,4 @@
-import { getRequestContext } from '@common/logging/middleware/correlation.middleware';
+import { getRequestContext } from '@logging/middleware/correlation.middleware';
 
 /**
  * Get current tenant ID from request context

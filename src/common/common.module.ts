@@ -1,38 +1,27 @@
 import { Global, Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigModule } from '@config';
-import { LoggingModule } from './logging/logging.module';
-import { HealthModule } from './health/health.module';
-import { DatabaseModule } from './database/database.module';
-import { RedisModule } from './redis/redis.module';
-import { QueueModule } from './queue/queue.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
-import { LoggerService } from './logging/services/logger.service';
+import { LoggerService } from '@logging/services/logger.service';
 
 /**
  * Global Common Module
- * Registers all common services and utilities:
+ * Registers common services and utilities:
  * - Configuration (with validation)
- * - Logging (structured logging with Pino)
- * - Database (TypeORM with PostgreSQL)
- * - Redis (caching, rate limiting)
  * - Health checks
  * - Error handling (exception filters)
  * - Response transformation (interceptors)
- * - API versioning (guards)
  *
- * This module should be imported in AppModule
+ * Note: Database, Redis, Queue, and Logging modules are imported directly in AppModule
+ * This module only handles shared utilities and filters.
  */
 @Global()
 @Module({
   imports: [
     ConfigModule,
-    LoggingModule, // Import LoggingModule first so LoggerService is available
-    DatabaseModule, // DatabaseModule needs LoggerService
-    RedisModule,
-    QueueModule, // Queue module for background job processing
-    HealthModule,
+    // Note: LoggingModule, DatabaseModule, RedisModule, QueueModule, and HealthModule
+    // are now imported directly in AppModule
   ],
   providers: [
     // Global exception filter with proper dependency injection
@@ -51,11 +40,7 @@ import { LoggerService } from './logging/services/logger.service';
   ],
   exports: [
     ConfigModule,
-    LoggingModule,
-    DatabaseModule,
-    RedisModule,
-    QueueModule,
-    HealthModule,
+    // Note: Other modules are exported directly from their own modules
   ],
 })
 export class CommonModule {}

@@ -18,6 +18,7 @@ import {
 import { hashPassword, comparePassword } from '../utils/password.util';
 import { toError } from '@common/utils/error.util';
 import { AuthenticationError } from '@common/errors/authentication.error';
+import { createEncryptionUtil, EncryptionUtil } from '../utils/encryption.util';
 
 /**
  * Two-Factor Authentication Service
@@ -26,6 +27,7 @@ import { AuthenticationError } from '@common/errors/authentication.error';
 @Injectable()
 export class TwoFactorService {
   private readonly issuer: string;
+  private readonly encryptionUtil: EncryptionUtil;
 
   constructor(
     private twoFactorRepository: TwoFactorRepository,
@@ -36,6 +38,7 @@ export class TwoFactorService {
   ) {
     this.logger.setContext('TwoFactorService');
     this.issuer = this.configService.get<string>('app.name')!;
+    this.encryptionUtil = createEncryptionUtil(configService);
   }
 
   /**
@@ -132,13 +135,16 @@ export class TwoFactorService {
         backupCodes.map((code) => hashPassword(code)),
       );
 
+      // Encrypt secret before storing
+      const encryptedSecret = this.encryptionUtil.encrypt(secret);
+
       // Create or update 2FA entity
       const existing = await this.twoFactorRepository.findByTenantId(tenantId);
 
       if (existing) {
         // Update existing
         await this.twoFactorRepository.update(existing.id, tenantId, {
-          secret, // TODO: Encrypt secret before storing
+          secret: encryptedSecret,
           isEnabled: true,
           enabledAt: new Date(),
           backupCodes: hashedBackupCodes,
@@ -148,7 +154,7 @@ export class TwoFactorService {
         // Create new
         await this.twoFactorRepository.create({
           tenantId,
-          secret, // TODO: Encrypt secret before storing
+          secret: encryptedSecret,
           isEnabled: true,
           enabledAt: new Date(),
           backupCodes: hashedBackupCodes,
@@ -176,8 +182,11 @@ export class TwoFactorService {
         return false;
       }
 
+      // Decrypt secret
+      const decryptedSecret = this.encryptionUtil.decrypt(twoFactor.secret);
+
       // Verify TOTP code
-      const isValid = verifyTOTPCode(twoFactor.secret, code);
+      const isValid = verifyTOTPCode(decryptedSecret, code);
       if (isValid) {
         // Update last verified timestamp
         await this.twoFactorRepository.updateLastVerified(tenantId);
@@ -297,16 +306,19 @@ export class TwoFactorService {
       // Send email with new codes
       const tenant = await this.tenantRepository.findById(tenantId);
       if (tenant) {
+        // Decrypt secret for email (only for display, not stored)
+        const decryptedSecret = this.encryptionUtil.decrypt(twoFactor.secret);
+
         await EmailHelpers.sendTwoFactorSetupEmail(
           this.emailService,
           tenant.email,
           {
             userName: tenant.name,
             qrCodeUrl: '', // Not needed for regeneration
-            secret: twoFactor.secret, // Show existing secret
+            secret: decryptedSecret, // Decrypted secret for display
             backupCodes,
             supportEmail:
-              this.configService.get<string>('EMAIL_FROM_EMAIL') ||
+              this.configService.get<string>('email.from.email') ||
               'support@haystack.com',
           },
           {

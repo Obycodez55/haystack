@@ -1,10 +1,12 @@
 import { DataSource } from 'typeorm';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as path from 'path';
 
 /**
  * Create a DataSource configured for testing
  * Uses test environment variables or defaults
+ *
+ * Note: No naming strategy is used - column names match exactly as defined in migrations
+ * (camelCase: createdAt, updatedAt, etc.)
  */
 export async function createDataSource(): Promise<DataSource> {
   const isTest = process.env.NODE_ENV === 'test';
@@ -28,10 +30,7 @@ export async function createDataSource(): Promise<DataSource> {
         : false,
     // Entities - scan for all entity files
     entities: [
-      path.join(
-        __dirname,
-        '../../src/common/database/entities/*.entity{.ts,.js}',
-      ),
+      path.join(__dirname, '../../src/database/entities/*.entity{.ts,.js}'),
       path.join(__dirname, '../../src/modules/**/entities/*.entity{.ts,.js}'),
     ],
     // Migrations
@@ -40,7 +39,7 @@ export async function createDataSource(): Promise<DataSource> {
     ],
     synchronize: false, // Never use synchronize in tests
     logging: process.env.DATABASE_LOGGING === 'true',
-    namingStrategy: new SnakeNamingStrategy(),
+    // No naming strategy - use exact column names from migrations (camelCase)
     // Test-specific connection pool settings
     extra: {
       max: parseInt(process.env.DATABASE_MAX_CONNECTIONS || '10', 10),

@@ -88,7 +88,7 @@ async function bootstrap() {
   // Global prefix (e.g., /api)
   // Exclude health checks from global prefix - they should be at root level
   app.setGlobalPrefix(appConfig.globalPrefix, {
-    exclude: ['/health', '/health/(.*)'],
+    exclude: ['/health', '/health/live', '/health/ready'],
   });
 
   // API versioning (e.g., /api/v1)

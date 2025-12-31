@@ -1,4 +1,4 @@
-import { Processor } from '@nestjs/bullmq';
+import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { Injectable } from '@nestjs/common';
 import { EmailJobData } from '../jobs/email.job.interface';
@@ -13,20 +13,21 @@ import { toError } from '@common/utils/error.util';
  */
 @Processor('email')
 @Injectable()
-export class EmailProcessor {
+export class EmailProcessor extends WorkerHost {
   constructor(
     private emailService: EmailService,
     private logger: LoggerService,
   ) {
+    super();
     this.logger.setContext('EmailProcessor');
   }
 
   /**
    * Process email job
    * This method is called automatically by BullMQ for jobs in the 'email' queue
-   * The method name must match the job name ('send-email')
+   * Implements the abstract process method from WorkerHost
    */
-  async process(job: Job<EmailJobData>) {
+  async process(job: Job<EmailJobData>): Promise<EmailResult> {
     const { options, template, templateVariables, tenantId, metadata } =
       job.data;
 

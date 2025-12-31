@@ -9,11 +9,54 @@ import apiSidebar from './docs/api-reference/sidebar';
  */
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
-    // Include the auto-generated API reference sidebar
+    {
+      type: 'category',
+      label: 'Product',
+      items: ['product/PRD'],
+    },
+    {
+      type: 'category',
+      label: 'Architecture',
+      items: [
+        'architecture/technical-architecture',
+        'architecture/database-schema',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Planning',
+      items: ['planning/development-roadmap'],
+    },
+    {
+      type: 'category',
+      label: 'Setup',
+      items: ['setup/database-setup', 'setup/redis-setup'],
+    },
+    {
+      type: 'category',
+      label: 'Guides',
+      items: [
+        'guides/docker-guide',
+        'guides/testing-guide',
+        'guides/migrations-guide',
+        'guides/caching-guide',
+        'guides/rate-limiting-guide',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'API',
+      items: ['api/api-specification'],
+    },
     {
       type: 'category',
       label: 'API Reference',
       items: apiSidebar,
+    },
+    {
+      type: 'category',
+      label: 'Providers',
+      items: ['providers/provider-integration-guide'],
     },
   ],
 };

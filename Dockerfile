@@ -1,5 +1,5 @@
 # Production Dockerfile - multi-stage build
-FROM node:20-alpine AS builder
+FROM node:25-alpine AS builder
 
 # Install pnpm
 RUN npm install -g pnpm
@@ -20,7 +20,7 @@ COPY . .
 RUN pnpm build
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:25-alpine AS production
 
 # Install pnpm
 RUN npm install -g pnpm

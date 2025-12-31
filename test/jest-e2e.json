@@ -4,6 +4,30 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "tsconfig": "<rootDir>/tsconfig.json"
+      }
+    ]
+  },
+  "testTimeout": 60000,
+  "maxWorkers": 1,
+  "setupFilesAfterEnv": ["<rootDir>/setup/jest.setup.ts"],
+  "globalSetup": "<rootDir>/setup/global-setup.ts",
+  "globalTeardown": "<rootDir>/setup/global-teardown.ts",
+  "transformIgnorePatterns": ["node_modules/(?!@faker-js|uuid)"],
+  "moduleNameMapper": {
+    "^@common$": "<rootDir>/../src/common",
+    "^@common/(.*)$": "<rootDir>/../src/common/$1",
+    "^@modules$": "<rootDir>/../src/modules",
+    "^@modules/(.*)$": "<rootDir>/../src/modules/$1",
+    "^@config$": "<rootDir>/../src/config",
+    "^@config/(.*)$": "<rootDir>/../src/config/$1",
+    "^@errors$": "<rootDir>/../src/common/errors",
+    "^@responses$": "<rootDir>/../src/common/responses",
+    "^@database$": "<rootDir>/../src/common/database",
+    "^@redis$": "<rootDir>/../src/common/redis",
+    "^uuid$": "<rootDir>/mocks/uuid.mock.ts"
   }
 }

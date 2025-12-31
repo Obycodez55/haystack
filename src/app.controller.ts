@@ -1,12 +1,29 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Version } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { LoggerService } from './common/logging/services/logger.service';
+import { Public } from './common/decorators/public.decorator';
 
+@ApiTags('health')
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly logger: LoggerService,
+  ) {
+    this.logger.setContext('AppController');
+  }
 
   @Get()
+  @Version('1')
+  @Public() // Public endpoint - no authentication required
+  @ApiOperation({
+    summary: 'Get API status',
+    description: 'Returns a simple hello message indicating the API is running',
+  })
+  @ApiResponse({ status: 200, description: 'API is running successfully' })
   getHello(): string {
+    this.logger.log('GET / endpoint called');
     return this.appService.getHello();
   }
 }

@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: haystack-postgres
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      POSTGRES_DB: ${DATABASE_NAME:-haystack}
+    ports:
+      - '${DATABASE_PORT:-5432}:5434'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USERNAME:-postgres}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - haystack-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: haystack-redis
+    command: redis-server --appendonly yes
+    ports:
+      - '${REDIS_PORT:-6379}:6381'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - haystack-network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: haystack-app
+    environment:
+      NODE_ENV: development
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
+      DATABASE_NAME: ${DATABASE_NAME:-haystack}
+      DATABASE_SSL: 'false'
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-in-production}
+      LOG_LEVEL: ${LOG_LEVEL:-debug}
+      LOG_PRETTY: 'true'
+    ports:
+      - '${PORT:-3000}:3000'
+    volumes:
+      - ./src:/app/src
+      - ./test:/app/test
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./nest-cli.json:/app/nest-cli.json
+      - ./eslint.config.mjs:/app/eslint.config.mjs
+      - ./tsconfig.build.json:/app/tsconfig.build.json
+      # Exclude node_modules from volume mounts
+      - /app/node_modules
+      # Don't mount dist - let it be created in container
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: pnpm start:dev
+    networks:
+      - haystack-network
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  haystack-network:
+    driver: bridge

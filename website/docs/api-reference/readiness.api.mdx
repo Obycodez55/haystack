@@ -1,0 +1,71 @@
+---
+id: readiness
+title: "Readiness probe"
+description: "Kubernetes readiness probe endpoint including database and Redis checks"
+sidebar_label: "Readiness probe"
+hide_title: true
+hide_table_of_contents: true
+api: eJzlVk1v2zgQ/SsETy2g2N4Wvfi02Wzapg26QZ2gCwQ5jKWxxZoiGX44VQ3/985QWq3tNEGBLdAW64slcvjmzXDmjTaywlB65aKyRk7l2zRHbzBiEB6hUgZDEM7bOQo0lbPKRKFMqRNtLUUFEeYQUICpxHusVBBljeUqyEJahx4Y9awi3AGMdhx4aMiFD3J6fVPQXnDWBKTXjXw2mfDfPqvLGsVrBB1rccL4ghyFVJaEt0iaIEtrIprIJ8E5rcrsefwx8PGNDMSqAX6KrUMCtPOPWEbm4plnVJ3zECGmsGMXoqc4yQ4/QeN0PrqS20Iqs7BfwxvsKIQ+ObvAMjm5peNQVYoZgr7YI3AI5/E2KY+Uwet/MG6+lfTDfqJPSJsmaQ1zJtsvoPfWPx7VT8u9wghKf5XIr3Mn3a+QLybPv60JjI0/rBG6avkf9wIxIsXbC6myd4ZsGroPWPKxE5t0la+JbsYwws8b8n9soeKXzsfQexGWPJdknVuN8WlW1ZaH2BJzpwAtT+W4MxjzZGtpOaBfdyNtI5PXZFHH6KbjsbYl6NqGOH0+oeFWHLT1OW+LCteorWu4d7fFLkIgCHDqiOJaUhyjGlp6LFej0jb3wGadEc3qtfLWPAz3OAxlp0olv+wj3XCYZfIqtjNWki7jcwSPfpAXznm/VPQPL61vgERJvvlwSYv9xTAdejOQjxwnyrJXn7Ng3WN0SrLmRWuTF8cXZ2KFrXjyR8YW0a7QPJWsQwxK14FZljhpZLdTCbTyFtsDy4HA30eEfNQZ7Ds/1uTcELE1Dt6B6FJOeoHN1TXooIpZIF/3KRYX0HL+xF+e8kPlmI8w0j1PV0YtFFbC9SeotFnb+UrZ8cJS+AtPTo2Yp5A/qDCMxBllZ0mwKO4UjYcm6aioXXdh1oqCDeLJRU+qEDPqC4eFeKlTpPjuYI1PRay9TctagGCnOsc7Ippc2h3F30aTfs5AmedMn74h2llyznrulP2qq2wZDsuOhpFim9Cd+X1vm1JKAwxNpzW9m6t352cnp+9mp38ODnLyHTVYA2bH8v3+9+thrjf/zsrv+NXbV1rET3HsNFChbXuam144BmUpZCcd1FSsDryz2TDuldfbLS/fJvRt9428Bq86sb6+IcS+dllrconLY/oGcJzzNejU1frB9N/uKtmr00vK2hfFkjV6
+sidebar_class_name: "get api-method"
+info_path: docs/api-reference/haystack-payment-orchestration-api
+custom_edit_url: null
+---
+
+import MethodEndpoint from "@theme/ApiExplorer/MethodEndpoint";
+import ParamsDetails from "@theme/ParamsDetails";
+import RequestSchema from "@theme/RequestSchema";
+import StatusCodes from "@theme/StatusCodes";
+import OperationTabs from "@theme/OperationTabs";
+import TabItem from "@theme/TabItem";
+import Heading from "@theme/Heading";
+
+<Heading
+  as={"h1"}
+  className={"openapi__heading"}
+  children={"Readiness probe"}
+>
+</Heading>
+
+<MethodEndpoint
+  method={"get"}
+  path={"/health/ready"}
+  context={"endpoint"}
+>
+  
+</MethodEndpoint>
+
+
+
+Kubernetes readiness probe endpoint including database and Redis checks
+
+<Heading
+  id={"request"}
+  as={"h2"}
+  className={"openapi-tabs__heading"}
+  children={"Request"}
+>
+</Heading>
+
+<ParamsDetails
+  parameters={[]}
+>
+  
+</ParamsDetails>
+
+<RequestSchema
+  title={"Body"}
+  body={undefined}
+>
+  
+</RequestSchema>
+
+<StatusCodes
+  id={undefined}
+  label={undefined}
+  responses={{"200":{"description":"The Health Check is successful","content":{"application/json":{"schema":{"type":"object","properties":{"status":{"type":"string","example":"ok"},"info":{"type":"object","example":{"database":{"status":"up"}},"additionalProperties":{"type":"object","required":["status"],"properties":{"status":{"type":"string"}},"additionalProperties":true},"nullable":true},"error":{"type":"object","example":{},"additionalProperties":{"type":"object","required":["status"],"properties":{"status":{"type":"string"}},"additionalProperties":true},"nullable":true},"details":{"type":"object","example":{"database":{"status":"up"}},"additionalProperties":{"type":"object","required":["status"],"properties":{"status":{"type":"string"}},"additionalProperties":true}}}}}}},"503":{"description":"The Health Check is not successful","content":{"application/json":{"schema":{"type":"object","properties":{"status":{"type":"string","example":"error"},"info":{"type":"object","example":{"database":{"status":"up"}},"additionalProperties":{"type":"object","required":["status"],"properties":{"status":{"type":"string"}},"additionalProperties":true},"nullable":true},"error":{"type":"object","example":{"redis":{"status":"down","message":"Could not connect"}},"additionalProperties":{"type":"object","required":["status"],"properties":{"status":{"type":"string"}},"additionalProperties":true},"nullable":true},"details":{"type":"object","example":{"database":{"status":"up"},"redis":{"status":"down","message":"Could not connect"}},"additionalProperties":{"type":"object","required":["status"],"properties":{"status":{"type":"string"}},"additionalProperties":true}}}}}}}}}
+>
+  
+</StatusCodes>
+
+
+      

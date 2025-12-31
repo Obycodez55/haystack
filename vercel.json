@@ -1,0 +1,13 @@
+{
+  "buildCommand": "cd website && pnpm install --frozen-lockfile && cd .. && pnpm docs:prepare && cd website && pnpm build",
+  "outputDirectory": "website/build",
+  "devCommand": "cd website && pnpm start",
+  "installCommand": "pnpm install && cd website && pnpm install --frozen-lockfile",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}

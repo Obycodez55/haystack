@@ -3,6 +3,15 @@
 /node_modules
 /build
 
+# Docusaurus build artifacts
+/website/.docusaurus/
+/website/build/
+/website/node_modules/
+# Copied docs - now committed (generated in pre-commit hook)
+# Allow api-reference to be committed (it's generated from OpenAPI spec)
+!/website/docs/api-reference/
+!/website/docs/api-reference/**
+
 # Logs
 logs
 *.log
@@ -54,3 +63,4 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.vercel

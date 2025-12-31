@@ -34,6 +34,13 @@ export class TenantEntity extends BaseEntity {
   passwordHash: string;
 
   @Column({
+    type: 'timestamp',
+    nullable: true,
+    name: 'email_verified_at',
+  })
+  emailVerifiedAt?: Date;
+
+  @Column({
     type: 'varchar',
     length: 50,
     default: TenantStatus.ACTIVE,

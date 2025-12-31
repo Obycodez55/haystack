@@ -284,6 +284,29 @@ export class EmailService {
   }
 
   /**
+   * Format email address(es) for logging
+   */
+  private formatEmailForLog(
+    address: string | string[] | EmailAddress | EmailAddress[] | undefined,
+  ): string | undefined {
+    if (!address) {
+      return undefined;
+    }
+
+    if (typeof address === 'string') {
+      return address;
+    }
+
+    if (Array.isArray(address)) {
+      return address
+        .map((addr) => (typeof addr === 'string' ? addr : addr.email))
+        .join(', ');
+    }
+
+    return address.email;
+  }
+
+  /**
    * Log email to database
    */
   private async logEmail(
@@ -296,25 +319,9 @@ export class EmailService {
       const log = this.emailLogRepository.create({
         messageId: result.messageId || `temp-${Date.now()}`,
         provider,
-        to: Array.isArray(options.to)
-          ? options.to.join(', ')
-          : typeof options.to === 'string'
-            ? options.to
-            : (options.to as EmailAddress).email,
-        cc: options.cc
-          ? Array.isArray(options.cc)
-            ? options.cc.join(', ')
-            : typeof options.cc === 'string'
-              ? options.cc
-              : (options.cc as EmailAddress).email
-          : undefined,
-        bcc: options.bcc
-          ? Array.isArray(options.bcc)
-            ? options.bcc.join(', ')
-            : typeof options.bcc === 'string'
-              ? options.bcc
-              : (options.bcc as EmailAddress).email
-          : undefined,
+        to: this.formatEmailForLog(options.to),
+        cc: this.formatEmailForLog(options.cc),
+        bcc: this.formatEmailForLog(options.bcc),
         subject: options.subject,
         template: originalOptions.template,
         status: result.success ? 'sent' : 'failed',

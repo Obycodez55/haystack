@@ -3,7 +3,7 @@ import { Job } from 'bullmq';
 import { Injectable } from '@nestjs/common';
 import { EmailJobData } from '../jobs/email.job.interface';
 import { EmailService } from '../services/email.service';
-import { EmailResult } from '../interfaces';
+import { EmailResult, EmailAddress } from '../interfaces';
 import { LoggerService } from '@logging/services/logger.service';
 import { toError } from '@common/utils/error.util';
 
@@ -23,6 +23,25 @@ export class EmailProcessor extends WorkerHost {
   }
 
   /**
+   * Format email address(es) for logging
+   */
+  private formatEmailForLog(
+    address: string | string[] | EmailAddress | EmailAddress[],
+  ): string {
+    if (typeof address === 'string') {
+      return address;
+    }
+
+    if (Array.isArray(address)) {
+      return address
+        .map((addr) => (typeof addr === 'string' ? addr : addr.email))
+        .join(', ');
+    }
+
+    return address.email;
+  }
+
+  /**
    * Process email job
    * This method is called automatically by BullMQ for jobs in the 'email' queue
    * Implements the abstract process method from WorkerHost
@@ -32,7 +51,7 @@ export class EmailProcessor extends WorkerHost {
       job.data;
 
     this.logger.log(`Processing email job ${job.id}`, {
-      to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
+      to: this.formatEmailForLog(options.to),
       subject: options.subject,
       template,
       attempt: job.attemptsMade + 1,
@@ -102,7 +121,7 @@ export class EmailProcessor extends WorkerHost {
           new Error(result.error?.message || 'Unknown error'),
           {
             errorCode: result.error?.code,
-            to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
+            to: this.formatEmailForLog(options.to),
           },
         );
         return result;
@@ -118,7 +137,7 @@ export class EmailProcessor extends WorkerHost {
       const errorObj = toError(error);
       this.logger.error(`Email job ${job.id} failed`, errorObj, {
         attempt: job.attemptsMade + 1,
-        to: Array.isArray(options.to) ? options.to.join(', ') : options.to,
+        to: this.formatEmailForLog(options.to),
       });
 
       // Re-throw to trigger retry mechanism

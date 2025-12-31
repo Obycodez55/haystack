@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { EmailJobData } from '../jobs/email.job.interface';
+import { EmailAddress } from '../interfaces';
 import { LoggerService } from '@logging/services/logger.service';
 
 /**
@@ -15,6 +16,25 @@ export class EmailQueueService {
     private logger: LoggerService,
   ) {
     this.logger.setContext('EmailQueueService');
+  }
+
+  /**
+   * Format email address(es) for logging
+   */
+  private formatEmailForLog(
+    address: string | string[] | EmailAddress | EmailAddress[],
+  ): string {
+    if (typeof address === 'string') {
+      return address;
+    }
+
+    if (Array.isArray(address)) {
+      return address
+        .map((addr) => (typeof addr === 'string' ? addr : addr.email))
+        .join(', ');
+    }
+
+    return address.email;
   }
 
   /**
@@ -37,18 +57,14 @@ export class EmailQueueService {
 
       this.logger.debug('Email job added to queue', {
         jobId: job.id,
-        to: Array.isArray(data.options.to)
-          ? data.options.to.join(', ')
-          : data.options.to,
+        to: this.formatEmailForLog(data.options.to),
         subject: data.options.subject,
       });
 
       return job;
     } catch (error) {
       this.logger.error('Failed to add email job to queue', error, {
-        to: Array.isArray(data.options.to)
-          ? data.options.to.join(', ')
-          : data.options.to,
+        to: this.formatEmailForLog(data.options.to),
         subject: data.options.subject,
       });
       throw error;

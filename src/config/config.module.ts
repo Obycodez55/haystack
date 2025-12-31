@@ -7,6 +7,7 @@ import redisConfig from './redis.config';
 import loggingConfig from './logging.config';
 import jwtConfig from './jwt.config';
 import queueConfig from './queue.config';
+import emailConfig from './email.config';
 
 /**
  * Global configuration module
@@ -30,6 +31,7 @@ import queueConfig from './queue.config';
         loggingConfig,
         jwtConfig,
         queueConfig,
+        emailConfig,
       ],
     }),
   ],

@@ -48,6 +48,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -65,7 +66,9 @@
     "class-validator": "^0.14.3",
     "compression": "^1.8.1",
     "express-timeout-handler": "^2.2.2",
+    "handlebars": "^4.7.8",
     "helmet": "^8.1.0",
+    "html-to-text": "^9.0.5",
     "ioredis": "^5.3.2",
     "joi": "^18.0.2",
     "lodash": "^4.17.21",

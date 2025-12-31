@@ -10,10 +10,11 @@ import {
   TenantContextInterceptor,
 } from '@modules';
 import { AuthModule } from '@modules';
+import { EmailModule } from '@modules/email/email.module';
 
 // Conditionally import DatabaseModule only if not generating OpenAPI
 // During OpenAPI generation, we don't need database connection
-const imports = [CommonModule, TenantModule, AuthModule];
+const imports = [CommonModule, TenantModule, AuthModule, EmailModule];
 
 // Only import DatabaseModule if not in OpenAPI generation mode
 // This prevents TypeORM from attempting to connect during spec generation

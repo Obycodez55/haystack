@@ -82,6 +82,22 @@ export const validationSchema = Joi.object({
   // Encryption (for provider credentials)
   ENCRYPTION_KEY: Joi.string().optional(),
 
+  // Email
+  EMAIL_DEFAULT_PROVIDER: Joi.string().default('brevo'),
+  EMAIL_FROM_NAME: Joi.string().default('Haystack'),
+  EMAIL_FROM_EMAIL: Joi.string().email().default('noreply@haystack.com'),
+  EMAIL_REPLY_TO: Joi.string().email().optional(),
+  EMAIL_TEMPLATES_DIRECTORY: Joi.string().optional(),
+  EMAIL_DEFAULT_LOCALE: Joi.string().default('en'),
+  BREVO_API_KEY: Joi.string().optional(),
+  BREVO_API_URL: Joi.string().optional(),
+  BREVO_RATE_LIMIT: Joi.number().optional(),
+  EMAIL_RETRY_MAX_ATTEMPTS: Joi.number().default(3),
+  EMAIL_RETRY_BACKOFF_DELAY: Joi.number().default(2000),
+  EMAIL_TRACKING_ENABLED: Joi.string().valid('true', 'false').default('true'),
+  EMAIL_TRACK_OPENS: Joi.string().valid('true', 'false').default('false'),
+  EMAIL_TRACK_CLICKS: Joi.string().valid('true', 'false').default('false'),
+
   // Docker/Test flags
   AUTO_MIGRATE: Joi.string().valid('true', 'false').optional(),
   WAIT_FOR_DB: Joi.string().valid('true', 'false').optional(),

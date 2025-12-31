@@ -6,6 +6,7 @@ import databaseConfig from './database.config';
 import redisConfig from './redis.config';
 import loggingConfig from './logging.config';
 import jwtConfig from './jwt.config';
+import queueConfig from './queue.config';
 
 /**
  * Global configuration module
@@ -22,7 +23,14 @@ import jwtConfig from './jwt.config';
         allowUnknown: true, // Allow extra env vars (useful for development)
         abortEarly: true, // Stop on first error (fail fast for required vars)
       },
-      load: [appConfig, databaseConfig, redisConfig, loggingConfig, jwtConfig],
+      load: [
+        appConfig,
+        databaseConfig,
+        redisConfig,
+        loggingConfig,
+        jwtConfig,
+        queueConfig,
+      ],
     }),
   ],
   exports: [NestConfigModule],

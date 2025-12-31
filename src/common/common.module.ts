@@ -5,6 +5,7 @@ import { LoggingModule } from './logging/logging.module';
 import { HealthModule } from './health/health.module';
 import { DatabaseModule } from './database/database.module';
 import { RedisModule } from './redis/redis.module';
+import { QueueModule } from './queue/queue.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { LoggerService } from './logging/services/logger.service';
@@ -30,6 +31,7 @@ import { LoggerService } from './logging/services/logger.service';
     LoggingModule, // Import LoggingModule first so LoggerService is available
     DatabaseModule, // DatabaseModule needs LoggerService
     RedisModule,
+    QueueModule, // Queue module for background job processing
     HealthModule,
   ],
   providers: [
@@ -52,6 +54,7 @@ import { LoggerService } from './logging/services/logger.service';
     LoggingModule,
     DatabaseModule,
     RedisModule,
+    QueueModule,
     HealthModule,
   ],
 })

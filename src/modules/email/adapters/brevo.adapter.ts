@@ -114,7 +114,12 @@ export class BrevoAdapter implements IEmailProvider {
         sendSmtpEmail.scheduledAt = options.scheduledAt;
       }
 
-      // Set headers for tracking
+      // Note: Brevo tracking (opens/clicks) is configured at account level
+      // in Brevo dashboard, not per-email. The tracking config flags here
+      // are for our internal logging and future webhook processing.
+      // If tracking is disabled globally, we won't log emails to database.
+
+      // Set headers for tracking metadata
       if (options.metadata) {
         sendSmtpEmail.headers = {
           'X-Haystack-Metadata': JSON.stringify(options.metadata),

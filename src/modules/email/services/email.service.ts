@@ -171,8 +171,10 @@ export class EmailService {
 
     const result = await provider.send(finalOptions);
 
-    // Log email if enabled
-    if (options.logEmail !== false) {
+    // Log email if enabled (respect both global tracking and per-email flag)
+    const shouldLog =
+      emailConfig.tracking.enabled && options.logEmail !== false;
+    if (shouldLog) {
       await this.logEmail(result, finalOptions, options, providerName);
     }
 
@@ -200,8 +202,10 @@ export class EmailService {
     // Send email
     const result = await provider.send(options);
 
-    // Log email if enabled
-    if (options.logEmail !== false) {
+    // Log email if enabled (respect both global tracking and per-email flag)
+    const shouldLog =
+      emailConfig.tracking.enabled && options.logEmail !== false;
+    if (shouldLog) {
       await this.logEmail(result, options, options, providerName);
     }
 

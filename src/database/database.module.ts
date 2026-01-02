@@ -3,6 +3,7 @@ import { TypeOrmModule, getDataSourceToken } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from '@config';
 import { DatabaseService } from './database.service';
+import * as path from 'path';
 
 // For OpenAPI generation, create a minimal module without TypeORM
 // This prevents database connection attempts during spec generation
@@ -33,11 +34,19 @@ const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
               database: dbConfig.database,
               ssl: dbConfig.ssl,
               // Scan for entities in both common and modules directories
+              // Use absolute paths for TypeORM to correctly resolve glob patterns
               entities: [
-                __dirname + '/entities/*.entity{.ts,.js}',
-                __dirname + '/../../modules/**/entities/*.entity{.ts,.js}',
+                path.resolve(__dirname, 'entities', '*.entity.{ts,js}'),
+                path.resolve(
+                  __dirname,
+                  '..',
+                  'modules',
+                  '**',
+                  'entities',
+                  '*.entity.{ts,js}',
+                ),
               ],
-              migrations: [__dirname + '/migrations/*{.ts,.js}'],
+              migrations: [path.resolve(__dirname, 'migrations', '*.{ts,js}')],
               migrationsRun: false, // Run migrations manually or via script
               synchronize: dbConfig.synchronize, // NEVER true in production
               logging: dbConfig.logging,

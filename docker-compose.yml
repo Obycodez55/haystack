@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
       POSTGRES_DB: ${DATABASE_NAME:-haystack}
     ports:
-      - '${DATABASE_PORT:-5432}:5434'
+      - '${DATABASE_PORT:-5432}:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -23,7 +23,7 @@ services:
     container_name: haystack-redis
     command: redis-server --appendonly yes
     ports:
-      - '${REDIS_PORT:-6379}:6381'
+      - 6379:6381
     volumes:
       - redis_data:/data
     healthcheck:
@@ -40,7 +40,6 @@ services:
       dockerfile: Dockerfile.dev
     container_name: haystack-app
     env_file:
-      - .env.local
       - .env
     environment:
       # Override database connection to use Docker service name
@@ -49,20 +48,16 @@ services:
       # Override Redis connection to use Docker service name
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      # Other environment variables (can be overridden from .env files)
-      NODE_ENV: ${NODE_ENV:-development}
+      # Database credentials - must match postgres service
       DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
       DATABASE_NAME: ${DATABASE_NAME:-haystack}
       DATABASE_SSL: ${DATABASE_SSL:-'false'}
+      # App port - always 3000 inside container, mapped to host port
+      PORT: 3000
+      # Other environment variables (can be overridden from .env files)
+      NODE_ENV: ${NODE_ENV:-development}
       REDIS_DB: ${REDIS_DB:-0}
-      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-in-production}
-      BREVO_API_KEY: ${BREVO_API_KEY:-dev-brevo-api-key}
-      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Haystack}
-      EMAIL_FROM_EMAIL: ${EMAIL_FROM_EMAIL:-noreply@haystack.com}
-      LOG_LEVEL: ${LOG_LEVEL:-debug}
-      LOG_PRETTY: ${LOG_PRETTY:-'true'}
     ports:
       - '${PORT:-3000}:3000'
     volumes:

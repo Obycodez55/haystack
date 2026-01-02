@@ -5,13 +5,6 @@ require('tsconfig-paths/register');
 import { DataSource } from 'typeorm';
 import * as path from 'path';
 
-// Use relative imports for migration CLI compatibility
-import { BaseEntity, TenantScopedEntity } from './entities/base.entity';
-import { TenantEntity } from '../modules/tenant/entities/tenant.entity';
-import { ApiKeyEntity } from '../modules/auth/entities/api-key.entity';
-import { TwoFactorEntity } from '../modules/auth/entities/two-factor.entity';
-import { EmailLogEntity } from '../modules/email/entities/email-log.entity';
-
 export default new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL || undefined,
@@ -27,15 +20,19 @@ export default new DataSource({
             process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false',
         }
       : false,
+  // Scan for entities using path patterns - works in both dev and production
   entities: [
-    BaseEntity,
-    TenantScopedEntity,
-    TenantEntity,
-    ApiKeyEntity,
-    TwoFactorEntity,
-    EmailLogEntity,
+    path.resolve(__dirname, 'entities', '*.entity.{ts,js}'),
+    path.resolve(
+      __dirname,
+      '..',
+      'modules',
+      '**',
+      'entities',
+      '*.entity.{ts,js}',
+    ),
   ],
-  migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
+  migrations: [path.resolve(__dirname, 'migrations', '*.{ts,js}')],
   synchronize: false,
   logging: process.env.DATABASE_LOGGING === 'true',
 });

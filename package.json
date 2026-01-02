@@ -31,6 +31,8 @@
     "migration:run": "pnpm exec ts-node -r tsconfig-paths/register scripts/run-migrations-sql.ts",
     "migration:revert": "ts-node -r tsconfig-paths/register scripts/migration-revert.ts",
     "migration:show": "ts-node -r tsconfig-paths/register scripts/migration-show.ts",
+    "db:reset": "ts-node -r tsconfig-paths/register scripts/db-reset.ts",
+    "db:reset:docker": "docker-compose exec app pnpm db:reset",
     "db:migrate:test": "NODE_ENV=test pnpm migration:run",
     "db:seed:test": "NODE_ENV=test ts-node -r tsconfig-paths/register test/setup/seed-test-data.ts",
     "db:reset:test": "NODE_ENV=test ts-node -r tsconfig-paths/register test/setup/reset-test-db.ts",

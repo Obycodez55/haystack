@@ -11,11 +11,6 @@ if (require.main !== module) {
   }
 }
 
-// Import entities - use relative paths for CLI compatibility
-import { BaseEntity, TenantScopedEntity } from './entities/base.entity';
-import { TenantEntity } from '../modules/tenant/entities/tenant.entity';
-import { ApiKeyEntity } from '../modules/auth/entities/api-key.entity';
-
 export default new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL || undefined,
@@ -31,8 +26,19 @@ export default new DataSource({
             process.env.DATABASE_SSL_REJECT_UNAUTHORIZED !== 'false',
         }
       : false,
-  entities: [BaseEntity, TenantScopedEntity, TenantEntity, ApiKeyEntity],
-  migrations: [path.join(__dirname, 'migrations/*{.ts,.js}')],
+  // Scan for entities using path patterns - works in both dev and production
+  entities: [
+    path.resolve(__dirname, 'entities', '*.entity.{ts,js}'),
+    path.resolve(
+      __dirname,
+      '..',
+      'modules',
+      '**',
+      'entities',
+      '*.entity.{ts,js}',
+    ),
+  ],
+  migrations: [path.resolve(__dirname, 'migrations', '*.{ts,js}')],
   synchronize: false,
   logging: process.env.DATABASE_LOGGING === 'true',
 });

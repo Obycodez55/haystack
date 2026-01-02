@@ -36,6 +36,7 @@ import {
   ForgotPasswordDto,
   ResetPasswordDto,
   VerifyEmailDto,
+  RequestEmailVerificationDto,
   CreateApiKeyDto,
   ApiKeyResponseDto,
   ApiKeyListDto,
@@ -92,30 +93,8 @@ export class AuthService {
         status: TenantStatus.ACTIVE,
       });
 
-      // Generate verification token
-      const verificationToken = this.jwtAuthService.generateVerificationToken(
-        tenant.id,
-        tenant.email,
-      );
-
-      // Send verification email
-      const baseUrl =
-        this.configService.get<string>('app.url') || 'http://localhost:3000';
-      const emailConfig = this.configService.get<EmailConfig>('email');
-      await EmailHelpers.sendVerificationEmail(
-        this.emailService,
-        tenant.email,
-        {
-          userName: tenant.name,
-          verificationUrl: `${baseUrl}/auth/verify-email?token=${verificationToken}`,
-          expiresIn: '24 hours',
-          supportEmail: emailConfig?.from?.email || 'support@haystack.com',
-        },
-        {
-          tenantId: tenant.id,
-          logEmail: true,
-        },
-      );
+      // Send verification email (reusable method)
+      await this.sendVerificationEmail(tenant);
 
       this.logger.log('Tenant registered successfully', {
         tenantId: tenant.id,
@@ -366,6 +345,50 @@ export class AuthService {
   }
 
   /**
+   * Request email verification (resend verification email)
+   */
+  async requestEmailVerification(dto: {
+    email: string;
+  }): Promise<{ message: string }> {
+    try {
+      const tenant = await this.tenantRepository.findByEmail(
+        dto.email.toLowerCase(),
+      );
+
+      // Don't reveal if email exists (security best practice)
+      // Also don't send if email is already verified
+      if (!tenant) {
+        return {
+          message:
+            'If an account exists with this email and is unverified, a verification email has been sent.',
+        };
+      }
+
+      // If email is already verified, don't reveal this but also don't send email
+      if (tenant.emailVerifiedAt) {
+        return {
+          message:
+            'If an account exists with this email and is unverified, a verification email has been sent.',
+        };
+      }
+
+      // Send verification email
+      await this.sendVerificationEmail(tenant);
+
+      return {
+        message:
+          'If an account exists with this email and is unverified, a verification email has been sent.',
+      };
+    } catch (error) {
+      const errorObj = toError(error);
+      this.logger.error('Email verification request failed', errorObj, {
+        email: dto.email,
+      });
+      throw error;
+    }
+  }
+
+  /**
    * Verify email
    */
   async verifyEmail(dto: VerifyEmailDto): Promise<{ message: string }> {
@@ -532,6 +555,37 @@ export class AuthService {
       });
       throw error;
     }
+  }
+
+  /**
+   * Send verification email to tenant (reusable method)
+   * Extracted to follow DRY principle - used by register and requestEmailVerification
+   */
+  private async sendVerificationEmail(tenant: TenantEntity): Promise<void> {
+    // Generate verification token
+    const verificationToken = this.jwtAuthService.generateVerificationToken(
+      tenant.id,
+      tenant.email,
+    );
+
+    // Send verification email
+    const baseUrl =
+      this.configService.get<string>('app.url') || 'http://localhost:3000';
+    const emailConfig = this.configService.get<EmailConfig>('email');
+    await EmailHelpers.sendVerificationEmail(
+      this.emailService,
+      tenant.email,
+      {
+        userName: tenant.name,
+        verificationUrl: `${baseUrl}/auth/verify-email?token=${verificationToken}`,
+        expiresIn: '24 hours',
+        supportEmail: emailConfig?.from?.email || 'support@haystack.com',
+      },
+      {
+        tenantId: tenant.id,
+        logEmail: true,
+      },
+    );
   }
 
   /**

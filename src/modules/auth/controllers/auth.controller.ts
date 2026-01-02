@@ -32,6 +32,7 @@ import {
   ForgotPasswordDto,
   ResetPasswordDto,
   VerifyEmailDto,
+  RequestEmailVerificationDto,
   CreateApiKeyDto,
   ApiKeyResponseDto,
   ApiKeyListDto,
@@ -152,6 +153,26 @@ export class AuthController {
     @Body() dto: ResetPasswordDto,
   ): Promise<{ message: string }> {
     return this.authService.resetPassword(dto);
+  }
+
+  /**
+   * Request email verification (resend verification email)
+   */
+  @Post('request-email-verification')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Request email verification (resend verification email)',
+  })
+  @ApiResponse({
+    status: 200,
+    description:
+      'Verification email sent (if account exists and is unverified)',
+  })
+  async requestEmailVerification(
+    @Body() dto: RequestEmailVerificationDto,
+  ): Promise<{ message: string }> {
+    return this.authService.requestEmailVerification(dto);
   }
 
   /**

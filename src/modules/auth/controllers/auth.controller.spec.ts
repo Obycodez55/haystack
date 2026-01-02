@@ -21,6 +21,7 @@ describe('AuthController', () => {
       refreshToken: jest.fn(),
       forgotPassword: jest.fn(),
       resetPassword: jest.fn(),
+      requestEmailVerification: jest.fn(),
       verifyEmail: jest.fn(),
       createApiKey: jest.fn(),
       listApiKeys: jest.fn(),
@@ -205,6 +206,24 @@ describe('AuthController', () => {
       const result = await controller.resetPassword(dto);
 
       expect(authService.resetPassword).toHaveBeenCalledWith(dto);
+      expect(result).toEqual(expectedResponse);
+    });
+  });
+
+  describe('requestEmailVerification', () => {
+    it('should call authService.requestEmailVerification with correct DTO', async () => {
+      const dto = {
+        email: 'test@example.com',
+      };
+      const expectedResponse = {
+        message:
+          'If an account exists with this email and is unverified, a verification email has been sent.',
+      };
+      authService.requestEmailVerification.mockResolvedValue(expectedResponse);
+
+      const result = await controller.requestEmailVerification(dto);
+
+      expect(authService.requestEmailVerification).toHaveBeenCalledWith(dto);
       expect(result).toEqual(expectedResponse);
     });
   });

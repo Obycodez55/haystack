@@ -143,23 +143,39 @@ export class BrevoAdapter implements IEmailProvider {
         },
       };
     } catch (error) {
+      const errorDetails = this.extractErrorDetails(error);
       const errorObj = toError(error);
-      this.logger.error('Failed to send email via Brevo', errorObj, {
-        to: options.to,
-        subject: options.subject,
-      });
 
-      // Determine if error is retryable
-      const retryable = this.isRetryableError(errorObj);
+      // Get email config for logging (may fail if config is missing)
+      const emailConfig = this.configService.get<EmailConfig>('email');
+
+      // Log comprehensive error details
+      this.logger.error('Failed to send email via Brevo', errorObj, {
+        // Request context
+        to: this.formatEmailForLog(options.to),
+        subject: options.subject,
+        from: options.from?.email || emailConfig?.from?.email,
+        cc: this.formatEmailForLog(options.cc),
+        bcc: this.formatEmailForLog(options.bcc),
+        // Error details
+        errorCode: errorDetails.code,
+        httpStatusCode: errorDetails.statusCode,
+        brevoError: errorDetails.brevoError,
+        retryable: errorDetails.retryable,
+        // Additional context
+        errorMessage: errorDetails.message,
+        errorName: errorObj.name,
+        hasStack: !!errorObj.stack,
+      });
 
       return {
         success: false,
         provider: 'brevo',
         sentAt: new Date(),
         error: {
-          code: this.getErrorCode(errorObj),
-          message: getErrorMessage(errorObj),
-          retryable,
+          code: errorDetails.code,
+          message: errorDetails.message,
+          retryable: errorDetails.retryable,
         },
       };
     }
@@ -208,12 +224,19 @@ export class BrevoAdapter implements IEmailProvider {
       };
     } catch (error) {
       const errorObj = toError(error);
-      this.logger.error('Brevo health check failed', errorObj);
+      const errorDetails = this.extractErrorDetails(error);
+
+      this.logger.error('Brevo health check failed', errorObj, {
+        errorCode: errorDetails.code,
+        httpStatusCode: errorDetails.statusCode,
+        brevoError: errorDetails.brevoError,
+        errorMessage: errorDetails.message,
+      });
 
       return {
         status: 'down',
         lastChecked: new Date(),
-        error: getErrorMessage(errorObj),
+        error: errorDetails.message,
       };
     }
   }
@@ -280,87 +303,189 @@ export class BrevoAdapter implements IEmailProvider {
   }
 
   /**
-   * Check if error is retryable
+   * Extract detailed error information from Brevo API errors
    */
-  private isRetryableError(error: Error): boolean {
-    const message = error.message.toLowerCase();
+  private extractErrorDetails(error: unknown): {
+    code: string;
+    message: string;
+    statusCode?: number;
+    brevoError?: any;
+    retryable: boolean;
+  } {
+    const errorObj = toError(error);
+    const message = errorObj.message.toLowerCase();
 
-    // Network errors are retryable
+    // Try to extract HTTP status code from error
+    let statusCode: number | undefined;
+    let brevoError: any;
+
+    // Brevo SDK errors typically have a response property
+    if (error && typeof error === 'object' && 'response' in error) {
+      const response = (error as any).response;
+      if (response?.status) {
+        statusCode = response.status;
+      }
+      if (response?.body) {
+        brevoError = response.body;
+      }
+      if (response?.data) {
+        brevoError = response.data;
+      }
+    }
+
+    // Also check for statusCode directly on error
     if (
-      message.includes('network') ||
-      message.includes('timeout') ||
-      message.includes('econnrefused') ||
-      message.includes('enotfound')
+      !statusCode &&
+      error &&
+      typeof error === 'object' &&
+      'statusCode' in error
     ) {
-      return true;
+      statusCode = (error as any).statusCode;
     }
 
-    // Rate limit errors are retryable
-    if (message.includes('rate limit') || message.includes('429')) {
-      return true;
+    // Extract error code based on status code (most reliable)
+    let code: string;
+    let retryable: boolean;
+
+    if (statusCode) {
+      switch (statusCode) {
+        case 400:
+          code = 'BAD_REQUEST';
+          retryable = false;
+          break;
+        case 401:
+          code = 'AUTH_ERROR';
+          retryable = false;
+          break;
+        case 403:
+          code = 'FORBIDDEN';
+          retryable = false;
+          break;
+        case 404:
+          code = 'NOT_FOUND';
+          retryable = false;
+          break;
+        case 429:
+          code = 'RATE_LIMIT';
+          retryable = true;
+          break;
+        case 500:
+        case 502:
+        case 503:
+        case 504:
+          code = 'SERVER_ERROR';
+          retryable = true;
+          break;
+        default:
+          // 4xx errors are generally not retryable, 5xx are
+          if (statusCode >= 400 && statusCode < 500) {
+            code = 'CLIENT_ERROR';
+            retryable = false;
+          } else if (statusCode >= 500) {
+            code = 'SERVER_ERROR';
+            retryable = true;
+          } else {
+            code = 'UNKNOWN_ERROR';
+            retryable = true; // Default to retryable for unknown
+          }
+      }
+    } else {
+      // Fallback to message-based detection if no status code
+      if (message.includes('400') || message.includes('bad request')) {
+        code = 'BAD_REQUEST';
+        retryable = false;
+      } else if (message.includes('401') || message.includes('unauthorized')) {
+        code = 'AUTH_ERROR';
+        retryable = false;
+      } else if (message.includes('403') || message.includes('forbidden')) {
+        code = 'FORBIDDEN';
+        retryable = false;
+      } else if (message.includes('404') || message.includes('not found')) {
+        code = 'NOT_FOUND';
+        retryable = false;
+      } else if (message.includes('429') || message.includes('rate limit')) {
+        code = 'RATE_LIMIT';
+        retryable = true;
+      } else if (
+        message.includes('500') ||
+        message.includes('502') ||
+        message.includes('503') ||
+        message.includes('504')
+      ) {
+        code = 'SERVER_ERROR';
+        retryable = true;
+      } else if (
+        message.includes('network') ||
+        message.includes('timeout') ||
+        message.includes('econnrefused') ||
+        message.includes('enotfound') ||
+        message.includes('etimedout') ||
+        message.includes('econnreset')
+      ) {
+        code = 'NETWORK_ERROR';
+        retryable = true;
+      } else {
+        code = 'UNKNOWN_ERROR';
+        retryable = true; // Default to retryable for unknown errors
+      }
     }
 
-    // Server errors (5xx) are retryable
-    if (
-      message.includes('500') ||
-      message.includes('502') ||
-      message.includes('503')
-    ) {
-      return true;
+    // Build comprehensive error message
+    let errorMessage = getErrorMessage(errorObj);
+
+    // Enhance message with Brevo API error details if available
+    if (brevoError) {
+      if (typeof brevoError === 'string') {
+        errorMessage = `${errorMessage}: ${brevoError}`;
+      } else if (brevoError.message) {
+        errorMessage = `${errorMessage}: ${brevoError.message}`;
+      } else if (brevoError.error) {
+        errorMessage = `${errorMessage}: ${brevoError.error}`;
+      } else if (Array.isArray(brevoError) && brevoError.length > 0) {
+        // Brevo sometimes returns array of errors
+        const firstError = brevoError[0];
+        if (typeof firstError === 'string') {
+          errorMessage = `${errorMessage}: ${firstError}`;
+        } else if (firstError.message) {
+          errorMessage = `${errorMessage}: ${firstError.message}`;
+        }
+      }
     }
 
-    // Invalid credentials or bad requests are not retryable
-    if (
-      message.includes('401') ||
-      message.includes('403') ||
-      message.includes('400') ||
-      message.includes('invalid')
-    ) {
-      return false;
+    // Add status code to message if available
+    if (statusCode) {
+      errorMessage = `[${statusCode}] ${errorMessage}`;
     }
 
-    // Default to retryable for unknown errors
-    return true;
+    return {
+      code,
+      message: errorMessage,
+      statusCode,
+      brevoError,
+      retryable,
+    };
   }
 
   /**
-   * Get error code from error
+   * Format email address(es) for logging
    */
-  private getErrorCode(error: Error): string {
-    const message = error.message.toLowerCase();
-
-    if (message.includes('400') || message.includes('bad request')) {
-      return 'BAD_REQUEST';
-    }
-    if (message.includes('401') || message.includes('unauthorized')) {
-      return 'AUTH_ERROR';
-    }
-    if (message.includes('403') || message.includes('forbidden')) {
-      return 'FORBIDDEN';
-    }
-    if (message.includes('404') || message.includes('not found')) {
-      return 'NOT_FOUND';
-    }
-    if (message.includes('429') || message.includes('rate limit')) {
-      return 'RATE_LIMIT';
-    }
-    if (
-      message.includes('500') ||
-      message.includes('502') ||
-      message.includes('503')
-    ) {
-      return 'SERVER_ERROR';
-    }
-    if (
-      message.includes('network') ||
-      message.includes('timeout') ||
-      message.includes('econnrefused') ||
-      message.includes('enotfound') ||
-      message.includes('etimedout')
-    ) {
-      return 'NETWORK_ERROR';
+  private formatEmailForLog(
+    address: string | string[] | EmailAddress | EmailAddress[] | undefined,
+  ): string | undefined {
+    if (!address) {
+      return undefined;
     }
 
-    return 'UNKNOWN_ERROR';
+    if (typeof address === 'string') {
+      return address;
+    }
+
+    if (Array.isArray(address)) {
+      return address
+        .map((addr) => (typeof addr === 'string' ? addr : addr.email))
+        .join(', ');
+    }
+
+    return address.email;
   }
 }

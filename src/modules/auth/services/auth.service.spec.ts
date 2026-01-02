@@ -509,6 +509,105 @@ describe('AuthService', () => {
     });
   });
 
+  describe('requestEmailVerification', () => {
+    const validRequestDto = {
+      email: 'test@example.com',
+    };
+
+    beforeEach(() => {
+      // Mock email service
+      emailService.sendWithTemplate = jest.fn().mockResolvedValue({
+        success: true,
+        messageId: 'email-123',
+        provider: 'brevo',
+        sentAt: new Date(),
+      });
+      // Mock JWT service
+      jwtAuthService.generateVerificationToken = jest
+        .fn()
+        .mockReturnValue('verification-token');
+      // Mock config service
+      configService.get = jest.fn().mockImplementation((key: string) => {
+        if (key === 'app.url') return 'http://localhost:3000';
+        if (key === 'email') {
+          return {
+            from: { email: 'support@haystack.com' },
+          };
+        }
+        return null;
+      });
+    });
+
+    it('should send verification email for unverified tenant', async () => {
+      tenantRepository.findByEmail.mockResolvedValue(mockTenant);
+
+      const result = await service.requestEmailVerification(validRequestDto);
+
+      expect(result.message).toContain('verification email has been sent');
+      expect(tenantRepository.findByEmail).toHaveBeenCalledWith(
+        'test@example.com',
+      );
+      expect(jwtAuthService.generateVerificationToken).toHaveBeenCalledWith(
+        mockTenant.id,
+        mockTenant.email,
+      );
+      expect(emailService.sendWithTemplate).toHaveBeenCalled();
+    });
+
+    it('should return generic message if tenant not found', async () => {
+      tenantRepository.findByEmail.mockResolvedValue(null);
+
+      const result = await service.requestEmailVerification(validRequestDto);
+
+      expect(result.message).toContain('verification email has been sent');
+      expect(tenantRepository.findByEmail).toHaveBeenCalledWith(
+        'test@example.com',
+      );
+      expect(jwtAuthService.generateVerificationToken).not.toHaveBeenCalled();
+      expect(emailService.sendWithTemplate).not.toHaveBeenCalled();
+    });
+
+    it('should return generic message if email already verified', async () => {
+      const verifiedTenant = {
+        ...mockTenant,
+        emailVerifiedAt: new Date(),
+      };
+      tenantRepository.findByEmail.mockResolvedValue(
+        verifiedTenant as TenantEntity,
+      );
+
+      const result = await service.requestEmailVerification(validRequestDto);
+
+      expect(result.message).toContain('verification email has been sent');
+      expect(tenantRepository.findByEmail).toHaveBeenCalledWith(
+        'test@example.com',
+      );
+      expect(jwtAuthService.generateVerificationToken).not.toHaveBeenCalled();
+      expect(emailService.sendWithTemplate).not.toHaveBeenCalled();
+    });
+
+    it('should normalize email to lowercase', async () => {
+      tenantRepository.findByEmail.mockResolvedValue(mockTenant);
+
+      await service.requestEmailVerification({
+        email: 'TEST@EXAMPLE.COM',
+      });
+
+      expect(tenantRepository.findByEmail).toHaveBeenCalledWith(
+        'test@example.com',
+      );
+    });
+
+    it('should handle errors and throw them', async () => {
+      const error = new Error('Database error');
+      tenantRepository.findByEmail.mockRejectedValue(error);
+
+      await expect(
+        service.requestEmailVerification(validRequestDto),
+      ).rejects.toThrow('Database error');
+    });
+  });
+
   describe('createApiKey', () => {
     const validCreateDto = {
       name: 'Test API Key',

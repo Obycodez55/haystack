@@ -39,24 +39,30 @@ services:
       context: .
       dockerfile: Dockerfile.dev
     container_name: haystack-app
+    env_file:
+      - .env.local
+      - .env
     environment:
-      NODE_ENV: development
+      # Override database connection to use Docker service name
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
+      # Override Redis connection to use Docker service name
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      # Other environment variables (can be overridden from .env files)
+      NODE_ENV: ${NODE_ENV:-development}
       DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
       DATABASE_NAME: ${DATABASE_NAME:-haystack}
-      DATABASE_SSL: 'false'
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_DB: 0
+      DATABASE_SSL: ${DATABASE_SSL:-'false'}
+      REDIS_DB: ${REDIS_DB:-0}
       JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev-refresh-secret-change-in-production}
       BREVO_API_KEY: ${BREVO_API_KEY:-dev-brevo-api-key}
       EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Haystack}
       EMAIL_FROM_EMAIL: ${EMAIL_FROM_EMAIL:-noreply@haystack.com}
       LOG_LEVEL: ${LOG_LEVEL:-debug}
-      LOG_PRETTY: 'true'
+      LOG_PRETTY: ${LOG_PRETTY:-'true'}
     ports:
       - '${PORT:-3000}:3000'
     volumes:

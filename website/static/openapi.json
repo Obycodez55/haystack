@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
+    "/api/v1": {
       "get": {
         "description": "Returns a simple hello message indicating the API is running",
         "operationId": "getHello",
@@ -483,7 +483,7 @@
         "tags": ["health"]
       }
     },
-    "/tenant/profile": {
+    "/api/v1/tenant/profile": {
       "get": {
         "operationId": "getProfile",
         "parameters": [],
@@ -556,7 +556,7 @@
         "tags": ["tenant"]
       }
     },
-    "/tenant/settings": {
+    "/api/v1/tenant/settings": {
       "get": {
         "operationId": "getSettings",
         "parameters": [],
@@ -629,7 +629,7 @@
         "tags": ["tenant"]
       }
     },
-    "/tenant/kyc": {
+    "/api/v1/tenant/kyc": {
       "post": {
         "operationId": "submitKyc",
         "parameters": [],
@@ -673,7 +673,7 @@
         "tags": ["tenant"]
       }
     },
-    "/tenant/kyc/status": {
+    "/api/v1/tenant/kyc/status": {
       "get": {
         "operationId": "getKycStatus",
         "parameters": [],
@@ -704,7 +704,7 @@
         "tags": ["tenant"]
       }
     },
-    "/auth/register": {
+    "/api/v1/auth/register": {
       "post": {
         "operationId": "register",
         "parameters": [],
@@ -737,7 +737,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/login": {
+    "/api/v1/auth/login": {
       "post": {
         "operationId": "login",
         "parameters": [],
@@ -770,7 +770,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/login/verify-2fa": {
+    "/api/v1/auth/login/verify-2fa": {
       "post": {
         "operationId": "verifyTwoFactor",
         "parameters": [],
@@ -803,7 +803,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/refresh": {
+    "/api/v1/auth/refresh": {
       "post": {
         "operationId": "refreshToken",
         "parameters": [],
@@ -836,7 +836,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/forgot-password": {
+    "/api/v1/auth/forgot-password": {
       "post": {
         "operationId": "forgotPassword",
         "parameters": [],
@@ -859,7 +859,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/reset-password": {
+    "/api/v1/auth/reset-password": {
       "post": {
         "operationId": "resetPassword",
         "parameters": [],
@@ -885,7 +885,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/verify-email": {
+    "/api/v1/auth/verify-email": {
       "post": {
         "operationId": "verifyEmail",
         "parameters": [],
@@ -911,7 +911,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/api-keys": {
+    "/api/v1/auth/api-keys": {
       "post": {
         "operationId": "createApiKey",
         "parameters": [],
@@ -972,7 +972,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/api-keys/{id}": {
+    "/api/v1/auth/api-keys/{id}": {
       "delete": {
         "operationId": "revokeApiKey",
         "parameters": [
@@ -1002,7 +1002,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/2fa/setup": {
+    "/api/v1/auth/2fa/setup": {
       "post": {
         "operationId": "setupTwoFactor",
         "parameters": [],
@@ -1030,7 +1030,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/2fa/verify-setup": {
+    "/api/v1/auth/2fa/verify-setup": {
       "post": {
         "operationId": "verifySetupTwoFactor",
         "parameters": [],
@@ -1061,7 +1061,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/2fa/disable": {
+    "/api/v1/auth/2fa/disable": {
       "post": {
         "operationId": "disableTwoFactor",
         "parameters": [],
@@ -1092,7 +1092,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/2fa/regenerate-codes": {
+    "/api/v1/auth/2fa/regenerate-codes": {
       "post": {
         "operationId": "regenerateBackupCodes",
         "parameters": [],
@@ -1120,7 +1120,7 @@
         "tags": ["auth"]
       }
     },
-    "/auth/2fa/status": {
+    "/api/v1/auth/2fa/status": {
       "get": {
         "operationId": "getTwoFactorStatus",
         "parameters": [],

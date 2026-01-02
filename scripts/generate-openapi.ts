@@ -15,10 +15,16 @@ process.env.JWT_SECRET =
 process.env.JWT_REFRESH_SECRET =
   process.env.JWT_REFRESH_SECRET ||
   'PLACEHOLDER_NOT_FOR_USE_JWT_REFRESH_SECRET';
+// Set API prefix and version defaults if not provided
+process.env.GLOBAL_PREFIX = process.env.GLOBAL_PREFIX || 'api';
+process.env.API_VERSION = process.env.API_VERSION || 'v1';
 
 import { NestFactory } from '@nestjs/core';
+import { VersioningType } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from '../src/app.module';
+import { AppConfig } from '../src/config/app.config';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -51,6 +57,30 @@ async function generateOpenApiSpec() {
       throw error;
     }
   }
+
+  // Get configuration to apply global prefix and versioning
+  const configService = app.get(ConfigService);
+  const appConfig = configService.get('app') as AppConfig;
+
+  if (!appConfig) {
+    throw new Error(
+      'App configuration is missing. Please check your environment variables.',
+    );
+  }
+
+  // Apply global prefix (e.g., /api)
+  // Exclude health checks from global prefix - they should be at root level
+  app.setGlobalPrefix(appConfig.globalPrefix, {
+    exclude: ['/health', '/health/live', '/health/ready'],
+  });
+
+  // Enable API versioning (e.g., /api/v1)
+  // NestJS URI versioning automatically adds 'v' prefix, so use just the number
+  const versionNumber = appConfig.apiVersion.replace(/^v/i, ''); // Remove 'v' prefix if present
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: versionNumber,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Haystack Payment Orchestration API')

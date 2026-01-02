@@ -92,9 +92,11 @@ async function bootstrap() {
   });
 
   // API versioning (e.g., /api/v1)
+  // NestJS URI versioning automatically adds 'v' prefix, so use just the number
+  const versionNumber = appConfig.apiVersion.replace(/^v/i, ''); // Remove 'v' prefix if present
   app.enableVersioning({
     type: VersioningType.URI,
-    defaultVersion: appConfig.apiVersion,
+    defaultVersion: versionNumber,
   });
 
   // Security headers (Helmet)

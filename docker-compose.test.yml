@@ -37,23 +37,29 @@ services:
       context: .
       dockerfile: Dockerfile.test
     container_name: haystack-test
+    env_file:
+      - .env.local
+      - .env
     environment:
-      NODE_ENV: test
+      # Override database connection to use Docker service name
       DATABASE_HOST: postgres-test
       DATABASE_PORT: 5432
+      # Override Redis connection to use Docker service name
+      REDIS_HOST: redis-test
+      REDIS_PORT: 6379
+      # Other environment variables (can be overridden from .env files)
+      NODE_ENV: ${NODE_ENV:-test}
       DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-postgres}
       DATABASE_NAME: ${DATABASE_NAME:-haystack_test}
-      DATABASE_SSL: 'false'
-      REDIS_HOST: redis-test
-      REDIS_PORT: 6379
-      REDIS_DB: 1
+      DATABASE_SSL: ${DATABASE_SSL:-'false'}
+      REDIS_DB: ${REDIS_DB:-1}
       JWT_SECRET: ${JWT_SECRET:-test-secret}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-test-refresh-secret}
-      LOG_LEVEL: error
-      LOG_PRETTY: 'false'
-      WAIT_FOR_DB: 'true'
-      WAIT_FOR_REDIS: 'true'
+      LOG_LEVEL: ${LOG_LEVEL:-error}
+      LOG_PRETTY: ${LOG_PRETTY:-'false'}
+      WAIT_FOR_DB: ${WAIT_FOR_DB:-'true'}
+      WAIT_FOR_REDIS: ${WAIT_FOR_REDIS:-'true'}
     volumes:
       - ./src:/app/src
       - ./test:/app/test

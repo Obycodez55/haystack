@@ -60,6 +60,13 @@ export class TenantService {
 
   /**
    * Get tenant profile
+   *
+   * Retrieves the complete profile information for the specified tenant.
+   * Includes personal information, company details, and account status.
+   *
+   * @param tenantId - The unique identifier of the tenant
+   * @returns Tenant profile DTO with all profile information
+   * @throws {TenantError} If tenant is not found or account is inactive
    */
   async getProfile(tenantId: string): Promise<TenantProfileDto> {
     try {
@@ -82,6 +89,14 @@ export class TenantService {
 
   /**
    * Update tenant profile
+   *
+   * Updates the tenant's profile information. Only provided fields are updated.
+   * Validates tenant status before allowing updates.
+   *
+   * @param tenantId - The unique identifier of the tenant
+   * @param dto - Update profile DTO with fields to update
+   * @returns Updated tenant profile DTO
+   * @throws {TenantError} If tenant is not found or account is inactive
    */
   async updateProfile(
     tenantId: string,
@@ -121,6 +136,12 @@ export class TenantService {
 
   /**
    * Get tenant settings
+   *
+   * Retrieves the tenant's settings including default currency and timezone.
+   *
+   * @param tenantId - The unique identifier of the tenant
+   * @returns Tenant settings DTO with currency and timezone
+   * @throws {TenantError} If tenant is not found or account is inactive
    */
   async getSettings(tenantId: string): Promise<TenantSettingsDto> {
     try {
@@ -146,6 +167,14 @@ export class TenantService {
 
   /**
    * Update tenant settings
+   *
+   * Updates the tenant's settings (currency and timezone).
+   * Validates currency against supported ISO 4217 codes and timezone against IANA identifiers.
+   *
+   * @param tenantId - The unique identifier of the tenant
+   * @param dto - Update settings DTO with currency and/or timezone
+   * @returns Updated tenant settings DTO
+   * @throws {TenantError} If tenant is not found, account is inactive, or validation fails
    */
   async updateSettings(
     tenantId: string,
@@ -202,6 +231,14 @@ export class TenantService {
 
   /**
    * Submit KYC information
+   *
+   * Submits KYC (Know Your Customer) information for the tenant.
+   * Allows resubmission if previous KYC was rejected, but prevents resubmission if already approved.
+   *
+   * @param tenantId - The unique identifier of the tenant
+   * @param dto - KYC submission DTO with business information
+   * @returns KYC status DTO with current status and timestamps
+   * @throws {TenantError} If tenant is not found, account is inactive, or KYC already approved
    */
   async submitKyc(
     tenantId: string,
@@ -263,6 +300,12 @@ export class TenantService {
 
   /**
    * Get KYC status
+   *
+   * Retrieves the current KYC status for the tenant, including submission and approval timestamps.
+   *
+   * @param tenantId - The unique identifier of the tenant
+   * @returns KYC status DTO with status, timestamps, and rejection reason (if applicable)
+   * @throws {TenantError} If tenant is not found or account is inactive
    */
   async getKycStatus(tenantId: string): Promise<KycStatusDto> {
     try {

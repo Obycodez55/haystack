@@ -207,6 +207,15 @@ X-Request-ID: correlation-id-12345
 - `api_key_revoked`: API key has been revoked
 - `insufficient_permissions`: API key lacks required permissions
 
+#### Tenant Errors
+
+- `tenant_not_found`: Tenant ID not found
+- `invalid_currency`: Unsupported currency code
+- `invalid_timezone`: Invalid timezone identifier
+- `kyc_already_submitted`: KYC already submitted (can resubmit if rejected)
+- `kyc_already_approved`: KYC already approved (cannot resubmit)
+- `tenant_inactive`: Tenant account is suspended or deleted
+
 #### System Errors
 
 - `internal_server_error`: Unexpected server error
@@ -823,6 +832,197 @@ X-RateLimit-Reset: 1703062800
   }
 }
 ```
+
+### 6.6 Tenant Management
+
+#### Get Tenant Profile
+
+**GET** `/tenant/profile`
+
+**Response:** `200 OK`
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": "tenant_123",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "isEmailVerified": true,
+    "status": "active",
+    "companyName": "Acme Corp",
+    "companyRegistrationNumber": "RC123456",
+    "businessAddress": "123 Main St, Lagos, Nigeria",
+    "phone": "+2348012345678",
+    "defaultCurrency": "NGN",
+    "timezone": "Africa/Lagos",
+    "createdAt": "2024-12-19T10:00:00Z",
+    "updatedAt": "2024-12-20T10:00:00Z"
+  }
+}
+```
+
+**Status Values:**
+
+- `active`: Tenant account is active
+- `suspended`: Tenant account is suspended
+- `deleted`: Tenant account is deleted
+
+#### Update Tenant Profile
+
+**PATCH** `/tenant/profile`
+
+**Request:**
+
+```json
+{
+  "name": "John Doe",
+  "companyName": "Acme Corp",
+  "companyRegistrationNumber": "RC123456",
+  "businessAddress": "123 Main St, Lagos, Nigeria",
+  "phone": "+2348012345678"
+}
+```
+
+**Validation:**
+
+- `name`: Optional, string
+- `companyName`: Optional, string
+- `companyRegistrationNumber`: Optional, string
+- `businessAddress`: Optional, string
+- `phone`: Optional, string (E.164 format recommended)
+
+**Response:** `200 OK`
+
+**Error Codes:**
+
+- `tenant_not_found`: Tenant ID not found
+- `tenant_inactive`: Tenant account is suspended or deleted
+
+#### Get Tenant Settings
+
+**GET** `/tenant/settings`
+
+**Response:** `200 OK`
+
+```json
+{
+  "success": true,
+  "data": {
+    "defaultCurrency": "NGN",
+    "timezone": "Africa/Lagos"
+  }
+}
+```
+
+#### Update Tenant Settings
+
+**PATCH** `/tenant/settings`
+
+**Request:**
+
+```json
+{
+  "defaultCurrency": "USD",
+  "timezone": "America/New_York"
+}
+```
+
+**Validation:**
+
+- `defaultCurrency`: Optional, ISO 4217 code (NGN, USD, EUR, GBP, KES, GHS, ZAR)
+- `timezone`: Optional, IANA timezone identifier (e.g., "Africa/Lagos", "America/New_York")
+
+**Response:** `200 OK`
+
+**Error Codes:**
+
+- `invalid_currency`: Unsupported currency code
+- `invalid_timezone`: Invalid timezone identifier
+- `tenant_not_found`: Tenant ID not found
+- `tenant_inactive`: Tenant account is suspended or deleted
+
+#### Submit KYC
+
+**POST** `/tenant/kyc`
+
+**Request:**
+
+```json
+{
+  "companyName": "Acme Corp",
+  "companyRegistrationNumber": "RC123456",
+  "businessAddress": "123 Main St, Lagos, Nigeria",
+  "metadata": {
+    "additionalInfo": "Any additional data"
+  }
+}
+```
+
+**Validation:**
+
+- `companyName`: Required, string
+- `companyRegistrationNumber`: Required, string
+- `businessAddress`: Required, string
+- `metadata`: Optional, object
+
+**Response:** `200 OK`
+
+```json
+{
+  "success": true,
+  "data": {
+    "status": "pending",
+    "submittedAt": "2024-12-20T10:30:00Z",
+    "approvedAt": null,
+    "rejectedReason": null
+  }
+}
+```
+
+**Status Values:**
+
+- `pending`: KYC submitted, awaiting review
+- `approved`: KYC approved (cannot resubmit)
+- `rejected`: KYC rejected (can resubmit with new information)
+
+**Error Codes:**
+
+- `kyc_already_submitted`: KYC already submitted (can resubmit if rejected)
+- `kyc_already_approved`: KYC already approved (cannot resubmit)
+- `tenant_not_found`: Tenant ID not found
+- `tenant_inactive`: Tenant account is suspended or deleted
+
+**Note:** If KYC was previously rejected, you can resubmit with updated information. The previous rejection reason will be cleared.
+
+#### Get KYC Status
+
+**GET** `/tenant/kyc/status`
+
+**Response:** `200 OK`
+
+```json
+{
+  "success": true,
+  "data": {
+    "status": "approved",
+    "submittedAt": "2024-12-19T10:00:00Z",
+    "approvedAt": "2024-12-20T10:00:00Z",
+    "rejectedReason": null
+  }
+}
+```
+
+**Status Values:**
+
+- `pending`: KYC submitted, awaiting review
+- `approved`: KYC approved
+- `rejected`: KYC rejected (can resubmit)
+
+**Error Codes:**
+
+- `tenant_not_found`: Tenant ID not found
+- `tenant_inactive`: Tenant account is suspended or deleted
 
 ---
 

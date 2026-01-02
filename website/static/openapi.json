@@ -12,9 +12,7 @@
           }
         },
         "summary": "Get API status",
-        "tags": [
-          "health"
-        ]
+        "tags": ["health"]
       }
     },
     "/health": {
@@ -43,9 +41,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -60,9 +56,7 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -81,9 +75,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -117,9 +109,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -139,9 +129,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -164,9 +152,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -182,9 +168,7 @@
           }
         },
         "summary": "Health check",
-        "tags": [
-          "health"
-        ]
+        "tags": ["health"]
       }
     },
     "/health/live": {
@@ -213,9 +197,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -230,9 +212,7 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -251,9 +231,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -287,9 +265,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -309,9 +285,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -334,9 +308,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -352,9 +324,7 @@
           }
         },
         "summary": "Liveness probe",
-        "tags": [
-          "health"
-        ]
+        "tags": ["health"]
       }
     },
     "/health/ready": {
@@ -383,9 +353,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -400,9 +368,7 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -421,9 +387,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -457,9 +421,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -479,9 +441,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -504,9 +464,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -522,9 +480,669 @@
           }
         },
         "summary": "Readiness probe",
-        "tags": [
-          "health"
-        ]
+        "tags": ["health"]
+      }
+    },
+    "/tenant/profile": {
+      "get": {
+        "operationId": "getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tenant profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantProfileDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get current tenant profile",
+        "tags": ["tenant"]
+      },
+      "patch": {
+        "operationId": "updateProfile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantProfileDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update tenant profile",
+        "tags": ["tenant"]
+      }
+    },
+    "/tenant/settings": {
+      "get": {
+        "operationId": "getSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Settings retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantSettingsDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get tenant settings",
+        "tags": ["tenant"]
+      },
+      "patch": {
+        "operationId": "updateSettings",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Settings updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantSettingsDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or currency/timezone"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update tenant settings",
+        "tags": ["tenant"]
+      }
+    },
+    "/tenant/kyc": {
+      "post": {
+        "operationId": "submitKyc",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KycSubmissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "KYC submitted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycStatusDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or KYC already submitted"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Submit KYC information",
+        "tags": ["tenant"]
+      }
+    },
+    "/tenant/kyc/status": {
+      "get": {
+        "operationId": "getKycStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "KYC status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KycStatusDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Tenant not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get KYC status",
+        "tags": ["tenant"]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or email already exists"
+          }
+        },
+        "summary": "Register a new tenant account",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        },
+        "summary": "Login tenant",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/login/verify-2fa": {
+      "post": {
+        "operationId": "verifyTwoFactor",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyTwoFactorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "2FA verified, login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid 2FA code"
+          }
+        },
+        "summary": "Verify 2FA code and complete login",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "refreshToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token refreshed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid refresh token"
+          }
+        },
+        "summary": "Refresh access token",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "operationId": "forgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset email sent (if email exists)"
+          }
+        },
+        "summary": "Request password reset email",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "operationId": "resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successful"
+          },
+          "401": {
+            "description": "Invalid or expired token"
+          }
+        },
+        "summary": "Reset password with token",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/verify-email": {
+      "post": {
+        "operationId": "verifyEmail",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email verified successfully"
+          },
+          "401": {
+            "description": "Invalid or expired token"
+          }
+        },
+        "summary": "Verify email address",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/api-keys": {
+      "post": {
+        "operationId": "createApiKey",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApiKeyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API key created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKeyResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new API key",
+        "tags": ["auth"]
+      },
+      "get": {
+        "operationId": "listApiKeys",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "API keys list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ApiKeyListDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "List all API keys for current tenant",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/api-keys/{id}": {
+      "delete": {
+        "operationId": "revokeApiKey",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API key revoked successfully"
+          },
+          "404": {
+            "description": "API key not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Revoke an API key",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/2fa/setup": {
+      "post": {
+        "operationId": "setupTwoFactor",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "2FA setup data generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetupTwoFactorResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "2FA already enabled"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Generate 2FA secret and QR code",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/2fa/verify-setup": {
+      "post": {
+        "operationId": "verifySetupTwoFactor",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifySetupTwoFactorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "2FA enabled successfully"
+          },
+          "400": {
+            "description": "Invalid 2FA code"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Verify 2FA code and enable 2FA",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/2fa/disable": {
+      "post": {
+        "operationId": "disableTwoFactor",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisableTwoFactorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "2FA disabled successfully"
+          },
+          "401": {
+            "description": "Invalid password"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Disable 2FA (requires password)",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/2fa/regenerate-codes": {
+      "post": {
+        "operationId": "regenerateBackupCodes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Backup codes regenerated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Regenerate 2FA backup codes",
+        "tags": ["auth"]
+      }
+    },
+    "/auth/2fa/status": {
+      "get": {
+        "operationId": "getTwoFactorStatus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "2FA status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwoFactorStatusDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get 2FA status for current tenant",
+        "tags": ["auth"]
       }
     }
   },
@@ -591,6 +1209,610 @@
         "description": "Alternative API key authentication"
       }
     },
-    "schemas": {}
+    "schemas": {
+      "TenantProfileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Tenant ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tenant name",
+            "example": "Acme Corp"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "admin@acme.com"
+          },
+          "isEmailVerified": {
+            "type": "boolean",
+            "description": "Whether email is verified",
+            "example": true
+          },
+          "status": {
+            "type": "string",
+            "description": "Tenant status",
+            "enum": ["active", "suspended", "deleted"],
+            "example": "active"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Company name",
+            "example": "Acme Corporation"
+          },
+          "companyRegistrationNumber": {
+            "type": "string",
+            "description": "Company registration number",
+            "example": "RC123456"
+          },
+          "businessAddress": {
+            "type": "string",
+            "description": "Business address",
+            "example": "123 Main Street, Lagos, Nigeria"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number",
+            "example": "+2348012345678"
+          },
+          "defaultCurrency": {
+            "type": "string",
+            "description": "Default currency",
+            "example": "NGN"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Timezone",
+            "example": "Africa/Lagos"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Account creation date",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last update date",
+            "example": "2024-01-01T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "isEmailVerified",
+          "status",
+          "defaultCurrency",
+          "timezone",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tenant name",
+            "example": "Acme Corp"
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Company name",
+            "example": "Acme Corporation"
+          },
+          "companyRegistrationNumber": {
+            "type": "string",
+            "description": "Company registration number",
+            "example": "RC123456"
+          },
+          "businessAddress": {
+            "type": "string",
+            "description": "Business address",
+            "example": "123 Main Street, Lagos, Nigeria"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number",
+            "example": "+2348012345678"
+          }
+        }
+      },
+      "TenantSettingsDto": {
+        "type": "object",
+        "properties": {
+          "defaultCurrency": {
+            "type": "string",
+            "description": "Default currency (ISO 4217 code)",
+            "example": "NGN"
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Timezone (IANA timezone identifier)",
+            "example": "Africa/Lagos"
+          }
+        },
+        "required": ["defaultCurrency", "timezone"]
+      },
+      "UpdateSettingsDto": {
+        "type": "object",
+        "properties": {
+          "defaultCurrency": {
+            "type": "string",
+            "description": "Default currency (ISO 4217 code)",
+            "example": "NGN",
+            "enum": ["NGN", "USD", "EUR", "GBP", "KES", "GHS", "ZAR"]
+          },
+          "timezone": {
+            "type": "string",
+            "description": "Timezone (IANA timezone identifier)",
+            "example": "Africa/Lagos"
+          }
+        }
+      },
+      "KycSubmissionDto": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
+            "description": "Company name",
+            "example": "Acme Corporation"
+          },
+          "companyRegistrationNumber": {
+            "type": "string",
+            "description": "Company registration number",
+            "example": "RC123456"
+          },
+          "businessAddress": {
+            "type": "string",
+            "description": "Business address",
+            "example": "123 Main Street, Lagos, Nigeria"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional KYC information (JSON)",
+            "example": {
+              "taxId": "TAX123",
+              "industry": "Fintech"
+            }
+          }
+        },
+        "required": ["companyName", "businessAddress"]
+      },
+      "KycStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "KYC status",
+            "enum": ["pending", "approved", "rejected", "not_required"],
+            "example": "pending"
+          },
+          "submittedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When KYC was submitted",
+            "example": "2024-01-01T00:00:00Z"
+          },
+          "approvedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When KYC was approved",
+            "example": "2024-01-02T00:00:00Z"
+          },
+          "rejectedReason": {
+            "type": "string",
+            "description": "Rejection reason (if rejected)",
+            "example": "Incomplete documentation"
+          }
+        },
+        "required": ["status"]
+      },
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Tenant name",
+            "example": "Acme Corp"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address (used for login)",
+            "example": "admin@acme.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password (min 8 chars, must include uppercase, lowercase, number, special char)",
+            "example": "SecurePass123!",
+            "minLength": 8
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Company name",
+            "example": "Acme Corporation"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number",
+            "example": "+2348012345678"
+          }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "RegisterResponseDto": {
+        "type": "object",
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "admin@acme.com"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message",
+            "example": "Registration successful. Please check your email to verify your account."
+          }
+        },
+        "required": ["tenantId", "email", "message"]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "admin@acme.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password",
+            "example": "SecurePass123!"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "TenantInfoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "suspended", "deleted"]
+          },
+          "kycStatus": {
+            "type": "string",
+            "enum": ["pending", "approved", "rejected", "not_required"]
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "defaultCurrency": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "email",
+          "status",
+          "kycStatus",
+          "defaultCurrency",
+          "timezone"
+        ]
+      },
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "expiresIn": {
+            "type": "number",
+            "description": "Access token expiry in seconds",
+            "example": 900
+          },
+          "tenant": {
+            "description": "Tenant information",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TenantInfoDto"
+              }
+            ]
+          }
+        },
+        "required": ["accessToken", "refreshToken", "expiresIn", "tenant"]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "requires2FA": {
+            "type": "boolean",
+            "description": "Whether 2FA is required",
+            "example": false
+          },
+          "temporaryToken": {
+            "type": "string",
+            "description": "Temporary token for 2FA verification (only if requires2FA is true)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "temporaryTokenExpiresIn": {
+            "type": "number",
+            "description": "Temporary token expiry in seconds",
+            "example": 300
+          },
+          "auth": {
+            "description": "Full auth response (only if 2FA is not required)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AuthResponseDto"
+              }
+            ]
+          }
+        }
+      },
+      "VerifyTwoFactorDto": {
+        "type": "object",
+        "properties": {
+          "temporaryToken": {
+            "type": "string",
+            "description": "Temporary token from login response (when 2FA is enabled)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit TOTP code from authenticator app OR backup code",
+            "example": "123456"
+          }
+        },
+        "required": ["temporaryToken", "code"]
+      },
+      "RefreshTokenDto": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": ["refreshToken"]
+      },
+      "ForgotPasswordDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address",
+            "example": "admin@acme.com"
+          }
+        },
+        "required": ["email"]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Password reset token (from email)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "New password (min 8 chars, must include uppercase, lowercase, number, special char)",
+            "example": "NewSecurePass123!",
+            "minLength": 8
+          }
+        },
+        "required": ["token", "newPassword"]
+      },
+      "VerifyEmailDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Email verification token (from email)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": ["token"]
+      },
+      "CreateApiKeyDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "API key name (for identification)",
+            "example": "Production API Key"
+          },
+          "mode": {
+            "type": "string",
+            "description": "API key mode",
+            "enum": ["test", "live"],
+            "example": "test"
+          }
+        },
+        "required": ["name", "mode"]
+      },
+      "ApiKeyResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["test", "live"]
+          },
+          "key": {
+            "type": "string",
+            "description": "API key (only shown once on creation)",
+            "example": "sk_test_abc123..."
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "mode",
+          "key",
+          "keyPrefix",
+          "isActive",
+          "createdAt"
+        ]
+      },
+      "ApiKeyListDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["test", "live"]
+          },
+          "keyPrefix": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "lastUsedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "mode", "keyPrefix", "isActive", "createdAt"]
+      },
+      "SetupTwoFactorResponseDto": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "TOTP secret (for manual entry)",
+            "example": "JBSWY3DPEHPK3PXP"
+          },
+          "qrCodeUrl": {
+            "type": "string",
+            "description": "QR code data URI (for scanning)",
+            "example": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+          },
+          "backupCodes": {
+            "description": "Backup codes (save these securely!)",
+            "example": ["ABCD-EFGH", "IJKL-MNOP"],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["secret", "qrCodeUrl", "backupCodes"]
+      },
+      "VerifySetupTwoFactorDto": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string",
+            "description": "TOTP secret from setup step",
+            "example": "JBSWY3DPEHPK3PXP"
+          },
+          "code": {
+            "type": "string",
+            "description": "6-digit TOTP code from authenticator app",
+            "example": "123456"
+          }
+        },
+        "required": ["secret", "code"]
+      },
+      "DisableTwoFactorDto": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "Current password (required to disable 2FA)",
+            "example": "SecurePass123!"
+          }
+        },
+        "required": ["password"]
+      },
+      "TwoFactorStatusDto": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether 2FA is enabled",
+            "example": true
+          },
+          "enabledAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When 2FA was enabled",
+            "example": "2024-01-15T10:30:00Z"
+          },
+          "backupCodesRemaining": {
+            "type": "number",
+            "description": "Number of backup codes remaining",
+            "example": 8
+          }
+        },
+        "required": ["enabled", "backupCodesRemaining"]
+      }
+    }
   }
 }

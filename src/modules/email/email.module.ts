@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BullModule } from '@nestjs/bullmq';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EmailConfig } from '@config/email.config';
-import { QueueConfig } from '@config/queue.config';
+import { TypeOrmFeatureModule, BullQueueModule } from '@common/openapi';
 import { EmailService } from './services/email.service';
 import { EmailQueueService } from './services/email-queue.service';
 import { TemplateService } from './services/template.service';
 import { BrevoAdapter } from './adapters/brevo.adapter';
 import { EmailProcessor } from './processors/email.processor';
 import { EmailLogEntity } from './entities/email-log.entity';
+import { EmailJobData } from './jobs/email.job.interface';
 
 /**
  * Email Module
@@ -22,12 +19,8 @@ import { EmailLogEntity } from './entities/email-log.entity';
  */
 @Module({
   imports: [
-    // Register email queue
-    BullModule.registerQueue({
-      name: 'email',
-    }),
-    // Register email log entity
-    TypeOrmModule.forFeature([EmailLogEntity]),
+    BullQueueModule<EmailJobData>('email'),
+    TypeOrmFeatureModule([EmailLogEntity]),
   ],
   providers: [
     EmailService,

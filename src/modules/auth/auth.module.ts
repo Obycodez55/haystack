@@ -1,7 +1,7 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmFeatureModule } from '@common/openapi';
 import { ApiKeyEntity } from './entities/api-key.entity';
 import { TwoFactorEntity } from './entities/two-factor.entity';
 import { ApiKeyRepository } from './repositories/api-key.repository';
@@ -15,14 +15,9 @@ import { TenantModule } from '../tenant/tenant.module';
 import { EmailModule } from '../email/email.module';
 import { JwtConfig } from '@config/jwt.config';
 
-const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
-
 @Module({
   imports: [
-    // TypeORM entities
-    ...(isOpenApiGeneration
-      ? []
-      : [TypeOrmModule.forFeature([ApiKeyEntity, TwoFactorEntity])]),
+    TypeOrmFeatureModule([ApiKeyEntity, TwoFactorEntity]),
     // JWT module configuration
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -35,9 +30,9 @@ const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
         return {
           secret: jwtConfig.secret,
           signOptions: {
-            expiresIn: jwtConfig.expiresIn,
+            expiresIn: parseInt(jwtConfig.expiresIn),
           },
-        };
+        } satisfies JwtModuleOptions;
       },
     }),
     // Forward refs to avoid circular dependencies
@@ -45,28 +40,11 @@ const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
     EmailModule,
   ],
   providers: [
-    // Repositories
-    ...(isOpenApiGeneration
-      ? [
-          {
-            provide: ApiKeyRepository,
-            useValue: {
-              // Mock repository methods if needed
-            },
-          },
-          {
-            provide: TwoFactorRepository,
-            useValue: {
-              // Mock repository methods if needed
-            },
-          },
-        ]
-      : [ApiKeyRepository, TwoFactorRepository]),
-    // Services
+    ApiKeyRepository,
+    TwoFactorRepository,
     AuthService,
     TwoFactorService,
     JwtAuthService,
-    // Guards
     JwtAuthGuard,
   ],
   controllers: [AuthController],
@@ -77,7 +55,6 @@ const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
     ApiKeyRepository,
     TwoFactorRepository,
     JwtAuthGuard,
-    ...(isOpenApiGeneration ? [] : [TypeOrmModule]),
   ],
 })
 export class AuthModule {}

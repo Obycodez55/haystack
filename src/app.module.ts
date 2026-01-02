@@ -3,6 +3,7 @@ import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule, CorrelationMiddleware } from '@common';
+import { OpenApiMockModule } from '@common/openapi';
 import {
   TenantModule,
   TenantMiddleware,
@@ -18,30 +19,25 @@ import { RedisModule } from '@redis/redis.module';
 import { QueueModule } from '@queue/queue.module';
 import { HealthModule } from '@common/health/health.module';
 
-// Conditionally import DatabaseModule only if not generating OpenAPI
-// During OpenAPI generation, we don't need database connection
-const imports = [
-  ConfigModule,
-  LoggingModule, // Import LoggingModule first so LoggerService is available
-  DatabaseModule, // DatabaseModule needs LoggerService
-  RedisModule,
-  QueueModule,
-  HealthModule,
-  CommonModule,
-  TenantModule,
-  AuthModule,
-  EmailModule,
-];
-
-// Only import DatabaseModule if not in OpenAPI generation mode
-// This prevents TypeORM from attempting to connect during spec generation
-if (process.env.GENERATE_OPENAPI !== 'true') {
-  // Dynamic import to prevent module initialization during OpenAPI generation
-  // Note: This is a workaround - in production, DatabaseModule is always needed
-}
+const isOpenApiGeneration = process.env.GENERATE_OPENAPI === 'true';
 
 @Module({
-  imports: imports,
+  imports: [
+    ConfigModule,
+    LoggingModule, // Import LoggingModule first so LoggerService is available
+    // Import OpenApiMockModule FIRST during OpenAPI generation to provide all mocks
+    // This ensures mocks are available before any modules try to use them
+    ...(isOpenApiGeneration ? [OpenApiMockModule] : []),
+    // Normal modules - they'll use mocks if OpenApiMockModule is imported
+    DatabaseModule,
+    RedisModule,
+    QueueModule,
+    HealthModule,
+    CommonModule,
+    TenantModule,
+    AuthModule,
+    EmailModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
